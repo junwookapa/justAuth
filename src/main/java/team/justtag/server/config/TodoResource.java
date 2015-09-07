@@ -1,12 +1,5 @@
 package team.justtag.server.config;
 
-import com.google.gson.Gson;
-import spark.Request;
-import spark.Response;
-import spark.Route;
-
-import java.util.HashMap;
-
 import static spark.Spark.get;
 import static spark.Spark.post;
 import static spark.Spark.put;
@@ -27,7 +20,8 @@ public class TodoResource {
 
     private void setupEndpoints() {
         post(API_CONTEXT + "/todos", "application/json", (request, response) -> {
-            todoService.createNewTodo(request.body());
+        	String funtionBlockJson = new String(request.bodyAsBytes(), "UTF-8");
+            todoService.createNewTodo(funtionBlockJson);
             response.status(201);
             return response;
         }, new JsonTransformer());
