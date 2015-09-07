@@ -2,8 +2,6 @@ package team.justtag.server.api.rest;
 
 import static spark.Spark.get;
 
-
-
 public class HelloWorld {
     public HelloWorld() {
 
