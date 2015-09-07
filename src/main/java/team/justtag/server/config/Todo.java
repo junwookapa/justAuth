@@ -1,4 +1,4 @@
-package com.todoapp;
+package team.justtag.server.config;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;

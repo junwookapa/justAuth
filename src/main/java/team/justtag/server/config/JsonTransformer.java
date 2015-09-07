@@ -1,4 +1,4 @@
-package com.todoapp;
+package team.justtag.server.config;
 
 import com.google.gson.Gson;
 import spark.Response;
