@@ -1,5 +1,7 @@
 package team.justtag.server.config;
 
+import team.justtag.server.api.rest.HelloWorld;
+
 import com.mongodb.*;
 
 import static spark.Spark.setIpAddress;
@@ -18,6 +20,7 @@ public class Bootstrap {
         setPort(PORT);
         staticFileLocation("/public");
         new TodoResource(new TodoService(mongo()));
+        new HelloWorld();
     }
 
     private static DB mongo() throws Exception {
