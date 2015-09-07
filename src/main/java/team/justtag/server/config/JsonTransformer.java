@@ -1,10 +1,11 @@
 package team.justtag.server.config;
 
-import com.google.gson.Gson;
+import java.util.HashMap;
+
 import spark.Response;
 import spark.ResponseTransformer;
 
-import java.util.HashMap;
+import com.google.gson.Gson;
 
 public class JsonTransformer implements ResponseTransformer {
 

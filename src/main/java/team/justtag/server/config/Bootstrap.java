@@ -1,12 +1,15 @@
 package team.justtag.server.config;
 
+import static spark.SparkBase.setIpAddress;
+import static spark.SparkBase.setPort;
+import static spark.SparkBase.staticFileLocation;
 import team.justtag.server.api.rest.HelloWorld;
 
-import com.mongodb.*;
-
-import static spark.Spark.setIpAddress;
-import static spark.Spark.setPort;
-import static spark.SparkBase.staticFileLocation;
+import com.mongodb.DB;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientOptions;
+import com.mongodb.ServerAddress;
+import com.mongodb.WriteConcern;
 
 /**
  * Created by shekhargulati on 09/06/14.

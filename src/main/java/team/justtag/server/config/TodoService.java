@@ -1,13 +1,17 @@
 package team.justtag.server.config;
 
-import com.google.gson.Gson;
-import com.mongodb.*;
-import org.bson.types.ObjectId;
-
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+
+import org.bson.types.ObjectId;
+
+import com.google.gson.Gson;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
 
 /**
  * Created by shekhargulati on 09/06/14.
