@@ -19,8 +19,8 @@ public class LoginController {
 	 private void setupEndpoints() {
 			// TODO Auto-generated method stub
 		 post("/todos", "application/json", (request, response) -> {
-	        	String funtionBlockJson = new String(request.bodyAsBytes(), "UTF-8");
-	        	loginService.createNewUser(funtionBlockJson);
+	        	//String funtionBlockJson = new String(request.bodyAsBytes(), "UTF-8");
+	        	loginService.createNewUser("");
 	            response.status(201);
 	            return response;
 	        }, new JsonTransformer());

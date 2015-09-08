@@ -19,7 +19,7 @@ public class LoginService {
         this.collection = db.getCollection("Login");
     }
     public void createNewUser(String body) {
-        User user = new Gson().fromJson(body, User.class);
+       // User user = new Gson().fromJson(body, User.class);
         //collection.insert(new BasicDBObject("user", user.getUser()).append("password", user.getPassword()).append("createdOn", new Date()));
         collection.insert(new BasicDBObject("user", "아리옹").append("password", "하리옹").append("createdOn", new Date()));
     }
