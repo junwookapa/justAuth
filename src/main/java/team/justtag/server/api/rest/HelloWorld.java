@@ -9,7 +9,7 @@ public class HelloWorld {
     	// 결과 - 이름: 준우 나이: 2
     	get("/hello/:name/:age","application/json", (request, response) -> {
     	   // return "이름: " + request.params(":name") +"\n" +"나이: " + request.params(":age");
-    	   return request.body().toString();
+    	   return request.toString();
     	});
     }
 }
