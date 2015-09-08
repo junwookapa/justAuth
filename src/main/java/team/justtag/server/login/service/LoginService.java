@@ -16,19 +16,11 @@ public class LoginService {
 
     public LoginService(DB db) {
         this.db = db;
-        this.collection = db.getCollection("Login");
+        this.collection = db.getCollection("user");
     }
     public void createNewUser(String body) {
-       // User user = new Gson().fromJson(body, User.class);
-        //collection.insert(new BasicDBObject("user", user.getUser()).append("password", user.getPassword()).append("createdOn", new Date()));
-        collection.insert(new BasicDBObject("user", "아리옹").append("password", "하리옹").append("createdOn", new Date()));
+        User user = new Gson().fromJson(body, User.class);
+        collection.insert(new BasicDBObject("user", user.getUser()).append("password", user.getPassword()).append("createdOn", new Date()));
     }
-    public String createNew(String body) {
-        // User user = new Gson().fromJson(body, User.class);
-         //collection.insert(new BasicDBObject("user", user.getUser()).append("password", user.getPassword()).append("createdOn", new Date()));
-         collection.insert(new BasicDBObject("user", "아리옹").append("password", "하리옹").append("createdOn", new Date()));
-         return "ok";
-     }
-     
 
 }
