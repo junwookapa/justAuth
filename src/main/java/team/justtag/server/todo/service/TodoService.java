@@ -1,4 +1,4 @@
-package team.justtag.server.ui.todo.service;
+package team.justtag.server.todo.service;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.bson.types.ObjectId;
 
-import team.justtag.server.ui.todo.vo.Todo;
+import team.justtag.server.todo.vo.Todo;
 
 import com.google.gson.Gson;
 import com.mongodb.BasicDBObject;

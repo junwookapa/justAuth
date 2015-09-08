@@ -5,8 +5,8 @@ import static spark.SparkBase.setPort;
 import static spark.SparkBase.staticFileLocation;
 import team.justtag.server.login.controller.LoginController;
 import team.justtag.server.login.service.LoginService;
-import team.justtag.server.ui.todo.controller.TodoResource;
-import team.justtag.server.ui.todo.service.TodoService;
+import team.justtag.server.todo.controller.TodoResource;
+import team.justtag.server.todo.service.TodoService;
 
 import com.mongodb.DB;
 import com.mongodb.MongoClient;

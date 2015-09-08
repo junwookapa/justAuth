@@ -1,4 +1,4 @@
-package team.justtag.server.ui.todo.vo;
+package team.justtag.server.todo.vo;
 
 import java.util.Date;
 
