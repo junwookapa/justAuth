@@ -1,9 +1,7 @@
 package team.justtag.server.login.controller;
 
-import static spark.Spark.get;
 import static spark.Spark.post;
 import team.justtag.server.login.service.LoginService;
-import team.justtag.server.todo.service.TodoService;
 import team.justtag.server.util.JsonTransformer;
 
 public class LoginController {
@@ -14,7 +12,6 @@ public class LoginController {
         this.loginService = loginService;
         setupEndpoints();
     }
-
     
 	 private void setupEndpoints() {
 			// TODO Auto-generated method stub

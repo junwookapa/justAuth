@@ -3,7 +3,6 @@ package team.justtag.server.login.service;
 import java.util.Date;
 
 import team.justtag.server.login.vo.User;
-import team.justtag.server.todo.vo.Todo;
 
 import com.google.gson.Gson;
 import com.mongodb.BasicDBObject;
