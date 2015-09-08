@@ -3,7 +3,8 @@ package team.justtag.server.config;
 import static spark.SparkBase.setIpAddress;
 import static spark.SparkBase.setPort;
 import static spark.SparkBase.staticFileLocation;
-import team.justtag.server.api.rest.HelloWorld;
+import team.justtag.server.login.controller.LoginController;
+import team.justtag.server.login.service.LoginService;
 import team.justtag.server.ui.todo.controller.TodoResource;
 import team.justtag.server.ui.todo.service.TodoService;
 
@@ -25,7 +26,7 @@ public class Bootstrap {
         setPort(PORT);
         staticFileLocation("/public");
         new TodoResource(new TodoService(mongo()));
-        new HelloWorld();
+        new LoginController(new LoginService(mongo()));
     }
 
     private static DB mongo() throws Exception {

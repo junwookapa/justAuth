@@ -17,9 +17,9 @@ public class Todo {
     private Date createdOn = new Date();
 
     public Todo(BasicDBObject dbObject) {
+        this.done = dbObject.getBoolean("done");
         this.id = ((ObjectId) dbObject.get("_id")).toString();
         this.title = dbObject.getString("title");
-        this.done = dbObject.getBoolean("done");
         this.createdOn = dbObject.getDate("createdOn");
     }
 
