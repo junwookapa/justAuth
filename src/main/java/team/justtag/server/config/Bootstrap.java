@@ -4,6 +4,8 @@ import static spark.SparkBase.setIpAddress;
 import static spark.SparkBase.setPort;
 import static spark.SparkBase.staticFileLocation;
 import team.justtag.server.api.rest.HelloWorld;
+import team.justtag.server.ui.todo.controller.TodoResource;
+import team.justtag.server.ui.todo.service.TodoService;
 
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
