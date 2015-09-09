@@ -47,7 +47,7 @@ public class LoginService {
 			jwe = new JsonWebEncryption();
 			jwe.setKey(key);
 			jwe.setCompactSerialization(serializedJwe);
-			return "Payload: " + jwe.getPayload();
+			return "Payload: " + jwe.toString();
 		} catch (JoseException e) {
 			// TODO Auto-generated catch block
 			return "error" + e.getMessage().toString();
