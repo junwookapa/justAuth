@@ -1,5 +1,6 @@
 package team.justtag.server.login.controller;
 
+import static spark.Spark.get;
 import static spark.Spark.post;
 import team.justtag.server.login.service.LoginService;
 import team.justtag.server.util.JsonTransformer;
@@ -21,6 +22,10 @@ public class LoginController {
 	            response.status(201);
 	            return response;
 	        }, new JsonTransformer());
+		 
+		 get("/test", "application/json", (request, response)
+
+	                -> loginService.tokenServicex(), new JsonTransformer());
 			
 		}
     
