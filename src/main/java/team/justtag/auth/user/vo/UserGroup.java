@@ -7,5 +7,4 @@ public class UserGroup {
 	private String groupName;
 	private List<User> User;
 	
-
 }

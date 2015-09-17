@@ -3,6 +3,8 @@ package team.justtag.server.util;
 import java.util.List;
 import java.util.Map;
 
+import org.bson.types.ObjectId;
+
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -26,17 +28,24 @@ public class DaoGeneric<T> {
 			return false;
 		}	
 	}
-	public boolean update(){
+	public boolean update(String id){
+		// TODO
 		return false;
 	}
-	public boolean delete(){
-		return false;	
+	public boolean delete(String id){
+		if(collection.remove(new BasicDBObject("_id", new ObjectId(id))).getN()>0){
+			return true;
+		}else{
+			return false;
+		}
 	}
+	@SuppressWarnings("unchecked")
 	public List<T> findAll(){
-		return null;
+		return (List<T>) collection.find();
 	}
+	@SuppressWarnings("unchecked")
 	public T findOneByOne(String type, String value){
-		return null;
+		return (T) collection.findOne(new BasicDBObject(type, value));
 	}
 	
 

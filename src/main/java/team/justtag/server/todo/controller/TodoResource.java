@@ -25,6 +25,7 @@ public class TodoResource {
         	String funtionBlockJson = new String(request.bodyAsBytes(), "UTF-8");
             todoService.createNewTodo(funtionBlockJson);
             response.status(201);
+            
             return response;
         }, new JsonTransformer());
 
