@@ -1,4 +1,4 @@
-package team.justtag.server.config;
+package team.justtag.server.main;
 
 import static spark.SparkBase.setIpAddress;
 import static spark.SparkBase.setPort;
@@ -17,7 +17,7 @@ import com.mongodb.WriteConcern;
 /**
  * Created by shekhargulati on 09/06/14.
  */
-public class Bootstrap {
+public class Main {
     private static final String IP_ADDRESS = System.getenv("OPENSHIFT_DIY_IP") != null ? System.getenv("OPENSHIFT_DIY_IP") : "localhost";
     private static final int PORT = System.getenv("OPENSHIFT_DIY_PORT") != null ? Integer.parseInt(System.getenv("OPENSHIFT_DIY_PORT")) : 8080;
 
@@ -25,8 +25,7 @@ public class Bootstrap {
         setIpAddress(IP_ADDRESS);
         setPort(PORT);
         staticFileLocation("/public");
-        new TodoResource(new TodoService(mongo()));
-        new LoginController(new LoginService(mongo()));
+        setController(mongo());
     }
 
     private static DB mongo() throws Exception {
@@ -48,5 +47,9 @@ public class Bootstrap {
         } else {
             throw new RuntimeException("Not able to authenticate with MongoDB");
         }
+    }
+    private static void setController(DB db){
+    	new TodoResource(new TodoService(db));
+        new LoginController(new LoginService(db));
     }
 }
