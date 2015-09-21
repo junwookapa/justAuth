@@ -1,8 +1,9 @@
-package team.justtag.auth.user.controll;
+package team.justtag.auth.user.controller;
 
 import static spark.Spark.delete;
 import static spark.Spark.get;
 import static spark.Spark.post;
+import static spark.Spark.put;
 import team.justtag.auth.user.service.UserServiceImpl;
 import team.justtag.server.main.Status.UserStatus;
 import team.justtag.server.util.JsonTransformer;
@@ -18,6 +19,7 @@ public class UserController {
 	}
 
 	private void setupEndpoints() {
+		//user
 		post("/user", "application/json", (request, response) -> {
 					String funtionBlockJson = new String(request.bodyAsBytes(), "UTF-8");
 					 return mUserService.createUser(funtionBlockJson);
@@ -27,7 +29,12 @@ public class UserController {
 				new JsonTransformer());
 		get("/users", "application/json", (request, response) -> mUserService.findAll(),
 				new JsonTransformer());
-		
+		delete("/user", "application/json",
+				(request, response) -> {String funtionBlockJson = new String(request.bodyAsBytes(), "UTF-8");
+					return mUserService.deleteUser(funtionBlockJson).toString();
+				}, new JsonTransformer());
+
+		// login
 		post("/login", "application/json", (request, response) ->{
 			UserStatus responseStatus = mUserService.login(request.body());
 			if(responseStatus.equals(UserStatus.success)){
@@ -37,11 +44,6 @@ public class UserController {
 			}
 			return responseStatus;
 		}, new JsonTransformer());
-		
-		delete("/user", "application/json",
-				(request, response) -> {String funtionBlockJson = new String(request.bodyAsBytes(), "UTF-8");
-					return mUserService.deleteUser(funtionBlockJson).toString();
-				}, new JsonTransformer());
 
 	}
 

@@ -1,4 +1,4 @@
-package team.justtag.auth.token.controll;
+package team.justtag.auth.token.controller;
 
 import static spark.Spark.after;
 import static spark.Spark.delete;
