@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.bson.types.ObjectId;
 
-import team.justtag.server.todo.vo.Todo;
+import team.justtag.server.todo.model.Todo;
 
 import com.google.gson.Gson;
 import com.mongodb.BasicDBObject;

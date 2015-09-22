@@ -1,6 +1,7 @@
 package team.justtag.server.main;
 
 public class Status {
+	
 	public enum TokenStatus {
 		notFoundToken, //토큰 찾을 수 없음
 		notFoundUser, // 사용자를 찾을 수 없음
@@ -8,6 +9,8 @@ public class Status {
 		tokenUpdateFail, // 토큰 업데이트 실패
 		tokenExpiringsoon, // 토큰이 곧 만료 됩니다.
 		unknownError,  // 알려지지 않은 에러
+		issueFail,
+		verifyFail,
 		success // 성공하였습니다.
 	}
 	public enum UserStatus {
@@ -17,23 +20,21 @@ public class Status {
 		signFail, // 가입 실패
 		loginFail, // 로그인 실패
 		unkwonError, // 알려지지 않은 에러
-		success; //성송
+		success //성공
+	}
+	public enum DBStatus{
+		insertFail,
+		updateFail,
+		deleteFail,
+		readFail,
+		success
 	}
 	
-	private String status;
-	public Status(TokenStatus status){
-		this.status = status.toString();
+	public enum TaskState{
+		submitted, // 제출 됨
+		waitting, // 대기 상태
+		processing, // 처리중
+		delay, // 지연 됨
+		finished // 완료됨
 	}
-	public Status(UserStatus status){
-		this.status = status.toString();
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
 }
