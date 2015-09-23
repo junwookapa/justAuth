@@ -3,8 +3,16 @@ package team.justtag.server.main;
 import static spark.SparkBase.setIpAddress;
 import static spark.SparkBase.setPort;
 import static spark.SparkBase.staticFileLocation;
+
+import java.util.List;
+
+import team.justtag.server.main.Status.UserStatus;
 import team.justtag.server.todo.controller.TodoResource;
 import team.justtag.server.todo.service.TodoService;
+import team.justtag.server.user.controller.UserController;
+import team.justtag.server.user.model.User;
+import team.justtag.server.user.service.UserService;
+import team.justtag.server.user.service.UserServiceImpl;
 
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
@@ -32,6 +40,7 @@ public class Main {
             MongoClient mongoClient = new MongoClient("localhost");
             return mongoClient.getDB("justtagserver");//
         }
+        
         int port = Integer.parseInt(System.getenv("OPENSHIFT_MONGODB_DB_PORT"));
         String dbname = System.getenv("OPENSHIFT_APP_NAME");
         String username = System.getenv("OPENSHIFT_MONGODB_DB_USERNAME");
@@ -48,5 +57,6 @@ public class Main {
     }
     private static void setController(DB db){
     	new TodoResource(new TodoService(db));
+    	new UserController(new UserServiceImpl(db), db);
     }
 }

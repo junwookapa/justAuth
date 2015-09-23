@@ -1,79 +1,70 @@
 package team.justtag.server.user.service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import team.justtag.server.main.Status.UserStatus;
+import team.justtag.server.user.dao.UserDao;
+import team.justtag.server.user.dao.UserDaoImpl;
+import team.justtag.server.user.dao.UserGroupDao;
+import team.justtag.server.user.dao.UserGroupDaoImpl;
 import team.justtag.server.user.model.User;
 import team.justtag.server.util.AESSecurity;
 import team.justtag.server.util.JWESecurity;
 
 import com.google.gson.Gson;
-import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
 import com.mongodb.MongoException;
 
 public class UserServiceImpl implements UserService {
-	private final DBCollection mCollection;
+	private final UserDao mUserDao;
+	private final UserGroupDao mUserGroupDao;
 	private final JWESecurity mJWESecurity;
 	private final AESSecurity mAESSecurity;
 
 	public UserServiceImpl(DB db) {
-		this.mCollection = db.getCollection("user");
+		this.mUserDao = new UserDaoImpl(db);
+		this.mUserGroupDao = new UserGroupDaoImpl(db);
 		this.mJWESecurity = new JWESecurity();
 		this.mAESSecurity = new AESSecurity();
 	}
 
 	@Override
 	public UserStatus createUser(String body) {
-		return null;
-/*		String decodedbody = mJWESecurity.decoding(body);
+		String decodedbody = mJWESecurity.decoding(body);
 		User user = new Gson().fromJson(decodedbody, User.class);
-		if (mCollection.findOne(new BasicDBObject("userID", user.getUserID())) == null) {
-			mCollection.insert(new BasicDBObject("userID", user.getUserID())
-					.append("password",
-							mAESSecurity.encoding(user.getPassword()))
-					.append("role", user.getRole())
-					.append("email", user.getEmail())
-					.append("group", user.getGroup())
-					.append("createdOn", new Date()));
-			
+		try{
+			user.setReg_date(new Date().toString());
+			mUserDao.createUser(user);
+			mUserGroupDao.addUser(user.getGroup_id(), mUserDao.getObjIDByUserID(user.getUser_id()));
 			return UserStatus.success;
-		} else {
-			return UserStatus.duplicateID;
-		}*/
+		}catch(Exception e){
+			return UserStatus.signFail;
+		}
 	}
 
 	@Override
 	public UserStatus deleteUser(String body) {
-		// TODO Auto-generated method stub
 		try {
-	/*		String decodedbody = mJWESecurity.decoding(body);
+			String decodedbody = mJWESecurity.decoding(body);
 			User user = new Gson().fromJson(decodedbody, User.class);
-			mCollection.remove(new BasicDBObject("userID", user.getUserID()));*/
-			
-			
-
+			mUserGroupDao.deleteUser(user.getGroup_name(), mUserDao.getObjIDByUserID(user.getUser_id()));
+			mUserDao.deleteUser(user.getUser_id());
+			return UserStatus.success;
 		} catch (Exception e) {
-
+			return UserStatus.unkwonError;
 		}
-		return UserStatus.success;
 	}
 
 	@Override
 	public UserStatus login(String body) {
-		// TODO Auto-generated method stub
 		User user = null;
 		User compareUser = null;
 		String decodedPassword = null;
 		try {
-/*			String decodedbody = mJWESecurity.decoding(body);
+			String decodedbody = mJWESecurity.decoding(body);
 			user = new Gson().fromJson(decodedbody, User.class);
-			compareUser = findUserbyUserID(user.getUserID());*/
+			compareUser = mUserDao.getUserByUserID(user.getUser_id());
 			decodedPassword = mAESSecurity.decoding(compareUser.getPassword());
 		} catch (Exception e) {
 			return UserStatus.unkwonError;
@@ -88,16 +79,13 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserStatus updateUser(String body) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public User findUserbyUserID(String userID) {
 		try {
-			return new User(
-					(BasicDBObject) mCollection.findOne(new BasicDBObject(
-							"userID", userID)));
+			return mUserDao.getUserByUserID(userID);
 		} catch (NullPointerException e) {
 			e.printStackTrace();
 			return null;
@@ -109,18 +97,11 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public List<User> findAllUsers() {
-		List<User> users = new ArrayList<>();
-		DBCursor dbObjects = mCollection.find();
-		while (dbObjects.hasNext()) {
-			DBObject dbObject = dbObjects.next();
-			users.add(new User((BasicDBObject) dbObject));
-		}
-		return users;
+		return mUserDao.getAllUsers();
 	}
 
 	@Override
 	public List<User> findAllUsersByUserGroup(String userGroupID) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

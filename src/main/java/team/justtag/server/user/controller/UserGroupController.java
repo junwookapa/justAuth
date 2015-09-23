@@ -18,28 +18,25 @@ public class UserGroupController {
 	}
 
 	private void setupEndpoints() {
-		
-		//user group
-				post("/userGroup", "application/json", (request, response) -> {
-					return null;
-					// create UserGroup
-					}, new JsonTransformer());
-				get("/userGroup/:id", "application/json", (request, response) -> {
-					return null;
-					// get UserGroup
-					}, new JsonTransformer());
-				put("/userGroup/:id", "application/json", (request, response) -> {
-					return null;
-					// update UserGroup
-					}, new JsonTransformer());
-				delete("/userGroup/:id", "application/json", (request, response) -> {
-					return null;
-					// update UserGroup
-					}, new JsonTransformer());
+
+		// user group
+		post("/userGroup", "application/json", (request, response) -> {
+			return null;
+			// create UserGroup
+			}, new JsonTransformer());
+		get("/userGroup/:id", "application/json", (request, response) -> {
+			return null;
+			// get UserGroup
+			}, new JsonTransformer());
+		put("/userGroup/:id", "application/json", (request, response) -> {
+			return null;
+			// update UserGroup
+			}, new JsonTransformer());
+		delete("/userGroup/:id", "application/json", (request, response) -> {
+			return null;
+			// update UserGroup
+			}, new JsonTransformer());
 
 	}
-	
 
 }
-
-

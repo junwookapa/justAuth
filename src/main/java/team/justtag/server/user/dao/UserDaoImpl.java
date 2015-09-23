@@ -16,21 +16,23 @@ import com.mongodb.DBObject;
 
 public class UserDaoImpl implements UserDao{
 	
-	private DBCollection mCollection;
+	private final DBCollection mCollection;
 	public UserDaoImpl(DB db){
 		this.mCollection = db.getCollection("user");
 	}
 	@Override
 	public DBStatus createUser(User user) {
 		try{
-			mCollection.insert(new BasicDBObject("userID", user.getUser_id())
+			mCollection.insert(new BasicDBObject()
 					.append("user_id", user.getUser_id())
 					.append("user_name", user.getUser_name())
-					.append("user_group_id", user.getUser_group_id())
+					.append("group_id", new ObjectId(user.getGroup_id()))
+					.append("group_name", user.getGroup_name())
 					.append("password", user.getPassword())
 					.append("role", user.getRole())
 					.append("email", user.getEmail())
-					.append("store_id", user.getStore_id()));
+					.append("store_id", user.getStore_id())
+					.append("reg_date", user.getReg_date()));
 			return DBStatus.success;
 		}catch(Exception e){
 			return DBStatus.insertFail;
@@ -42,14 +44,16 @@ public class UserDaoImpl implements UserDao{
 		try{
 			mCollection.update(
 					new BasicDBObject("_id", new ObjectId(_id))
-					, new BasicDBObject("userID", user.getUser_id())
+					, new BasicDBObject("$set", new BasicDBObject()
 					.append("user_id", user.getUser_id())
 					.append("user_name", user.getUser_name())
-					.append("user_group_id", user.getUser_group_id())
+					.append("group_id", new ObjectId(user.getGroup_id()))
+					.append("group_name", user.getGroup_name())
 					.append("password", user.getPassword())
 					.append("role", user.getRole())
 					.append("email", user.getEmail())
-					.append("store_id", user.getStore_id()));
+					.append("store_id", user.getStore_id())
+					.append("reg_date", user.getReg_date())));
 			return DBStatus.success;
 		}catch(Exception e){
 			return DBStatus.updateFail;
@@ -65,7 +69,7 @@ public class UserDaoImpl implements UserDao{
 		}
 	}
 	@Override
-	public User findbyObjectID(String _id) {
+	public User getUserByObjectID(String _id) {
 		try{
 			 return new User((BasicDBObject) mCollection.findOne(new BasicDBObject("_id", new ObjectId(_id))));
 		}catch(Exception e){
@@ -73,16 +77,24 @@ public class UserDaoImpl implements UserDao{
 		}
 	}
 	@Override
-	public User findbyUserID(String user_id) {
-		// TODO Auto-generated method stub
+	public User getUserByUserID(String user_id) {
 		try{
-			 return new User((BasicDBObject) mCollection.findOne(new BasicDBObject("user_id", new ObjectId(user_id))));
+			 return new User((BasicDBObject) mCollection.findOne(new BasicDBObject("user_id", user_id)));
 		}catch(Exception e){
 			return null;
 		}
 	}
 	@Override
-	public List<User> findAllUsers() {
+	public String getObjIDByUserID(String user_id) {
+		try{
+			 return new User((BasicDBObject) mCollection.findOne(new BasicDBObject("user_id", user_id))).get_id();
+		}catch(Exception e){
+			return null;
+		}
+	}
+	
+	@Override
+	public List<User> getAllUsers() {
 		 List<User> users = new ArrayList<>();
 	        DBCursor dbObjects = mCollection.find();
 	        while (dbObjects.hasNext()) {
@@ -91,16 +103,18 @@ public class UserDaoImpl implements UserDao{
 	        }
 	        return users;
 	}
+	
 	@Override
-	public List<User> findAllUsersByUserGroupName(String userGroupName) {
+	public List<User> getUsersByUserGroupID(String group_id) {
 		List<User> users = new ArrayList<>();
-        DBCursor dbObjects = mCollection.find();
+        DBCursor dbObjects = mCollection.find(new BasicDBObject("group_id", new ObjectId(group_id)));
         while (dbObjects.hasNext()) {
             DBObject dbObject = dbObjects.next();
             users.add(new User((BasicDBObject) dbObject));
         }
         return users;
 	}
+	
 	
 
 }
