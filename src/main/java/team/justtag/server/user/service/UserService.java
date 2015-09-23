@@ -7,7 +7,7 @@ import team.justtag.server.user.model.User;
 
 public interface UserService {
 	// user method
-	public UserStatus createUser(String body); // 유저 생성
+	public UserStatus createUser(String body); // 회원가입
 	public UserStatus updateUser(String body); // 유저 변경
 	public UserStatus deleteUser(String body); // 유저 삭제
 	public User findUserbyUserID(String userID); // 유저 아이디로 유저 정보 찾기
@@ -16,4 +16,5 @@ public interface UserService {
 	
 	// login method
 	public UserStatus login(String body); // 로그인 정보
+	public UserStatus logout(String body); // 로그아웃
 }

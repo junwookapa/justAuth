@@ -105,4 +105,10 @@ public class UserServiceImpl implements UserService {
 		return null;
 	}
 
+	@Override
+	public UserStatus logout(String body) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
