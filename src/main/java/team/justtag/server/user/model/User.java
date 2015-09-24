@@ -13,6 +13,7 @@ public class User {
 	private String user_password; // 비밀번호
 	private String user_role; // 역할 admin, group master, ...
 	private String user_email; // 이메일
+	private String user_tel; // 전화 번호
 	private String store_id; // 가게 아이디
 	private String reg_date; // 생성일
 
@@ -25,6 +26,7 @@ public class User {
 		this.user_password = dbObject.getString("user_password");
 		this.user_role = dbObject.getString("user_role");
 		this.user_email = dbObject.getString("user_email");
+		this.user_email = dbObject.getString("user_tel");
 		this.store_id = dbObject.getString("store_id");
 		this.reg_date = dbObject.getString("reg_date");
 	}
@@ -93,6 +95,14 @@ public class User {
 		this.user_email = user_email;
 	}
 
+	public String getUser_tel() {
+		return user_tel;
+	}
+
+	public void setUser_tel(String user_tel) {
+		this.user_tel = user_tel;
+	}
+
 	public String getStore_id() {
 		return store_id;
 	}
@@ -108,5 +118,6 @@ public class User {
 	public void setReg_date(String reg_date) {
 		this.reg_date = reg_date;
 	}
+
 
 }

@@ -8,12 +8,14 @@ public class Store {
 	private String _id;
 	private String store_name;
 	private String store_address;
+	private String store_tel;
 	private String description;
 	
 	public Store(BasicDBObject dbObject) {
 		this._id = ((ObjectId) dbObject.get("_id")).toString();		
 		this.store_name = dbObject.getString("store_name");
 		this.store_address = dbObject.getString("store_address");
+		this.store_tel = dbObject.getString("store_tel");
 		this.description = dbObject.getString("description");
 	}
 
@@ -41,6 +43,14 @@ public class Store {
 		this.store_address = store_address;
 	}
 
+	public String getStore_tel() {
+		return store_tel;
+	}
+
+	public void setStore_tel(String store_tel) {
+		this.store_tel = store_tel;
+	}
+
 	public String getDescription() {
 		return description;
 	}
@@ -48,4 +58,5 @@ public class Store {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
 }
