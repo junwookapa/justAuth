@@ -16,6 +16,6 @@ public interface UserDao {
 	public String getObjIDByUserID(String user_id); // 유저 아이디에 의한 유저 아이디 검색
 	
 	public List<User> getAllUsers(); // 모든 유저 찾기
-	public List<User> getUsersByUserGroupID(String group_id); // 유저 그룹에 의한 모든 유저 찾기
+	public List<User> getUsersByUserGroupID(String user_group_id); // 유저 그룹에 의한 모든 유저 찾기
 		
 }

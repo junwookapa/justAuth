@@ -25,8 +25,8 @@ public class UserGroupDaoImpl implements UserGroupDao{
 	public DBStatus createUserGroup(UserGroup user) {
 		try{
 			mCollection.insert(new BasicDBObject()
-					.append("group_name", user.getGroup_name())
-					.append("description", user.getDescription())
+					.append("user_group_name", user.getUser_group_name())
+					.append("user_group_description", user.getUser_group_description())
 					.append("reg_date", user.getReg_date())
 					.append("users", user.getUsers()));
 			return DBStatus.success;
@@ -41,8 +41,8 @@ public class UserGroupDaoImpl implements UserGroupDao{
 			mCollection.update(
 					new BasicDBObject("_id", new ObjectId(_id))
 					, new BasicDBObject("$set", new BasicDBObject()
-					.append("group_name", user.getGroup_name())
-					.append("description", user.getDescription())
+					.append("user_group_name", user.getUser_group_name())
+					.append("user_group_description", user.getUser_group_description())
 					.append("reg_date", user.getReg_date())
 					.append("users", user.getUsers())));
 			return DBStatus.success;
@@ -71,18 +71,18 @@ public class UserGroupDaoImpl implements UserGroupDao{
 	}
 
 	@Override
-	public UserGroup getUserGroupByUserGroupName(String group_name) {
+	public UserGroup getUserGroupByUserGroupName(String user_group_name) {
 		try{
-			 return new UserGroup((BasicDBObject) mCollection.findOne(new BasicDBObject("group_name", group_name)));
+			 return new UserGroup((BasicDBObject) mCollection.findOne(new BasicDBObject("user_group_name", user_group_name)));
 		}catch(Exception e){
 			return null;
 		}
 	}
 
 	@Override
-	public String getObjIDByUserGroupName(String group_name) {
+	public String getObjIDByUserGroupName(String user_group_name) {
 		try{
-			 return new UserGroup((BasicDBObject) mCollection.findOne(new BasicDBObject("group_name", group_name))).get_id();
+			 return new UserGroup((BasicDBObject) mCollection.findOne(new BasicDBObject("user_group_name", user_group_name))).get_id();
 		}catch(Exception e){
 			return null;
 		}
@@ -100,10 +100,10 @@ public class UserGroupDaoImpl implements UserGroupDao{
 	}
 
 	@Override
-	public DBStatus addUser(String group_name, String userObjid) {
+	public DBStatus addUser(String user_group_name, String userObjid) {
 		try{
 			mCollection.update(
-					new BasicDBObject("group_name", group_name)
+					new BasicDBObject("user_group_name", user_group_name)
 					, new BasicDBObject("$addToSet", new BasicDBObject("users", new ObjectId(userObjid))));
 			return DBStatus.success;
 		}catch(Exception e){
@@ -111,10 +111,10 @@ public class UserGroupDaoImpl implements UserGroupDao{
 		}
 	}
 	@Override
-	public DBStatus deleteUser(String group_name, String userObjid) {
+	public DBStatus deleteUser(String user_group_name, String userObjid) {
 		try{
 			mCollection.update(
-					new BasicDBObject("group_name", group_name)
+					new BasicDBObject("user_group_name", user_group_name)
 					, new BasicDBObject("$pull", new BasicDBObject("users", new ObjectId(userObjid))));
 			return DBStatus.success;
 		}catch(Exception e){

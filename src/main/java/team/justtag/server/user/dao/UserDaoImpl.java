@@ -26,11 +26,11 @@ public class UserDaoImpl implements UserDao{
 			mCollection.insert(new BasicDBObject()
 					.append("user_id", user.getUser_id())
 					.append("user_name", user.getUser_name())
-					.append("group_id", new ObjectId(user.getGroup_id()))
-					.append("group_name", user.getGroup_name())
-					.append("password", user.getPassword())
-					.append("role", user.getRole())
-					.append("email", user.getEmail())
+					.append("user_group_id", new ObjectId(user.getUser_group_id()))
+					.append("user_group_name", user.getUser_group_name())
+					.append("user_password", user.getUser_password())
+					.append("user_role", user.getUser_role())
+					.append("user_email", user.getUser_email())
 					.append("store_id", user.getStore_id())
 					.append("reg_date", user.getReg_date()));
 			return DBStatus.success;
@@ -47,11 +47,11 @@ public class UserDaoImpl implements UserDao{
 					, new BasicDBObject("$set", new BasicDBObject()
 					.append("user_id", user.getUser_id())
 					.append("user_name", user.getUser_name())
-					.append("group_id", new ObjectId(user.getGroup_id()))
-					.append("group_name", user.getGroup_name())
-					.append("password", user.getPassword())
-					.append("role", user.getRole())
-					.append("email", user.getEmail())
+					.append("user_group_id", new ObjectId(user.getUser_group_id()))
+					.append("user_group_name", user.getUser_group_name())
+					.append("user_password", user.getUser_password())
+					.append("user_role", user.getUser_role())
+					.append("user_email", user.getUser_email())
 					.append("store_id", user.getStore_id())
 					.append("reg_date", user.getReg_date())));
 			return DBStatus.success;
@@ -105,9 +105,9 @@ public class UserDaoImpl implements UserDao{
 	}
 	
 	@Override
-	public List<User> getUsersByUserGroupID(String group_id) {
+	public List<User> getUsersByUserGroupID(String user_group_id) {
 		List<User> users = new ArrayList<>();
-        DBCursor dbObjects = mCollection.find(new BasicDBObject("group_id", new ObjectId(group_id)));
+        DBCursor dbObjects = mCollection.find(new BasicDBObject("user_group_id", new ObjectId(user_group_id)));
         while (dbObjects.hasNext()) {
             DBObject dbObject = dbObjects.next();
             users.add(new User((BasicDBObject) dbObject));

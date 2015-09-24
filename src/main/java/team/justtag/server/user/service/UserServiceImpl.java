@@ -36,7 +36,7 @@ public class UserServiceImpl implements UserService {
 		try{
 			user.setReg_date(new Date().toString());
 			mUserDao.createUser(user);
-			mUserGroupDao.addUser(user.getGroup_id(), mUserDao.getObjIDByUserID(user.getUser_id()));
+			mUserGroupDao.addUser(user.getUser_group_id(), mUserDao.getObjIDByUserID(user.getUser_id()));
 			return UserStatus.success;
 		}catch(Exception e){
 			return UserStatus.signFail;
@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
 		try {
 			String decodedbody = mJWESecurity.decoding(body);
 			User user = new Gson().fromJson(decodedbody, User.class);
-			mUserGroupDao.deleteUser(user.getGroup_name(), mUserDao.getObjIDByUserID(user.getUser_id()));
+			mUserGroupDao.deleteUser(user.getUser_group_name(), mUserDao.getObjIDByUserID(user.getUser_id()));
 			mUserDao.deleteUser(user.getUser_id());
 			return UserStatus.success;
 		} catch (Exception e) {
@@ -65,11 +65,11 @@ public class UserServiceImpl implements UserService {
 			String decodedbody = mJWESecurity.decoding(body);
 			user = new Gson().fromJson(decodedbody, User.class);
 			compareUser = mUserDao.getUserByUserID(user.getUser_id());
-			decodedPassword = mAESSecurity.decoding(compareUser.getPassword());
+			decodedPassword = mAESSecurity.decoding(compareUser.getUser_password());
 		} catch (Exception e) {
 			return UserStatus.unkwonError;
 		}
-		if (user.getPassword().equals(decodedPassword)) {
+		if (user.getUser_password().equals(decodedPassword)) {
 			return UserStatus.success;
 		} else {
 			return UserStatus.wrongPassword;

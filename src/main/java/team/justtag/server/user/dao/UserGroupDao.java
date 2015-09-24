@@ -11,13 +11,13 @@ public interface UserGroupDao {
 	public DBStatus deleteUserGroup(String _id); // 유저 그룹 삭제
 	
 	public UserGroup getUserGroupByObjectID(String _id); // 오브젝트 아이디에 의한 유저 그룹 객체 검색
-	public UserGroup getUserGroupByUserGroupName(String group_name); // 유저 그룹 이름에 의한 유저 그룹 객체 검색
+	public UserGroup getUserGroupByUserGroupName(String user_group_name); // 유저 그룹 이름에 의한 유저 그룹 객체 검색
 	
-	public String getObjIDByUserGroupName(String group_name); // 유저 그룹 이름에 의한 유저그룹 객체 아이디 검색
+	public String getObjIDByUserGroupName(String user_group_name); // 유저 그룹 이름에 의한 유저그룹 객체 아이디 검색
 	
 	public List<UserGroup> getAllUserGroups(); // 모든 유저 그룹 검색
 	
-	public DBStatus addUser(String group_name, String userObjid);
-	public DBStatus deleteUser(String group_name, String userObjid);
+	public DBStatus addUser(String user_group_name, String userObjid);
+	public DBStatus deleteUser(String user_group_name, String userObjid);
 
 }
