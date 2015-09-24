@@ -1,16 +1,11 @@
 package team.justtag.server.test;
 
-import java.security.Key;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.crypto.KeyGenerator;
-
 import org.junit.Test;
 
-import team.justtag.server.main.Config;
 import team.justtag.server.user.model.UserGroup;
 import team.justtag.server.util.JWESecurity;
 
