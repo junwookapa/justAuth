@@ -20,7 +20,7 @@ public class AESSecurity {
 		Cipher cipher;
 		try {
 			cipher = Cipher.getInstance("AES");
-			cipher.init(Cipher.ENCRYPT_MODE, Config.SECRET_KEY);
+			cipher.init(Cipher.ENCRYPT_MODE, Config.AES_KEY);
 			byte[] encryptedData;
 			encryptedData = cipher.doFinal(str.getBytes());
 			return Hex.encodeHexString(encryptedData);
@@ -46,7 +46,7 @@ public class AESSecurity {
 	public String decoding(String str) {
 		try {
 			Cipher cipherx = Cipher.getInstance("AES");
-			cipherx.init(Cipher.DECRYPT_MODE, Config.SECRET_KEY);
+			cipherx.init(Cipher.DECRYPT_MODE, Config.AES_KEY);
 			byte[] plainText = cipherx
 					.doFinal(Hex.decodeHex(str.toCharArray()));
 			return new String(plainText);

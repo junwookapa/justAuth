@@ -1,25 +1,22 @@
 package team.justtag.server.test;
 
+import java.security.Key;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.crypto.SecretKeyFactory;
+import javax.crypto.KeyGenerator;
 
-import org.jose4j.json.internal.json_simple.JSONObject;
 import org.junit.Test;
 
 import team.justtag.server.main.Config;
-import team.justtag.server.user.model.User;
 import team.justtag.server.user.model.UserGroup;
 import team.justtag.server.util.JWESecurity;
 
-import com.auth0.jwt.internal.org.apache.commons.codec.binary.Hex;
 import com.google.gson.Gson;
 import com.mongodb.BasicDBObject;
-
 public class TestDB {
-	@Test
 	public void test(){
 		BasicDBObject userObj = 
 				new BasicDBObject()
@@ -33,7 +30,6 @@ public class TestDB {
 		System.out.println(new Gson().toJson(userObj));
 	//	System.out.println(new JWESecurity().encoding(new Gson().toJson(userObj)));
 		// eyJhbGciOiJBMTI4S1ciLCJlbmMiOiJBMTI4Q0JDLUhTMjU2In0.5YQfDbvuA6I4Id9LSuof8Vkxw3oIxZ3iHPl-U6E19mK0e5DYTHYMyQ.KYTkny9w5GtoNDgpJFmQBA.goQmfsd17R00sgoEOitccu9G965LQqMmsdA0qA_9FhCFj1s6B4HuSQy7HjF-Qqzi3jErKPVCm0jLdAzzmRdVVYhAkY__NzH37WROT31HubmHA4D4mIWbVsYdY9PvWAXX8WjawIgOvcA0iWS70zWuS7VwrxIwOugQexud6WYx2oQ.DcWmFv8M_q2oPVsnJyO3kw
-		
 	}
 	
 	public void test2(){
@@ -60,13 +56,12 @@ public class TestDB {
 	}
 	@Test
 	public void test3(){
-		String asd = "hello world";
-		System.out.println(Hex.encodeHexString(Config.AES_TOKEN.getBytes()));
-		System.out.println(Hex.encodeHex(Config.AES_TOKEN.getBytes()));
-		System.out.println(Hex.encodeHex(Config.AES_TOKEN.getBytes()));
-	//	System.out.println(Config.SECRET_KEY.getEncoded());
-	//	System.out.println(Hex.encodeHexString(Config.SECRET_KEY));
-		//System.out.println(new String(Config.SECRET_KEY.toString()));
-	}
+//System.out.println(new JWESecurity().keyGenerate("1234567890qwerty"));
+				//System.out.println(new JWESecurity().keyGenerate(Config.KEY_STRING)+"");
+				System.out.println(new JWESecurity().decoding("eyJhbGciOiJBMTI4S1ciLCJlbmMiOiJBMTI4Q0JDLUhTMjU2In0.dV7imqqkJHWKMJ0zvFCb6l7WY5anBmoYIEivmUu50mExn-EzMQcGIQ.MaGDHhBKEVZcxF4mL8LUVA.o0W9Djg_ZaoooOg4iD7HFw.bmZba_z_2FpdxfajnEP47w"));
+				//eyJhbGciOiJBMTI4S1ciLCJlbmMiOiJBMTI4Q0JDLUhTMjU2In0.ecI-M_GWuqf_8fjP1tl1dOheIxuHFRplEpX9bPCv11ij9J737vCssg.3DBSpwNkZC1SkHhwnCrwFw.Rv7sQpuMfqc5Ax_lAxfbgA.zX2vjpka1XAjA0eoyiP40w
+				
+				
+	}			
 
 }

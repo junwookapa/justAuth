@@ -55,8 +55,10 @@ public class Main {
             throw new RuntimeException("Not able to authenticate with MongoDB");
         }
     }
+    
     private static void setController(DB db){
     	new TodoResource(new TodoService(db));
     	new UserController(new UserServiceImpl(db), db);
     }
+    
 }

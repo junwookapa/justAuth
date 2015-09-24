@@ -35,3 +35,8 @@ How to LocalTest
 2. 윈도우 경우 : mongod --dbpath {$DB_REPOSITORY_PATH}
 3. 프로젝트 오른쪽 클릭 -> Run As -> JAVA Application -> Select Type ? Main team.justtag.server.main
 4. Running server... with jetty , http://locahost:8080/
+
+Security
+1. JWE, JWK를 통한 암호화를 하였으나, JavaScript단에서 보안에 취약함
+2. 추가적인 보안을 하려면 RSA, SSL이나 공개키/대칭키 방법을 사용해야 겠음
+3. 시간적인 제약상 JWE,JWK를 적용한 정도에서 넘어감
