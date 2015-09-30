@@ -36,8 +36,8 @@ public class JWESecurity {
 	public String encoding(JSONObject json) {
 		JsonWebEncryption jwe = new JsonWebEncryption();
 		jwe.setPayload(json.toJSONString());
-		jwe.setAlgorithmHeaderValue(KeyManagementAlgorithmIdentifiers.A128KW);
-		jwe.setEncryptionMethodHeaderParameter(ContentEncryptionAlgorithmIdentifiers.AES_128_CBC_HMAC_SHA_256);
+		jwe.setAlgorithmHeaderValue(KeyManagementAlgorithmIdentifiers.RSA_OAEP);
+		jwe.setEncryptionMethodHeaderParameter(ContentEncryptionAlgorithmIdentifiers.AES_256_GCM);
 		jwe.setKey(Config.JWK);
 		try {
 			return jwe.getCompactSerialization();
@@ -50,8 +50,8 @@ public class JWESecurity {
 	public String encoding(String str) {
 		JsonWebEncryption jwe = new JsonWebEncryption();
 		jwe.setPayload(str);
-		jwe.setAlgorithmHeaderValue(KeyManagementAlgorithmIdentifiers.A128KW);
-		jwe.setEncryptionMethodHeaderParameter(ContentEncryptionAlgorithmIdentifiers.AES_128_CBC_HMAC_SHA_256);
+		jwe.setAlgorithmHeaderValue(KeyManagementAlgorithmIdentifiers.RSA_OAEP);
+		jwe.setEncryptionMethodHeaderParameter(ContentEncryptionAlgorithmIdentifiers.AES_256_GCM);
 		jwe.setKey(Config.JWK);
 
 		try {
@@ -64,8 +64,8 @@ public class JWESecurity {
 	public String encoding(JwtClaims claims) {
 		JsonWebEncryption jwe = new JsonWebEncryption();
 		jwe.setPayload(claims.toJson());
-		jwe.setAlgorithmHeaderValue(KeyManagementAlgorithmIdentifiers.A128KW);
-		jwe.setEncryptionMethodHeaderParameter(ContentEncryptionAlgorithmIdentifiers.AES_128_CBC_HMAC_SHA_256);
+		jwe.setAlgorithmHeaderValue(KeyManagementAlgorithmIdentifiers.RSA_OAEP);
+		jwe.setEncryptionMethodHeaderParameter(ContentEncryptionAlgorithmIdentifiers.AES_256_GCM);
 		jwe.setKey(Config.JWK);
 		try {
 			return jwe.getCompactSerialization();

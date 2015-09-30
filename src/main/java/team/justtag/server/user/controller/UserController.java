@@ -10,17 +10,20 @@ import java.util.List;
 
 import org.jose4j.json.internal.json_simple.JSONObject;
 
+import spark.Session;
 import team.justtag.server.main.Status.UserStatus;
 import team.justtag.server.user.dao.UserGroupDaoImpl;
 import team.justtag.server.user.model.UserGroup;
 import team.justtag.server.user.service.UserService;
 import team.justtag.server.util.JsonTransformer;
+import team.justtag.server.util.RSASecurity;
 
 import com.google.gson.Gson;
 import com.mongodb.DB;
 
 public class UserController {
 
+	private static RSASecurity asd;
 	private UserService mUserService;
 	private DB mDB;
 
@@ -90,7 +93,39 @@ public class UserController {
 				return null;
 					
 		},new JsonTransformer());
+		
+		get("/sign", "application/json",
+				(request, response) -> {
+					if(request.session().attribute("publicKey") == null){
+					asd= new RSASecurity();
+					request.session(true);
+					
+					request.session().attribute("publicKey", asd.getPublicKey());
+					response.cookie("publicKey", request.session().attribute("publicKey").toString());
+					}
+					System.out.println(request.session().attribute("publicKey").toString());
+					
+				return response;
 
+		},new JsonTransformer());
+	
+		post("/conn", "application/json",
+				(request, response) -> {
+				//	System.out.println(request.body());
+				//	System.out.println("param : "+request.params(":para"));
+					System.out.println(request.body());
+					String kk = null;
+					try{
+					kk = asd.decoding2(request.body());
+					}catch(Exception e){
+						System.out.println("에롱"+e.getMessage());
+						
+					}
+					System.out.println(kk);
+				return kk;
+
+		},new JsonTransformer());
 	}
+
 
 }
