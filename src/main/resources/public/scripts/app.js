@@ -46,30 +46,27 @@ app.controller('ListCtrl', function ($scope, $http) {
 app.controller('sign2', function ($scope, $http, $window, $cookieStore) {
 	
 	 $scope.ReadCookie = function () {
-	        $http.get('/sign').success(function (data) {
+	        $http.post('/sign').success(function (data) {
 	        	
 	        	
 	        	var asd = $cookieStore.get('publicKey');
-	        	asd = asd.replace(/([\[:])?(\d+)([,\}\]])/g, "$1\"$2\"$3");
+	       // 	asd = asd.replace(/([\[:])?(\d+)([,\}\]])/g, "$1\"$2\"$3");
 	        	var kkk = JSON.parse(asd);
 	        	
 	        	var rsa_key = {
 		        		"n": kkk.n,
-		        		"e": kkk.e *1
+		        		"e": kkk.e
 		        	};
-	        	
 	        	var cryptographer = new Jose.WebCryptographer();
-	        	cryptographer.setContentSignAlgorithm("RS256");
 	        	cryptographer.setContentEncryptionAlgorithm("A128GCM");
 	        	var public_rsa_key = Jose.Utils.importRsaPublicKey(rsa_key, "RSA-OAEP");
 	        	var encrypter = new JoseJWE.Encrypter(cryptographer, public_rsa_key);
-	        	$window.alert(public_rsa_key);
-	        	encrypter.encrypt("helloworld").then(function(result) {
-	        		$scope.test = result;
+	        	encrypter.encrypt("okay").then(function(result) {
+	        		console.log(result);
 	        		  $http.post('/conn', result).success(function (data) {
-	        		    	//$window.alert(data);
+	        			  console.log(data);
 	        		    }).error(function (data, status) {
-	        		    	//$window.alert(data);
+	        		    	console.log(data);
 	        		    })      			        		
 	        	    });
 	        })
@@ -78,7 +75,7 @@ app.controller('sign2', function ($scope, $http, $window, $cookieStore) {
 });
 
 app.controller('conn2', function ($scope, $http, $window){
-	    $http.get('/conn/:para'
+	    $http.get('/conn'
 	    ).success(function (data) {
 	    	$window.alert(data);
 	    }).error(function (data, status) {

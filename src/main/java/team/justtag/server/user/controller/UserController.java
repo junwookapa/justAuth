@@ -4,10 +4,13 @@ import static spark.Spark.delete;
 import static spark.Spark.get;
 import static spark.Spark.post;
 
+import java.security.KeyFactory;
+import java.security.spec.RSAPublicKeySpec;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.bouncycastle.asn1.x9.KeySpecificInfo;
 import org.jose4j.json.internal.json_simple.JSONObject;
 
 import spark.Session;
@@ -94,16 +97,18 @@ public class UserController {
 					
 		},new JsonTransformer());
 		
-		get("/sign", "application/json",
+		post("/sign", "application/json",
 				(request, response) -> {
 					if(request.session().attribute("publicKey") == null){
 					asd= new RSASecurity();
 					request.session(true);
 					request.session().attribute("publicKey", asd.getPublicKey());
 					response.cookie("publicKey", request.session().attribute("publicKey").toString());
+					KeyFactory fact = KeyFactory.getInstance("RSA");
+					
 					}
 					System.out.println(request.session().attribute("publicKey").toString());
-					
+					response.body("asd");
 				return response;
 
 		},new JsonTransformer());

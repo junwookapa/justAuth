@@ -47,7 +47,6 @@ public class Test2 {
 	System.out.println(jwk111.getPublicKey().getEncoded().toString());
 	
 }
-	@Test
 	public void test() throws ParseException, NoSuchAlgorithmException,
 			JOSEException, JoseException {
 		String json = "     {\n"
@@ -86,6 +85,8 @@ public class Test2 {
 		JsonWebSignature jws = new JsonWebSignature();
 		jws.setPayload(claims);
 		jws.setAlgorithmHeaderValue(AlgorithmIdentifiers.HMAC_SHA256);
+		
+		
 		OctetSequenceJsonWebKey macKey = OctJwkGenerator.generateJwk(256);
 		jws.setKey(macKey.getKey());
 		String jwscs = jws.getCompactSerialization();

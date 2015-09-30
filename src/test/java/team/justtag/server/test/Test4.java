@@ -1,18 +1,22 @@
 package team.justtag.server.test;
 
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPublicKey;
 
-import org.jose4j.jwk.JsonWebKey;
-import org.jose4j.jwk.JsonWebKeySet;
+import org.jose4j.jwe.ContentEncryptionAlgorithmIdentifiers;
+import org.jose4j.jwe.JsonWebEncryption;
+import org.jose4j.jwe.KeyManagementAlgorithmIdentifiers;
 import org.jose4j.jwk.PublicJsonWebKey;
 import org.jose4j.jwk.RsaJsonWebKey;
-import org.jose4j.keys.BigEndianBigInteger;
 import org.jose4j.lang.JoseException;
 import org.junit.Test;
 
 public class Test4 {
 	
-	public void test() throws JoseException{
+	//decodingTest
+	public void test() throws JoseException, NoSuchAlgorithmException{
 	String rsa_key=	"{\"n\": \"00:c2:4b:af:0f:2d:2b:ad:36:72:a7:91:0f:ee:30:a0:95:d5:3a:46:82:86:96:7e:42:c6:fe:8f:20:97:af:49:f6:48:a3:91:53:ac:2e:e6:ec:9a:9a:e0:0a:fb:1c:db:44:40:5b:8c:fc:d5:1c:cb:b6:9b:60:c0:a8:ac:06:f1:6b:29:5e:2f:7b:09:d9:93:32:da:3f:db:53:9c:2e:ea:3b:41:7f:6b:c9:7b:88:9f:2e:c5:dd:42:1e:7f:8f:04:f6:60:3c:fe:43:6d:32:10:ce:8d:99:cb:76:f7:10:97:05:af:28:1e:39:0f:78:35:50:7b:8e:28:22:a4:7d:11:51:22:d1:0e:ab:6b:6f:96:cb:cf:7d:eb:c6:aa:a2:6a:2e:97:2a:93:af:a5:89:e6:c8:bc:9f:fd:85:2b:0f:b4:c0:e4:ca:b5:a7:9a:01:05:81:93:6b:f5:8d:1c:f7:f3:77:0e:6e:53:34:92:0f:48:21:34:33:44:14:5e:4a:00:41:3a:7d:cb:38:82:c1:65:e0:79:ea:a1:05:84:b2:6e:40:19:77:1a:0e:38:4b:28:1f:34:b5:cb:ac:c5:2f:58:51:d7:ec:a8:08:0e:7c:c0:20:c1:5e:a1:4d:b1:30:17:63:0e:e7:58:8e:7f:6e:9f:a4:77:8b:1e:a2:d2:2e:1b:e9\","
 			+ "\"e\": \"65537\","
 			+"\"d\": \"37:b6:4b:f4:26:17:a8:0b:3c:c5:1f:ab:59:b9:47:d2:ae:d9:8e:ee:4e:79:48:ab:0d:34:61:06:0f:78:8b:d4:ba:ef:6b:f4:7a:22:d8:c4:6f:70:89:5d:9c:b3:a1:8b:e8:88:57:dd:07:9e:c2:2b:12:52:a3:eb:b9:a8:24:01:7e:53:2b:7a:34:50:d7:0c:75:d8:69:a3:87:dd:4b:fc:c1:c3:2f:bd:0e:57:16:8d:ea:de:8e:de:ff:e4:9a:9f:aa:e8:d2:5f:b3:27:ef:f9:ca:50:97:2e:fd:99:1c:34:dd:0c:bb:dd:d0:b9:bf:4f:dc:9d:de:94:50:66:2c:58:7e:c2:31:8b:41:56:49:6a:e6:11:14:53:a1:45:0d:15:8b:26:79:0f:c9:dc:ac:dc:c7:bc:55:2c:96:ed:a7:29:09:04:ee:00:74:60:e1:bc:97:7b:0a:b6:f2:83:82:79:65:e0:aa:88:9f:90:b0:0d:76:4d:3c:08:7e:a5:05:19:d4:8b:54:d3:f1:c1:a3:e3:a5:1e:aa:d6:c4:94:ad:6c:b3:8f:85:06:8a:6f:52:f8:a3:c3:e0:8d:67:35:2f:d4:18:fc:70:f4:71:bf:18:88:d6:a7:b7:04:8e:d3:06:ca:83:c3:2d:21:98:65:c9:41:2c:77:bf:4c:7c:8c:2c:01\","
@@ -23,24 +27,157 @@ public class Test4 {
 			+"\"qi\": \"0a:ed:5f:30:67:d5:e5:6e:4a:7a:35:49:fe:16:2f:1e:91:2b:39:c3:01:d3:d4:c0:4d:b3:fc:08:b0:66:e9:44:10:9e:5b:5a:ea:83:a5:9c:95:7a:58:70:35:28:e5:4d:ba:19:de:0d:66:f9:db:5c:f6:5b:24:27:9d:0b:2d:44:40:eb:33:3a:19:e2:1d:c0:b0:16:99:d1:c1:52:84:02:d6:67:06:32:f8:4d:cb:42:9f:7c:8a:e0:ad:df:40:6f:e4:8c:f6:f6:9e:1d:bd:43:e3:38:91:a2:d0:9e:60:ff:9d:8c:fb:72:5b:df:95:30:17:d2:f2:cb:7d:92:56:0a\","
 			+"}";
 	
+	
 //	PublicJsonWebKey
 //	privateJsonWebKey
 	//RsaJsonWebKey jwk = (RsaJsonWebKey) PublicJsonWebKey
 	//JsonWebKey jwk = JsonWebKey.Factory.new
-	
+	// + "      \"alg\": \"RSA-OAEP\",\n"
+	// + "      \"kid\": \"2011-04-29\"\n" 
 	String json = "     {\n"
 			+ "      \"kty\": \"RSA\",\n"
-			+ "      \"n\": \"00:c2:4b:af:0f:2d:2b:ad:36:72:a7:91:0f:ee:30:a0:95:d5:3a:46:82:86:96:7e:42:c6:fe:8f:20:97:af:49:f6:48:a3:91:53:ac:2e:e6:ec:9a:9a:e0:0a:fb:1c:db:44:40:5b:8c:fc:d5:1c:cb:b6:9b:60:c0:a8:ac:06:f1:6b:29:5e:2f:7b:09:d9:93:32:da:3f:db:53:9c:2e:ea:3b:41:7f:6b:c9:7b:88:9f:2e:c5:dd:42:1e:7f:8f:04:f6:60:3c:fe:43:6d:32:10:ce:8d:99:cb:76:f7:10:97:05:af:28:1e:39:0f:78:35:50:7b:8e:28:22:a4:7d:11:51:22:d1:0e:ab:6b:6f:96:cb:cf:7d:eb:c6:aa:a2:6a:2e:97:2a:93:af:a5:89:e6:c8:bc:9f:fd:85:2b:0f:b4:c0:e4:ca:b5:a7:9a:01:05:81:93:6b:f5:8d:1c:f7:f3:77:0e:6e:53:34:92:0f:48:21:34:33:44:14:5e:4a:00:41:3a:7d:cb:38:82:c1:65:e0:79:ea:a1:05:84:b2:6e:40:19:77:1a:0e:38:4b:28:1f:34:b5:cb:ac:c5:2f:58:51:d7:ec:a8:08:0e:7c:c0:20:c1:5e:a1:4d:b1:30:17:63:0e:e7:58:8e:7f:6e:9f:a4:77:8b:1e:a2:d2:2e:1b:e9\",\n"
-			+ "      \"e\": \"65537\",\n" + "      \"alg\": \"RS256\",\n"
-			+ "      \"kid\": \"2011-04-29\"\n" + "     }";
-	RsaJsonWebKey jwk = (RsaJsonWebKey) PublicJsonWebKey.Factory
-			.newPublicJwk(json);
-	String template = "{\"e\":\"%s\",\"kty\":\"RSA\",\"n\":\"%s\"}";
-	RSAPublicKey rsaPublicKey = jwk.getRsaPublicKey();
-	String e = BigEndianBigInteger.toBase64Url(rsaPublicKey.getPublicExponent());
-	String n = BigEndianBigInteger.toBase64Url(rsaPublicKey.getModulus());
-	String formated = String.format(template, e, n);
+			+ "      \"n\": \"oahUIoWw0K0usKNuOR6H4wkf4oBUXHTxRvgb48E-BVvxkeDNjbC4he8rUWcJoZmds2h7M70imEVhRU5djINXtqllXI4DFqcI1DgjT9LewND8MW2Krf3Spsk_ZkoFnilakGygTwpZ3uesH-PFABNIUYpOiN15dsQRkgr0vEhxN92i2asbOenSZeyaxziK72UwxrrKoExv6kc5twXTq4h-QChLOln0_mtUZwfsRaMStPs6mS6XrgxnxbWhojf663tuEQueGC-FCMfra36C9knDFGzKsNa7LZK2djYgyD3JR_MB_4NUJW_TqOQtwHYbxevoJArm-L5StowjzGy-_bq6Gw\",\n"
+			+ "      \"e\": \"AQAB\",\n"
+			+ "}";
+	RsaJsonWebKey jwk = (RsaJsonWebKey) PublicJsonWebKey.Factory.newPublicJwk(json);
+	JsonWebEncryption jwe = new JsonWebEncryption();
+	jwe.setAlgorithmHeaderValue(KeyManagementAlgorithmIdentifiers.RSA_OAEP);
+	jwe.setEncryptionMethodHeaderParameter(ContentEncryptionAlgorithmIdentifiers.AES_128_GCM);
+	jwe.setKey(jwk.getPublicKey());
+	jwe.setPayload("asd");
+	String jwscs = jwe.getCompactSerialization();
+	//eyJhbGciOiJSU0EtT0FFUCIsImVuYyI6IkExMjhHQ00ifQ.ctc5eOA2eYJ5V485zEovFU3ShOfAmp4kUYIXryJ5uilmShFNiCL7bybITKavK6kFPuZj-fNrN5czgvri6J4emQfb9xWIl1kC_DoVGpMY2aaRNNxwN8qSzR2R2xQAHqBIuIe0S84sqfh0cFpTp_GoouV74l4gElWJFOnzGcXnkDX8q7VJyeW5XcMDAc9IPDwL4hy5VJ15jt3pnrJv2QVjnVOvTnXE5QZDf7S_QLTFwQ1afMcI0zPYzmIBFVif6Igj2PIxr2PJwihrYLzBtIft6__SzQ-vSSlmGVBn0OKlQbqfWvgbw94rZPv3CPhhaLar7j8ISltP5IHaa1oXd3DPiptJGxNI1wNsL5koo6PSP_eLKsUnu3fSsPIm83mnwgTEztjg9N95OE4aRAROR8pDu0C5AM88-tOE9X9X5tcALwyVATxtPjIpM2oOgSjgATXIqU_3l2RIyFbAivpdUyAlXr-_Q-_Rp6dMoUlllK6GtTjvoeBnpd-CgERov1BgIGzDoQ.L_rBIczznVfGU2S9.iHvfAlvk-mnXNA.HwcOgWy-8QlSLYXvY-0DtA
+
 	
+//	String jwscs = jws.getCompactSerialization();
 	}
+	@Test
+	public void superman() throws JoseException, NoSuchAlgorithmException{
+		KeyPairGenerator clsKeyPairGenerator = KeyPairGenerator.getInstance("RSA");
+		clsKeyPairGenerator.initialize(2048);
+		KeyPair clsKeyPair = clsKeyPairGenerator.genKeyPair();
+	
+		
+		PublicJsonWebKey.Factory.newPublicJwk(clsKeyPair.getPublic());
+		RsaJsonWebKey asd = new RsaJsonWebKey((RSAPublicKey) clsKeyPair.getPublic());
+		asd.setPrivateKey(clsKeyPair.getPrivate());
+				
+		JsonWebEncryption jwe = new JsonWebEncryption();
+		jwe.setAlgorithmHeaderValue(KeyManagementAlgorithmIdentifiers.RSA_OAEP);
+		jwe.setEncryptionMethodHeaderParameter(ContentEncryptionAlgorithmIdentifiers.AES_128_GCM);
+		jwe.setKey(asd.getPublicKey());
+		jwe.setPayload("asd");
+		String enString = jwe.getCompactSerialization();
+		System.out.println(enString);
+		
+		JsonWebEncryption jwe2 = new JsonWebEncryption();
+		jwe2.setAlgorithmHeaderValue(KeyManagementAlgorithmIdentifiers.RSA_OAEP);
+		jwe2.setEncryptionMethodHeaderParameter(ContentEncryptionAlgorithmIdentifiers.AES_128_GCM);
+		jwe2.setKey(asd.getPrivateKey());
+		jwe2.setCompactSerialization(enString);
+		System.out.println(jwe2.getPayload());
+
+		
+	}
+	
+	
+	public void test2(){
+		String key=	"     {\n"
+				+ "\"kty\": \"RSA\",\n"
+				+ "\"n\": \"oahUIoWw0K0usKNuOR6H4wkf4oBUXHTxRvgb48E-BVvxkeDNjbC4he8rUWcJoZmds2h7M70imEVhRU5djINXtqllXI4DFqcI1DgjT9LewND8MW2Krf3Spsk_ZkoFnilakGygTwpZ3uesH-PFABNIUYpOiN15dsQRkgr0vEhxN92i2asbOenSZeyaxziK72UwxrrKoExv6kc5twXTq4h-QChLOln0_mtUZwfsRaMStPs6mS6XrgxnxbWhojf663tuEQueGC-FCMfra36C9knDFGzKsNa7LZK2djYgyD3JR_MB_4NUJW_TqOQtwHYbxevoJArm-L5StowjzGy-_bq6Gw\",\n"
+				+ "\"e\": \"AQAB\",\n"
+				+ "\"d\": \"kLdtIj6GbDks_ApCSTYQtelcNttlKiOyPzMrXHeI-yk1F7-kpDxY4-WY5N"+
+               "WV5KntaEeXS1j82E375xxhWMHXyvjYecPT9fpwR_M9gV8n9Hrh2anTpTD9"+
+               "3Dt62ypW3yDsJzBnTnrYu1iwWRgBKrEYY46qAZIrA2xAwnm2X7uGR1hghk"+
+               "qDp0Vqj3kbSCz1XyfCs6_LehBwtxHIyh8Ripy40p24moOAbgxVw3rxT_vl"+
+               "t3UVe4WO3JkJOzlpUf-KTVI2Ptgm-dARxTEtE-id-4OJr0h-K-VFs3VSnd"+
+               "VTIznSxfyrj8ILL6MG_Uv8YAu7VILSB3lOW085-4qE3DzgrTjgy\",\n"
+		+ "      \"p\": \"1r52Xk46c-LsfB5P442p7atdPUrxQSy4mti_tZI3Mgf2EuFVbUoDBvaRQ-"+
+               "SWxkbkmoEzL7JXroSBjSrK3YIQgYdMgyAEPTPjXv_hI2_1eTSPVZfzL0lf"+
+               "fNn03IXqWF5MDFuoUYE0hzb2vhrlN_rKrbfDIwUbTrjjgieRbwC6Cl0\",\n"
+		+ "      \"q\": \"wLb35x7hmQWZsWJmB_vle87ihgZ19S8lBEROLIsZG4ayZVe9Hi9gDVCOBm"+
+               "UDdaDYVTSNx_8Fyw1YYa9XGrGnDew00J28cRUoeBB_jKI1oma0Orv1T9aX"+
+               "IWxKwd4gvxFImOWr3QRL9KEBRzk2RatUBnmDZJTIAfwTs0g68UZHvtc\",\n"
+		+ "\"dp\": \"ZK-YwE7diUh0qR1tR7w8WHtolDx3MZ_OTowiFvgfeQ3SiresXjm9gZ5KL"+
+               "hMXvo-uz-KUJWDxS5pFQ_M0evdo1dKiRTjVw_x4NyqyXPM5nULPkcpU827"+
+               "rnpZzAJKpdhWAgqrXGKAECQH0Xt4taznjnd_zVpAmZZq60WPMBMfKcuE\",\n"
+		+ "\"dq\": \"Dq0gfgJ1DdFGXiLvQEZnuKEN0UUmsJBxkjydc3j4ZYdBiMRAy86x0vHCj"+
+               "ywcMlYYg4yoC4YZa9hNVcsjqA3FeiL19rk8g6Qn29Tt0cj8qqyFpz9vNDB"+
+               "UfCAiJVeESOjJDZPYHdHY8v1b-o-Z2X5tvLx-TCekf7oxyeKDUqKWjis\",\n"
+		+ "\"qi\": \"VIMpMYbPf47dT1w_zDUXfPimsSegnMOA1zTaX7aGk_8urY6R8-ZW1FxU7"+
+               "AlWAyLWybqq6t16VFd7hQd0y6flUK4SlOydB61gwanOsXGOAOv82cHq0E3"+
+               "eL4HrtZkUuKvnPrMnsUUFlfUdybVzxyjz9JF_XyaY14ardLSjf4L_FNY\"\n" + "}";
+		
+	}
+	
+	public void encoding2() throws JoseException, NoSuchAlgorithmException{
+//		RsaJsonWebKey ads = new RsaJsonWebKey();		
+		
+		
+		String key=	"     {\n"
+				+ "\"kty\": \"RSA\",\n"
+				+ "\"n\": \"oahUIoWw0K0usKNuOR6H4wkf4oBUXHTxRvgb48E-BVvxkeDNjbC4he8rUWcJoZmds2h7M70imEVhRU5djINXtqllXI4DFqcI1DgjT9LewND8MW2Krf3Spsk_ZkoFnilakGygTwpZ3uesH-PFABNIUYpOiN15dsQRkgr0vEhxN92i2asbOenSZeyaxziK72UwxrrKoExv6kc5twXTq4h-QChLOln0_mtUZwfsRaMStPs6mS6XrgxnxbWhojf663tuEQueGC-FCMfra36C9knDFGzKsNa7LZK2djYgyD3JR_MB_4NUJW_TqOQtwHYbxevoJArm-L5StowjzGy-_bq6Gw\",\n"
+				+ "\"e\": \"AQAB\",\n"
+				+ "\"d\": \"kLdtIj6GbDks_ApCSTYQtelcNttlKiOyPzMrXHeI-yk1F7-kpDxY4-WY5N"+
+               "WV5KntaEeXS1j82E375xxhWMHXyvjYecPT9fpwR_M9gV8n9Hrh2anTpTD9"+
+               "3Dt62ypW3yDsJzBnTnrYu1iwWRgBKrEYY46qAZIrA2xAwnm2X7uGR1hghk"+
+               "qDp0Vqj3kbSCz1XyfCs6_LehBwtxHIyh8Ripy40p24moOAbgxVw3rxT_vl"+
+               "t3UVe4WO3JkJOzlpUf-KTVI2Ptgm-dARxTEtE-id-4OJr0h-K-VFs3VSnd"+
+               "VTIznSxfyrj8ILL6MG_Uv8YAu7VILSB3lOW085-4qE3DzgrTjgy\",\n"
+		+ "      \"p\": \"1r52Xk46c-LsfB5P442p7atdPUrxQSy4mti_tZI3Mgf2EuFVbUoDBvaRQ-"+
+               "SWxkbkmoEzL7JXroSBjSrK3YIQgYdMgyAEPTPjXv_hI2_1eTSPVZfzL0lf"+
+               "fNn03IXqWF5MDFuoUYE0hzb2vhrlN_rKrbfDIwUbTrjjgieRbwC6Cl0\",\n"
+		+ "      \"q\": \"wLb35x7hmQWZsWJmB_vle87ihgZ19S8lBEROLIsZG4ayZVe9Hi9gDVCOBm"+
+               "UDdaDYVTSNx_8Fyw1YYa9XGrGnDew00J28cRUoeBB_jKI1oma0Orv1T9aX"+
+               "IWxKwd4gvxFImOWr3QRL9KEBRzk2RatUBnmDZJTIAfwTs0g68UZHvtc\",\n"
+		+ "\"dp\": \"ZK-YwE7diUh0qR1tR7w8WHtolDx3MZ_OTowiFvgfeQ3SiresXjm9gZ5KL"+
+               "hMXvo-uz-KUJWDxS5pFQ_M0evdo1dKiRTjVw_x4NyqyXPM5nULPkcpU827"+
+               "rnpZzAJKpdhWAgqrXGKAECQH0Xt4taznjnd_zVpAmZZq60WPMBMfKcuE\",\n"
+		+ "\"dq\": \"Dq0gfgJ1DdFGXiLvQEZnuKEN0UUmsJBxkjydc3j4ZYdBiMRAy86x0vHCj"+
+               "ywcMlYYg4yoC4YZa9hNVcsjqA3FeiL19rk8g6Qn29Tt0cj8qqyFpz9vNDB"+
+               "UfCAiJVeESOjJDZPYHdHY8v1b-o-Z2X5tvLx-TCekf7oxyeKDUqKWjis\",\n"
+		+ "\"qi\": \"VIMpMYbPf47dT1w_zDUXfPimsSegnMOA1zTaX7aGk_8urY6R8-ZW1FxU7"+
+               "AlWAyLWybqq6t16VFd7hQd0y6flUK4SlOydB61gwanOsXGOAOv82cHq0E3"+
+               "eL4HrtZkUuKvnPrMnsUUFlfUdybVzxyjz9JF_XyaY14ardLSjf4L_FNY\"\n" + "}";
+		
+		
+		
+	
+		String json = "     {\n"
+				+ "      \"kty\": \"RSA\",\n"
+				+ "      \"n\": \"oahUIoWw0K0usKNuOR6H4wkf4oBUXHTxRvgb48E-BVvxkeDNjbC4he8rUWcJoZmds2h7M70imEVhRU5djINXtqllXI4DFqcI1DgjT9LewND8MW2Krf3Spsk_ZkoFnilakGygTwpZ3uesH-PFABNIUYpOiN15dsQRkgr0vEhxN92i2asbOenSZeyaxziK72UwxrrKoExv6kc5twXTq4h-QChLOln0_mtUZwfsRaMStPs6mS6XrgxnxbWhojf663tuEQueGC-FCMfra36C9knDFGzKsNa7LZK2djYgyD3JR_MB_4NUJW_TqOQtwHYbxevoJArm-L5StowjzGy-_bq6Gw\",\n"
+				+ "      \"e\": \"AQAB\",\n" + "      \"alg\": \"RSA-OAEP\",\n"
+				+ "      \"kid\": \"2011-04-29\"\n" + "}";
+		
+		KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
+		generator.initialize(512);
+			
+//		RsaJsonWebKey jwk =(RsaJsonWebKey) PublicJsonWebKey.Factory.newPublicJwk(json);
+	//	RsaJsonWebKey jwk =new RsaJsonWebKey(publicKey);
+		
+		JsonWebEncryption jwe = new JsonWebEncryption();
+		jwe.setAlgorithmHeaderValue(KeyManagementAlgorithmIdentifiers.RSA_OAEP);
+		jwe.setEncryptionMethodHeaderParameter(ContentEncryptionAlgorithmIdentifiers.AES_128_GCM);
+	//	jwe.setKey(jwk.getPublicKey());
+		
+		jwe.setPayload("testString");
+		String jwscs = jwe.getCompactSerialization();
+		//eyJhbGciOiJSU0EtT0FFUCIsImVuYyI6IkExMjhHQ00ifQ.ctc5eOA2eYJ5V485zEovFU3ShOfAmp4kUYIXryJ5uilmShFNiCL7bybITKavK6kFPuZj-fNrN5czgvri6J4emQfb9xWIl1kC_DoVGpMY2aaRNNxwN8qSzR2R2xQAHqBIuIe0S84sqfh0cFpTp_GoouV74l4gElWJFOnzGcXnkDX8q7VJyeW5XcMDAc9IPDwL4hy5VJ15jt3pnrJv2QVjnVOvTnXE5QZDf7S_QLTFwQ1afMcI0zPYzmIBFVif6Igj2PIxr2PJwihrYLzBtIft6__SzQ-vSSlmGVBn0OKlQbqfWvgbw94rZPv3CPhhaLar7j8ISltP5IHaa1oXd3DPiptJGxNI1wNsL5koo6PSP_eLKsUnu3fSsPIm83mnwgTEztjg9N95OE4aRAROR8pDu0C5AM88-tOE9X9X5tcALwyVATxtPjIpM2oOgSjgATXIqU_3l2RIyFbAivpdUyAlXr-_Q-_Rp6dMoUlllK6GtTjvoeBnpd-CgERov1BgIGzDoQ.L_rBIczznVfGU2S9.iHvfAlvk-mnXNA.HwcOgWy-8QlSLYXvY-0DtA
+
+		System.out.println(jwscs);
+		
+		JsonWebEncryption jwe2 = new JsonWebEncryption();
+	//	jwe2.setKey(jwk.getRsaPrivateKey());
+		jwe2.setCompactSerialization(jwscs);
+		System.out.println(jwe2.getCompactSerialization());
+		
+		
+	}
+	
+	
+	
+	
+	
+	
 
 }

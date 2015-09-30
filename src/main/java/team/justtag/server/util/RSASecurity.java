@@ -6,9 +6,12 @@ import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.Security;
 import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPublicKeySpec;
 import java.util.Map;
@@ -19,11 +22,16 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
 import org.jose4j.json.internal.json_simple.JSONObject;
+import org.jose4j.jwe.ContentEncryptionAlgorithmIdentifiers;
 import org.jose4j.jwe.JsonWebEncryption;
+import org.jose4j.jwe.KeyManagementAlgorithmIdentifiers;
 import org.jose4j.jwk.JsonWebKey;
+import org.jose4j.jwk.PublicJsonWebKey;
+import org.jose4j.jwk.RsaJsonWebKey;
 import org.jose4j.jwk.JsonWebKey.OutputControlLevel;
 import org.jose4j.jws.AlgorithmIdentifiers;
 import org.jose4j.jws.JsonWebSignature;
+import org.jose4j.keys.BigEndianBigInteger;
 import org.jose4j.lang.JoseException;
 
 import com.auth0.jwt.internal.org.apache.commons.codec.binary.Base64;
@@ -37,9 +45,9 @@ import com.nimbusds.jwt.JWTClaimsSet;
 
 public class RSASecurity {
 
-	private Key mPublicKey;
-	private Key mPrivateKey;
-	
+	private PublicKey mPublicKey;
+	private PrivateKey mPrivateKey;
+	private RsaJsonWebKey mJsonWebKey;
 	
 	public RSASecurity(){
 		try {
@@ -54,10 +62,14 @@ public class RSASecurity {
 	
 	public void init() throws NoSuchAlgorithmException, JoseException{
 		KeyPairGenerator clsKeyPairGenerator = KeyPairGenerator.getInstance("RSA");
-		clsKeyPairGenerator.initialize(512);
+		clsKeyPairGenerator.initialize(2048);
 		KeyPair clsKeyPair = clsKeyPairGenerator.genKeyPair();
 		mPublicKey = clsKeyPair.getPublic();
 		mPrivateKey = clsKeyPair.getPrivate();
+		
+		mJsonWebKey = new RsaJsonWebKey((RSAPublicKey) mPublicKey);
+		mJsonWebKey.setPrivateKey(mPrivateKey);
+		
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -65,8 +77,10 @@ public class RSASecurity {
 		KeyFactory fact = KeyFactory.getInstance("RSA");
 		RSAPublicKeySpec clsPublicKeySpec = fact.getKeySpec(mPublicKey, RSAPublicKeySpec.class);
 		JSONObject json = new JSONObject();
-		json.put("n", clsPublicKeySpec.getModulus());
-		json.put("e", clsPublicKeySpec.getPublicExponent());
+		String e = BigEndianBigInteger.toBase64Url(clsPublicKeySpec.getPublicExponent());
+		String n = BigEndianBigInteger.toBase64Url(clsPublicKeySpec.getModulus());
+		json.put("n", n);
+		json.put("e", e);
 		return json.toJSONString();
 	}
 	
@@ -76,31 +90,16 @@ public class RSASecurity {
 	
 	public String decoding(String byteString) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, JoseException{
 		
-		JsonWebKey webKey = JsonWebKey.Factory.newJwk(mPrivateKey);
-	//	json
-		Cipher clsCipher = Cipher.getInstance("RSA");
-		
-		System.out.println("pppp" + byteString);
-		 String jwkJson = "{\"kty\":\"oct\",\"k\":\"Fdh9u8rINxfivbrianbbVT1u232VQBZYKx1HGAGPt2I\"}";
-		    JsonWebKey jwk = JsonWebKey.Factory.newJwk(jwkJson);
 		
 		
-		byte[] arrData = null;
-		try {
-			arrData = clsCipher.doFinal(byteString.getBytes());
-		} catch (IllegalBlockSizeException e) {
-			System.out.println("ille" +e.getMessage());
-			e.printStackTrace();
-		} catch (BadPaddingException e) {
-			System.out.println("badpadding" +e.getMessage());
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		System.out.println("asdasd");
-		String strResult = new String(arrData);
-		System.out.println("result(" + strResult + ")");
-		return null;
 		
+		JsonWebEncryption jwe2 = new JsonWebEncryption();
+		jwe2.setAlgorithmHeaderValue(KeyManagementAlgorithmIdentifiers.RSA_OAEP);
+		jwe2.setEncryptionMethodHeaderParameter(ContentEncryptionAlgorithmIdentifiers.AES_128_GCM);
+		jwe2.setKey(mJsonWebKey.getPrivateKey());
+		jwe2.setCompactSerialization(byteString);
+		System.out.println(jwe2.getPayload());
+		return jwe2.getPayload();
 	}
 	
 	public String decoding2(String byteString) throws JOSEException  {
