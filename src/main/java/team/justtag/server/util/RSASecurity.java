@@ -8,8 +8,10 @@ import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.Security;
+import java.security.interfaces.RSAPrivateKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPublicKeySpec;
+import java.util.Map;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -18,12 +20,20 @@ import javax.crypto.NoSuchPaddingException;
 
 import org.jose4j.json.internal.json_simple.JSONObject;
 import org.jose4j.jwe.JsonWebEncryption;
-import org.jose4j.jwk.RsaJsonWebKey;
-import org.jose4j.jwk.RsaJwkGenerator;
+import org.jose4j.jwk.JsonWebKey;
+import org.jose4j.jwk.JsonWebKey.OutputControlLevel;
 import org.jose4j.jws.AlgorithmIdentifiers;
 import org.jose4j.jws.JsonWebSignature;
 import org.jose4j.lang.JoseException;
-import org.junit.Test;
+
+import com.auth0.jwt.internal.org.apache.commons.codec.binary.Base64;
+import com.nimbusds.jose.EncryptionMethod;
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.JWEAlgorithm;
+import com.nimbusds.jose.JWEHeader;
+import com.nimbusds.jose.crypto.RSADecrypter;
+import com.nimbusds.jwt.EncryptedJWT;
+import com.nimbusds.jwt.JWTClaimsSet;
 
 public class RSASecurity {
 
@@ -43,9 +53,11 @@ public class RSASecurity {
 	}
 	
 	public void init() throws NoSuchAlgorithmException, JoseException{
-		RsaJsonWebKey rsaJsonWebKey = RsaJwkGenerator.generateJwk(2048);
-			mPublicKey = rsaJsonWebKey.getPublicKey();
-			mPrivateKey = rsaJsonWebKey.getPrivateKey();
+		KeyPairGenerator clsKeyPairGenerator = KeyPairGenerator.getInstance("RSA");
+		clsKeyPairGenerator.initialize(512);
+		KeyPair clsKeyPair = clsKeyPairGenerator.genKeyPair();
+		mPublicKey = clsKeyPair.getPublic();
+		mPrivateKey = clsKeyPair.getPrivate();
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -62,17 +74,15 @@ public class RSASecurity {
 		return mPrivateKey;
 	}
 	
-	public String decoding(String byteString) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException{
+	public String decoding(String byteString) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, JoseException{
 		
+		JsonWebKey webKey = JsonWebKey.Factory.newJwk(mPrivateKey);
+	//	json
 		Cipher clsCipher = Cipher.getInstance("RSA");
 		
-		
 		System.out.println("pppp" + byteString);
-		JsonWebSignature jws = new JsonWebSignature();
-		jws.setAlgorithmHeaderValue(AlgorithmIdentifiers.RSA_USING_SHA256);
-	    jws.setKey(mPrivateKey);
-		//String strCipher = new String(org.bouncycastle.util.encoders.Hex.encode(arrCipherData));
-	    clsCipher.init(Cipher.DECRYPT_MODE, jws.getKey());
+		 String jwkJson = "{\"kty\":\"oct\",\"k\":\"Fdh9u8rINxfivbrianbbVT1u232VQBZYKx1HGAGPt2I\"}";
+		    JsonWebKey jwk = JsonWebKey.Factory.newJwk(jwkJson);
 		
 		
 		byte[] arrData = null;
@@ -93,7 +103,20 @@ public class RSASecurity {
 		
 	}
 	
-	public String decoding2(String str) {
+	public String decoding2(String byteString) throws JOSEException  {
+		RSADecrypter decrypter = new RSADecrypter((RSAPrivateKey) mPrivateKey);
+		JWEHeader header = new JWEHeader(JWEAlgorithm.RSA_OAEP, EncryptionMethod.A128GCM);
+		JWTClaimsSet jwtClaims2 = new JWTClaimsSet.Builder().issuer("asd").build();
+		EncryptedJWT jwtdes = new EncryptedJWT(header, jwtClaims2);
+		// Decrypt
+		jwtdes.decrypt(decrypter);
+		return jwtdes.getPayload().toString();
+		
+		
+	}
+	
+	
+	public String decoding3(String str) {
 		JsonWebEncryption jwe = new JsonWebEncryption();
 		/*jwe.setAlgorithmHeaderValue(KeyManagementAlgorithmIdentifiers.RSA_OAEP);
 		jwe.setEncryptionMethodHeaderParameter(ContentEncryptionAlgorithmIdentifiers.AES_256_GCM);*/
@@ -108,31 +131,5 @@ public class RSASecurity {
 		}
 	}
 	
-	
-	@Test
-	public void initJsonWebKey() throws Exception {
-		// RSA 공개키/개인키를 생성한다.
-		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
-
-	     byte[] input = "abcdefg hijklmn".getBytes();
-	     Cipher cipher = Cipher.getInstance("RSA/None/NoPadding", "BC");
-	     SecureRandom random = new SecureRandom();
-	     KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA", "BC");
-
-	     generator.initialize(2048, random); // 여기에서는 128 bit 키를 생성하였음
-	     KeyPair pair = generator.generateKeyPair();
-	     Key pubKey = pair.getPublic();  // Kb(pub) 공개키
-	     Key privKey = pair.getPrivate();// Kb(pri) 개인키
-
-	     // 공개키를 전달하여 암호화
-	     cipher.init(Cipher.ENCRYPT_MODE, pubKey);
-	     byte[] cipherText = cipher.doFinal(input);
-	     System.out.println("cipher: ("+ cipherText.length +")"+ new String(cipherText));
-	     
-	     // 개인키를 가지고있는쪽에서 복호화
-	     cipher.init(Cipher.DECRYPT_MODE, privKey);
-	     byte[] plainText = cipher.doFinal(cipherText);
-	     System.out.println("plain : " + new String(plainText));
-	}
 
 }

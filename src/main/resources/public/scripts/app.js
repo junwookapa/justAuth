@@ -63,13 +63,13 @@ app.controller('sign2', function ($scope, $http, $window, $cookieStore) {
 	        	cryptographer.setContentEncryptionAlgorithm("A128GCM");
 	        	var public_rsa_key = Jose.Utils.importRsaPublicKey(rsa_key, "RSA-OAEP");
 	        	var encrypter = new JoseJWE.Encrypter(cryptographer, public_rsa_key);
-	        	
+	        	$window.alert(public_rsa_key);
 	        	encrypter.encrypt("helloworld").then(function(result) {
 	        		$scope.test = result;
 	        		  $http.post('/conn', result).success(function (data) {
-	        		    	$window.alert(data);
+	        		    	//$window.alert(data);
 	        		    }).error(function (data, status) {
-	        		    	$window.alert(data);
+	        		    	//$window.alert(data);
 	        		    })      			        		
 	        	    });
 	        })

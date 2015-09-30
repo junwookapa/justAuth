@@ -79,7 +79,6 @@ public class TestDB {
 				
 				
 	}
-	@Test
 	 public void testtool() throws NoSuchAlgorithmException, NoSuchProviderException, NoSuchPaddingException, InvalidKeySpecException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException{
 		KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
 		generator.initialize(512);

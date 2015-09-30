@@ -99,7 +99,6 @@ public class UserController {
 					if(request.session().attribute("publicKey") == null){
 					asd= new RSASecurity();
 					request.session(true);
-					
 					request.session().attribute("publicKey", asd.getPublicKey());
 					response.cookie("publicKey", request.session().attribute("publicKey").toString());
 					}
@@ -116,7 +115,7 @@ public class UserController {
 					System.out.println(request.body());
 					String kk = null;
 					try{
-					kk = asd.decoding2(request.body());
+					kk = asd.decoding(request.body());
 					}catch(Exception e){
 						System.out.println("에롱"+e.getMessage());
 						
