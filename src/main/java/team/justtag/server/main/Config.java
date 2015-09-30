@@ -18,7 +18,7 @@ public final class Config {
 	//security
 	public static final String KEY_STRING = "1234567890qwerty"; // 16 wrods
 	public static final Key AES_KEY = new SecretKeySpec(KEY_STRING.getBytes(), "AES"); // AES KEY
-	public static final Key JWK = new JWESecurity().initJsonWebKey(AES_KEY); // JWK
+	public static final int RSA_LENGTH = 2048;
 	
 	//token
 	public static final String EXPIRED_TOKEN_TIME = "21600"; // 6시간

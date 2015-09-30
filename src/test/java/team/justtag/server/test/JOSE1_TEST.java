@@ -9,7 +9,6 @@ import java.text.ParseException;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.eclipse.jetty.util.security.Credential.Crypt;
 import org.jose4j.base64url.Base64Url;
 import org.jose4j.jwe.ContentEncryptionAlgorithmIdentifiers;
 import org.jose4j.jwe.JsonWebEncryption;
@@ -31,12 +30,8 @@ import org.jose4j.keys.PbkdfKey;
 import org.jose4j.lang.JoseException;
 import org.jose4j.lang.StringUtil;
 import org.jose4j.zip.CompressionAlgorithmIdentifiers;
-import org.junit.Test;
 
-import com.auth0.jwt.internal.com.fasterxml.jackson.databind.jsontype.SubtypeResolver;
-import com.nimbusds.jose.JOSEException;
-
-public class Test2 {
+public class JOSE1_TEST {
 
 	PrivateKey pre;
 	PublicKey pub;
@@ -48,7 +43,7 @@ public class Test2 {
 	
 }
 	public void test() throws ParseException, NoSuchAlgorithmException,
-			JOSEException, JoseException {
+			JoseException {
 		String json = "     {\n"
 				+ "      \"kty\": \"RSA\",\n"
 				+ "      \"n\": \"0vx7agoebGcQSuuPiLJXZptN9nndrQmbXEps2aiAFbWhM78LhWx4cbbfAAt\n"

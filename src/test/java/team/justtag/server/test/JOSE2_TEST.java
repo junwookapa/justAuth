@@ -13,7 +13,7 @@ import org.jose4j.jwk.RsaJsonWebKey;
 import org.jose4j.lang.JoseException;
 import org.junit.Test;
 
-public class Test4 {
+public class JOSE2_TEST {
 	
 	//decodingTest
 	public void test() throws JoseException, NoSuchAlgorithmException{

@@ -14,6 +14,7 @@ import team.justtag.server.main.Config;
 
 public class JWESecurity {
 
+	private Key mKEy;
 	public Key initJsonWebKey(Key aes_key) {
 		String base64EndcodedKey = aesToBase64(aes_key); // base 64key
 		String jwk_shared_key = "{\"kty\":\"oct\",\"k\":\"" + base64EndcodedKey
@@ -38,7 +39,7 @@ public class JWESecurity {
 		jwe.setPayload(json.toJSONString());
 		jwe.setAlgorithmHeaderValue(KeyManagementAlgorithmIdentifiers.RSA_OAEP);
 		jwe.setEncryptionMethodHeaderParameter(ContentEncryptionAlgorithmIdentifiers.AES_256_GCM);
-		jwe.setKey(Config.JWK);
+		jwe.setKey(Config.AES_KEY);
 		try {
 			return jwe.getCompactSerialization();
 		} catch (JoseException e) {
@@ -52,7 +53,7 @@ public class JWESecurity {
 		jwe.setPayload(str);
 		jwe.setAlgorithmHeaderValue(KeyManagementAlgorithmIdentifiers.RSA_OAEP);
 		jwe.setEncryptionMethodHeaderParameter(ContentEncryptionAlgorithmIdentifiers.AES_256_GCM);
-		jwe.setKey(Config.JWK);
+		jwe.setKey(Config.AES_KEY);
 
 		try {
 			return jwe.getCompactSerialization();
@@ -66,7 +67,7 @@ public class JWESecurity {
 		jwe.setPayload(claims.toJson());
 		jwe.setAlgorithmHeaderValue(KeyManagementAlgorithmIdentifiers.RSA_OAEP);
 		jwe.setEncryptionMethodHeaderParameter(ContentEncryptionAlgorithmIdentifiers.AES_256_GCM);
-		jwe.setKey(Config.JWK);
+		jwe.setKey(Config.AES_KEY);
 		try {
 			return jwe.getCompactSerialization();
 		} catch (JoseException e) {
@@ -77,7 +78,7 @@ public class JWESecurity {
 	public String decoding(String str) {
 		JsonWebEncryption jwe = new JsonWebEncryption();
 		JsonWebKey jwk = null;
-		jwe.setKey(Config.JWK);
+		jwe.setKey(Config.AES_KEY);
 		try {
 			jwe.setCompactSerialization(str);
 			return jwe.getPayload();
