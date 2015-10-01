@@ -1,13 +1,11 @@
 package team.justtag.server.security;
 
 import java.security.InvalidKeyException;
-import java.security.Key;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
-import java.security.PublicKey;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPublicKeySpec;
@@ -27,23 +25,11 @@ import team.justtag.server.main.Config;
 public class JWEwithRSA {
 
 	private RsaJsonWebKey mJsonWebKey;
-	
-	public JWEwithRSA(){
-		try {
-			init();
-		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}catch (JoseException e) {
-			// TODO: handle exception
-		}
-	}
-	
+		
 	public void init() throws NoSuchAlgorithmException, JoseException{
 		KeyPairGenerator clsKeyPairGenerator = KeyPairGenerator.getInstance("RSA");
 		clsKeyPairGenerator.initialize(Config.RSA_LENGTH);
 		KeyPair clsKeyPair = clsKeyPairGenerator.genKeyPair();
-		
 		mJsonWebKey = new RsaJsonWebKey((RSAPublicKey) clsKeyPair.getPublic());
 		mJsonWebKey.setPrivateKey(clsKeyPair.getPrivate());
 	}
@@ -59,7 +45,10 @@ public class JWEwithRSA {
 		json.put("e", e);
 		return json.toJSONString();
 	}
-	
+	public PrivateKey getPrivateKey() {
+		// TODO Auto-generated method stub
+		return mJsonWebKey.getPrivateKey();
+	}
 	public String decoding(String byteString) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, JoseException{
 		JsonWebEncryption jwe = new JsonWebEncryption();
 		jwe.setAlgorithmHeaderValue(KeyManagementAlgorithmIdentifiers.RSA_OAEP);
@@ -69,21 +58,15 @@ public class JWEwithRSA {
 		System.out.println(jwe.getPayload());
 		return jwe.getPayload();
 	}
+	
 	public String decoding(PrivateKey privateKey, String byteString) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, JoseException{
 		JsonWebEncryption jwe = new JsonWebEncryption();
 		jwe.setAlgorithmHeaderValue(KeyManagementAlgorithmIdentifiers.RSA_OAEP);
 		jwe.setEncryptionMethodHeaderParameter(ContentEncryptionAlgorithmIdentifiers.AES_128_GCM);
-		mJsonWebKey.setPrivateKey(privateKey);
-		jwe.setKey(mJsonWebKey.getPrivateKey());
-	//	jwe.setKey(privateKey);
+		jwe.setKey(privateKey);
 		jwe.setCompactSerialization(byteString);
 		System.out.println(jwe.getPayload());
 		return jwe.getPayload();
-	}
-
-	public PrivateKey getPrivateKey() {
-		// TODO Auto-generated method stub
-		return mJsonWebKey.getPrivateKey();
 	}
 	
 }

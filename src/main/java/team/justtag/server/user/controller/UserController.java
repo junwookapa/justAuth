@@ -97,6 +97,7 @@ public class UserController {
 				(request, response) -> {
 					if(request.session().isNew() == true){
 					JWEwithRSA jWEwithRSA= new JWEwithRSA();
+					jWEwithRSA.init();
 					request.session(true);
 					request.session().attribute("privateKey", jWEwithRSA.getPrivateKey());
 					response.cookie("publicKey", jWEwithRSA.getPublicKey());	

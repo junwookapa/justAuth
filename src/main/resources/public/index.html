@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<link rel="stylesheet" href="/bootstrap/dist/css/bootstrap.css"
-	media="screen">
+<link rel="stylesheet" href="/bootstrap/dist/css/bootstrap.css" media="screen">
 <link rel="stylesheet" href="/assets/css/custom.min.css">
+<link rel="stylesheet" href="/assets/css/sign.css">
 
 <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
 <script src="/bootstrap/dist/js/bootstrap.min.js"></script>
@@ -22,12 +22,7 @@
 <script src="/jose/dist/jose.min.js"></script>
 <script src="/scripts/app.js"></script>
 
-<script src="/json-js/json2.js"></script>
-<script src="/json-js/json-parse_state.js"></script>
-<script src="/json-js/json_parse.js"></script>
-
-<link rel="stylesheet" media="screen"
-	href="https://fontlibrary.org/face/amburegul" type="text/css" />
+<link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/amburegul" type="text/css" />
 <style type="text/css">
 logo {
 	font-family: 'AmburegulRegular';
@@ -91,40 +86,10 @@ logo {
 	<!------------------------------------------- container------------------------------->
 	<script type="text/javascript">
 
-  var result = Math.floor(Math.random() * 10) + 1;
-  document.write(result);
-
 </script>
 	<div class="container" ng-view=""></div>
 
 	<!------------------------------------------- footer --------------------------------->
-	<footer>
-		<div class="container">
-			<div class="col-lg-12">
-				<ul class="list-unstyled">
-					<li><h2>
-							<logo> JustTag</font-family></logo>
-						</h2></li>
-					<li>
-						<p>
-							Made by Just Tag Team. Contact us at <a
-								href="mailto:junwookapa@gmail.com">junwookapa@gmail.com</a>.
-						</p>
-						<p>
-							Server Running On <a href="https://www.openshift.com"
-								rel="nofollow">Openshift</a>. Code is located on <a
-								href="https://github.com/junwookapa/justtagserver"
-								rel="nofollow">github</a>.
-						<p>
-							Web UI Based on <a href="https://bootswatch.com/" rel="nofollow">Bootswatch</a> and
-							<a href="http://getbootstrap.com" rel="nofollow">BootsTrap</a>.
-							Web fonts from <a href="http://www.google.com/webfonts"
-								rel="nofollow">Google</a>.
-						</p>
-					</li>
-				</ul>
-			</div>
-		</div>
-	</footer>
+	<div class="container" ng-include="'views/footer.html'"></div>
 </body>
 </html>

@@ -11,6 +11,12 @@ var app = angular.module('todoapp', [
 
 app.config(function ($routeProvider) {
     $routeProvider.when('/', {
+        templateUrl: 'views/user/login.html',
+        controller: 'LoginCtrl'
+    }).when('/sign', {
+        templateUrl: 'views/user/signup.html',
+        controller: 'ListCtrl'
+    }).when('/list', {
         templateUrl: 'views/list.html',
         controller: 'ListCtrl'
     }).when('/create', {
@@ -43,12 +49,19 @@ app.controller('ListCtrl', function ($scope, $http) {
         })
     }    
 });
+
+app.controller('LoginCtrl', function ($scope, $http, $location) {
+	
+    $scope.changeSingUpPage= function(){
+    	$location.path('/sign');
+    }
+});
+
+
 app.controller('sign2', function ($scope, $http, $window, $cookieStore) {
 	
 	 $scope.ReadCookie = function () {
-	        $http.post('/sign').success(function (data) {
-	        	
-	        	
+	        $http.post('/sign').success(function (data) {      	
 	        	var asd = $cookieStore.get('publicKey');
 	       // 	asd = asd.replace(/([\[:])?(\d+)([,\}\]])/g, "$1\"$2\"$3");
 	        	var kkk = JSON.parse(asd);
@@ -62,25 +75,24 @@ app.controller('sign2', function ($scope, $http, $window, $cookieStore) {
 	        	var encrypter = new JoseJWE.Encrypter(cryptographer, public_rsa_key);
 	        	encrypter.encrypt("ppt").then(function(result) {
 	        		console.log(result);
-	        		  $http.post('/conn', result).success(function (data) {
+	        		$http.post('/conn', result).success(function (data) {
 	        			  console.log(data);
 	        		    }).error(function (data, status) {
 	        		    	console.log(data);
-	        		    })      			        		
+	        		    })
+	        		
 	        	    });
-	        })
+	        });
 	    }
 
 });
 
 app.controller('conn2', function ($scope, $http, $window){
-	    $http.get('/conn'
-	    ).success(function (data) {
-	    	$window.alert(data);
+	$http.post('/conn', result).success(function (data) {
+		  console.log(data);
 	    }).error(function (data, status) {
-	    	$window.alert(data);
-	    })
-	
+	    	console.log(data);
+	    });	
 
 });
 
@@ -94,7 +106,7 @@ app.controller('CreateCtrl', function ($scope, $http, $location) {
     $scope.createTodo = function () {
         console.log($scope.todo);
         $http.post('/api/v1/todos', $scope.todo).success(function (data) {
-            $location.path('/');
+            $location.path('/list');
         }).error(function (data, status) {
             console.log('Error ' + data)
         })
