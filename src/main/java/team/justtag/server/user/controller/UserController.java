@@ -12,18 +12,17 @@ import java.util.List;
 import org.jose4j.json.internal.json_simple.JSONObject;
 
 import team.justtag.server.main.Status.UserStatus;
+import team.justtag.server.security.JWEwithRSA;
 import team.justtag.server.user.dao.UserGroupDaoImpl;
 import team.justtag.server.user.model.UserGroup;
 import team.justtag.server.user.service.UserService;
 import team.justtag.server.util.JsonTransformer;
-import team.justtag.server.util.RSASecurity;
 
 import com.google.gson.Gson;
 import com.mongodb.DB;
 
 public class UserController {
 
-	private static RSASecurity asd;
 	private UserService mUserService;
 	private DB mDB;
 
@@ -96,34 +95,27 @@ public class UserController {
 		
 		post("/sign", "application/json",
 				(request, response) -> {
-					if(request.session().attribute("publicKey") == null){
-					asd= new RSASecurity();
+					if(request.session().isNew() == true){
+					JWEwithRSA jWEwithRSA= new JWEwithRSA();
 					request.session(true);
-					request.session().attribute("publicKey", asd.getPublicKey());
-					response.cookie("publicKey", request.session().attribute("publicKey").toString());
-					KeyFactory fact = KeyFactory.getInstance("RSA");
-					
+					request.session().attribute("privateKey", jWEwithRSA.getPrivateKey());
+					response.cookie("publicKey", jWEwithRSA.getPublicKey());	
 					}
-					System.out.println(request.session().attribute("publicKey").toString());
-					response.body("asd");
 				return response;
-
 		},new JsonTransformer());
 	
 		post("/conn", "application/json",
 				(request, response) -> {
-				//	System.out.println(request.body());
-				//	System.out.println("param : "+request.params(":para"));
 					System.out.println(request.body());
-					String kk = null;
+					String decodingString = null;
 					try{
-					kk = asd.decoding(request.body());
+					decodingString = new JWEwithRSA().decoding(request.session().attribute("privateKey"), request.body());
 					}catch(Exception e){
 						System.out.println("에롱"+e.getMessage());
 						
 					}
-					System.out.println(kk);
-				return kk;
+					System.out.println(decodingString);
+				return decodingString;
 
 		},new JsonTransformer());
 	}

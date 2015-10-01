@@ -1,4 +1,4 @@
-package team.justtag.server.util;
+package team.justtag.server.security;
 
 import java.security.InvalidKeyException;
 import java.security.Key;
@@ -24,11 +24,11 @@ import org.jose4j.lang.JoseException;
 
 import team.justtag.server.main.Config;
 
-public class RSASecurity {
+public class JWEwithRSA {
 
 	private RsaJsonWebKey mJsonWebKey;
 	
-	public RSASecurity(){
+	public JWEwithRSA(){
 		try {
 			init();
 		} catch (NoSuchAlgorithmException e) {
@@ -46,7 +46,6 @@ public class RSASecurity {
 		
 		mJsonWebKey = new RsaJsonWebKey((RSAPublicKey) clsKeyPair.getPublic());
 		mJsonWebKey.setPrivateKey(clsKeyPair.getPrivate());
-		
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -61,20 +60,30 @@ public class RSASecurity {
 		return json.toJSONString();
 	}
 	
-	public Key getPrivateKey() throws NoSuchAlgorithmException, InvalidKeySpecException{
+	public String decoding(String byteString) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, JoseException{
+		JsonWebEncryption jwe = new JsonWebEncryption();
+		jwe.setAlgorithmHeaderValue(KeyManagementAlgorithmIdentifiers.RSA_OAEP);
+		jwe.setEncryptionMethodHeaderParameter(ContentEncryptionAlgorithmIdentifiers.AES_128_GCM);
+		jwe.setKey(mJsonWebKey.getPrivateKey());
+		jwe.setCompactSerialization(byteString);
+		System.out.println(jwe.getPayload());
+		return jwe.getPayload();
+	}
+	public String decoding(PrivateKey privateKey, String byteString) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, JoseException{
+		JsonWebEncryption jwe = new JsonWebEncryption();
+		jwe.setAlgorithmHeaderValue(KeyManagementAlgorithmIdentifiers.RSA_OAEP);
+		jwe.setEncryptionMethodHeaderParameter(ContentEncryptionAlgorithmIdentifiers.AES_128_GCM);
+		mJsonWebKey.setPrivateKey(privateKey);
+		jwe.setKey(mJsonWebKey.getPrivateKey());
+	//	jwe.setKey(privateKey);
+		jwe.setCompactSerialization(byteString);
+		System.out.println(jwe.getPayload());
+		return jwe.getPayload();
+	}
+
+	public PrivateKey getPrivateKey() {
+		// TODO Auto-generated method stub
 		return mJsonWebKey.getPrivateKey();
 	}
 	
-	public String decoding(String byteString) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, JoseException{
-		JsonWebEncryption jwe2 = new JsonWebEncryption();
-		jwe2.setAlgorithmHeaderValue(KeyManagementAlgorithmIdentifiers.RSA_OAEP);
-		jwe2.setEncryptionMethodHeaderParameter(ContentEncryptionAlgorithmIdentifiers.AES_128_GCM);
-		jwe2.setKey(mJsonWebKey.getPrivateKey());
-		jwe2.setCompactSerialization(byteString);
-		System.out.println(jwe2.getPayload());
-		return jwe2.getPayload();
-	}
-	
-	
-
 }

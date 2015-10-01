@@ -1,4 +1,4 @@
-package team.justtag.server.util;
+package team.justtag.server.security;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;

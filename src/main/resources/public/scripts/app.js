@@ -52,7 +52,6 @@ app.controller('sign2', function ($scope, $http, $window, $cookieStore) {
 	        	var asd = $cookieStore.get('publicKey');
 	       // 	asd = asd.replace(/([\[:])?(\d+)([,\}\]])/g, "$1\"$2\"$3");
 	        	var kkk = JSON.parse(asd);
-	        	
 	        	var rsa_key = {
 		        		"n": kkk.n,
 		        		"e": kkk.e
@@ -61,7 +60,7 @@ app.controller('sign2', function ($scope, $http, $window, $cookieStore) {
 	        	cryptographer.setContentEncryptionAlgorithm("A128GCM");
 	        	var public_rsa_key = Jose.Utils.importRsaPublicKey(rsa_key, "RSA-OAEP");
 	        	var encrypter = new JoseJWE.Encrypter(cryptographer, public_rsa_key);
-	        	encrypter.encrypt("okay").then(function(result) {
+	        	encrypter.encrypt("ppt").then(function(result) {
 	        		console.log(result);
 	        		  $http.post('/conn', result).success(function (data) {
 	        			  console.log(data);

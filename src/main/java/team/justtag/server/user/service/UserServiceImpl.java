@@ -4,13 +4,13 @@ import java.util.Date;
 import java.util.List;
 
 import team.justtag.server.main.Status.UserStatus;
+import team.justtag.server.security.AESSecurity;
+import team.justtag.server.security.JWEwithAES;
 import team.justtag.server.user.dao.UserDao;
 import team.justtag.server.user.dao.UserDaoImpl;
 import team.justtag.server.user.dao.UserGroupDao;
 import team.justtag.server.user.dao.UserGroupDaoImpl;
 import team.justtag.server.user.model.User;
-import team.justtag.server.util.AESSecurity;
-import team.justtag.server.util.JWESecurity;
 
 import com.google.gson.Gson;
 import com.mongodb.DB;
@@ -19,13 +19,13 @@ import com.mongodb.MongoException;
 public class UserServiceImpl implements UserService {
 	private final UserDao mUserDao;
 	private final UserGroupDao mUserGroupDao;
-	private final JWESecurity mJWESecurity;
+	private final JWEwithAES mJWESecurity;
 	private final AESSecurity mAESSecurity;
 
 	public UserServiceImpl(DB db) {
 		this.mUserDao = new UserDaoImpl(db);
 		this.mUserGroupDao = new UserGroupDaoImpl(db);
-		this.mJWESecurity = new JWESecurity();
+		this.mJWESecurity = new JWEwithAES();
 		this.mAESSecurity = new AESSecurity();
 	}
 

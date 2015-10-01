@@ -1,4 +1,4 @@
-package team.justtag.server.util;
+package team.justtag.server.security;
 
 import java.security.Key;
 
@@ -12,7 +12,7 @@ import org.jose4j.lang.JoseException;
 
 import team.justtag.server.main.Config;
 
-public class JWESecurity {
+public class JWEwithAES {
 
 	private Key mKEy;
 	public Key initJsonWebKey(Key aes_key) {

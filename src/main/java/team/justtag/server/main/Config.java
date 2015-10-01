@@ -6,7 +6,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.jose4j.jwk.JsonWebKey;
 
-import team.justtag.server.util.JWESecurity;
+import team.justtag.server.security.JWEwithAES;
 
 public final class Config {
 	

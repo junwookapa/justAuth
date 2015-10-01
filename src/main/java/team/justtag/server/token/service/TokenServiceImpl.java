@@ -2,9 +2,9 @@ package team.justtag.server.token.service;
 
 import team.justtag.server.main.Config;
 import team.justtag.server.main.Status.TokenStatus;
+import team.justtag.server.security.AESSecurity;
+import team.justtag.server.security.JWEwithAES;
 import team.justtag.server.token.model.Token;
-import team.justtag.server.util.AESSecurity;
-import team.justtag.server.util.JWESecurity;
 
 import com.google.gson.Gson;
 import com.mongodb.BasicDBObject;
@@ -15,12 +15,12 @@ import com.mongodb.DBObject;
 public class TokenServiceImpl implements TokenService {
 
 	private final DBCollection mCollection;
-	private final JWESecurity mJWESecurity;
+	private final JWEwithAES mJWESecurity;
 	private final AESSecurity mAESSecurity;
 
 	public TokenServiceImpl(DB db) {
 		this.mCollection = db.getCollection("token");
-		this.mJWESecurity = new JWESecurity();
+		this.mJWESecurity = new JWEwithAES();
 		this.mAESSecurity = new AESSecurity();
 	}
 
