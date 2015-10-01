@@ -34,7 +34,6 @@ public class UserController {
 
 	@SuppressWarnings("unchecked")
 	private void setupEndpoints() {
-
 		// createUser
 		post("/user", "application/json",
 				(request, response) -> {
@@ -64,6 +63,8 @@ public class UserController {
 
 		// login
 		post("/login", "application/json", (request, response) -> {
+			
+			System.out.println(request.body());
 			String decodingString = new JWEwithRSA().decoding(request.session().attribute("privateKey"), request.body());
 			UserStatus responseStatus = mUserService.login(decodingString);
 			if (responseStatus.equals(UserStatus.success)) {
@@ -73,28 +74,6 @@ public class UserController {
 			}
 			return responseStatus;
 		}, new JsonTransformer());
-
-		get("/test2", "application/json",
-				(request, response) -> {
-					JSONObject	userGroup1	=new JSONObject();
-					userGroup1.put("group_name", "123");
-					userGroup1.put("description", "456");
-
-				UserGroup userGroup = new Gson().fromJson(userGroup1.toJSONString() , UserGroup.class);
-				userGroup.setReg_date(new Date().toGMTString());
-				List<String> arr = new ArrayList<String>();
-				arr.add("123");
-				arr.add("456");
-				userGroup.setUsers(arr);
-
-				UserGroupDaoImpl asd = new UserGroupDaoImpl(mDB);
-
-				asd.createUserGroup(userGroup);
-				//asd.addUser("456", "asd");
-				//asd.deleteUser("456", "123");
-				return null;
-					
-		},new JsonTransformer());
 		
 		post("/sign", "application/json",
 				(request, response) -> {
@@ -103,7 +82,7 @@ public class UserController {
 						jWEwithRSA.init();
 						request.session(true);
 						request.session().attribute("privateKey", jWEwithRSA.getPrivateKey());
-						response.cookie("publicKey", jWEwithRSA.getPublicKey());	
+						response.cookie("publicKey", jWEwithRSA.getPublicKey());
 					}
 				return response;
 		},new JsonTransformer());
@@ -115,8 +94,7 @@ public class UserController {
 					try{
 					decodingString = new JWEwithRSA().decoding(request.session().attribute("privateKey"), request.body());
 					}catch(Exception e){
-						System.out.println("에롱"+e.getMessage());
-						
+						System.out.println("에롱"+e.getMessage());	
 					}
 					System.out.println(decodingString);
 				return decodingString;

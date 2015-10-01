@@ -3,6 +3,7 @@ package team.justtag.server.user.service;
 import java.util.Date;
 import java.util.List;
 
+import team.justtag.server.main.Status.DBStatus;
 import team.justtag.server.main.Status.UserStatus;
 import team.justtag.server.security.AESSecurity;
 import team.justtag.server.security.JWEwithAES;
@@ -34,8 +35,13 @@ public class UserServiceImpl implements UserService {
 	//	String decodedbody = mJWESecurity.decoding(body);
 		User user = new Gson().fromJson(body, User.class);
 		try{
+			if(!mUserDao.isUserExist(user.getUser_id()).equals(DBStatus.success))
+				return UserStatus.duplicateID;
 			user.setReg_date(new Date().toString());
+			String decodingUserpassword = mAESSecurity.encoding(user.getUser_password());
+			user.setUser_password(decodingUserpassword);
 			mUserDao.createUser(user);
+			
 		//	mUserGroupDao.addUser(user.getUser_group_id(), mUserDao.getObjIDByUserID(user.getUser_id()));
 			return UserStatus.success;
 		}catch(Exception e){
@@ -63,13 +69,15 @@ public class UserServiceImpl implements UserService {
 		User user = null;
 		User compareUser = null;
 		String decodedPassword = null;
+		System.out.println(body);
 		try {
 		//	String decodedbody = mJWESecurity.decoding(body);
-			System.out.println(body);
+			
 			user = new Gson().fromJson(body, User.class);
 			compareUser = mUserDao.getUserByUserID(user.getUser_id());
 			decodedPassword = mAESSecurity.decoding(compareUser.getUser_password());
 		} catch (Exception e) {
+			
 			return UserStatus.unkwonError;
 		}
 		if (user.getUser_password().equals(decodedPassword)) {

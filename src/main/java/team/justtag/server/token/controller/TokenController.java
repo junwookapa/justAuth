@@ -21,7 +21,9 @@ public class TokenController {
 		after("/login", "application/json",
 				(request, response) ->{
 					int statusCode = response.raw().getStatus();
+					System.out.println(statusCode+"");
 					if(statusCode == 201){
+						
 						String funtionBlockJson = new String(request.bodyAsBytes(), "UTF-8");
 						response.body(mTokenService.issueToken(funtionBlockJson, request.host()));
 					}else{

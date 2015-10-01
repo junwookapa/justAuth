@@ -17,7 +17,8 @@ public class JWEwithAES {
 	private Key mKEy;
 	public Key initJsonWebKey(Key aes_key) {
 		String base64EndcodedKey = aesToBase64(aes_key); // base 64key
-		String jwk_shared_key = "{\"kty\":\"oct\",\"k\":\"" + base64EndcodedKey
+		String jwk_shared_key = "{"
+				+ "\"kty\":\"oct\",\"k\":\"" + base64EndcodedKey
 				+ "\"}"; // JWT KEY
 		try {
 			return JsonWebKey.Factory.newJwk(jwk_shared_key).getKey();

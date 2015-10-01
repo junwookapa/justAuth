@@ -116,6 +116,19 @@ public class UserDaoImpl implements UserDao{
         }
         return users;
 	}
+	@Override
+	public DBStatus isUserExist(String user_id) {
+		try{
+			if(mCollection.findOne(new BasicDBObject("user_id", user_id)).isPartialObject() != true){
+				return DBStatus.insertFail;
+			}else{
+				return DBStatus.success;
+			}
+		}catch(Exception e){
+			return null;
+		}
+		
+	}
 	
 	
 
