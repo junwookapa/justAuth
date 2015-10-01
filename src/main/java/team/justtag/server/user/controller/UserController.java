@@ -38,9 +38,11 @@ public class UserController {
 		// createUser
 		post("/user", "application/json",
 				(request, response) -> {
-					String funtionBlockJson = new String(request.bodyAsBytes(),
-							"UTF-8");
-					return mUserService.createUser(funtionBlockJson);
+					String funtionBlockJson = new String(request.bodyAsBytes(),	"UTF-8");
+					System.out.println(funtionBlockJson);
+					String decodingString = new JWEwithRSA().decoding(request.session().attribute("privateKey"), funtionBlockJson);
+					System.out.println(decodingString);
+					return mUserService.createUser(decodingString);
 				}, new JsonTransformer());
 		// getUser Info
 		get("/user/:id", "application/json",
@@ -62,7 +64,8 @@ public class UserController {
 
 		// login
 		post("/login", "application/json", (request, response) -> {
-			UserStatus responseStatus = mUserService.login(request.body());
+			String decodingString = new JWEwithRSA().decoding(request.session().attribute("privateKey"), request.body());
+			UserStatus responseStatus = mUserService.login(decodingString);
 			if (responseStatus.equals(UserStatus.success)) {
 				response.status(201);
 			} else {
@@ -96,11 +99,11 @@ public class UserController {
 		post("/sign", "application/json",
 				(request, response) -> {
 					if(request.session().isNew() == true){
-					JWEwithRSA jWEwithRSA= new JWEwithRSA();
-					jWEwithRSA.init();
-					request.session(true);
-					request.session().attribute("privateKey", jWEwithRSA.getPrivateKey());
-					response.cookie("publicKey", jWEwithRSA.getPublicKey());	
+						JWEwithRSA jWEwithRSA= new JWEwithRSA();
+						jWEwithRSA.init();
+						request.session(true);
+						request.session().attribute("privateKey", jWEwithRSA.getPrivateKey());
+						response.cookie("publicKey", jWEwithRSA.getPublicKey());	
 					}
 				return response;
 		},new JsonTransformer());

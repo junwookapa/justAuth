@@ -31,14 +31,16 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserStatus createUser(String body) {
-		String decodedbody = mJWESecurity.decoding(body);
-		User user = new Gson().fromJson(decodedbody, User.class);
+	//	String decodedbody = mJWESecurity.decoding(body);
+		User user = new Gson().fromJson(body, User.class);
 		try{
 			user.setReg_date(new Date().toString());
 			mUserDao.createUser(user);
-			mUserGroupDao.addUser(user.getUser_group_id(), mUserDao.getObjIDByUserID(user.getUser_id()));
+		//	mUserGroupDao.addUser(user.getUser_group_id(), mUserDao.getObjIDByUserID(user.getUser_id()));
 			return UserStatus.success;
 		}catch(Exception e){
+			System.out.println("서비스에러");
+			System.out.println(e.getMessage());
 			return UserStatus.signFail;
 		}
 	}
@@ -62,8 +64,9 @@ public class UserServiceImpl implements UserService {
 		User compareUser = null;
 		String decodedPassword = null;
 		try {
-			String decodedbody = mJWESecurity.decoding(body);
-			user = new Gson().fromJson(decodedbody, User.class);
+		//	String decodedbody = mJWESecurity.decoding(body);
+			System.out.println(body);
+			user = new Gson().fromJson(body, User.class);
 			compareUser = mUserDao.getUserByUserID(user.getUser_id());
 			decodedPassword = mAESSecurity.decoding(compareUser.getUser_password());
 		} catch (Exception e) {

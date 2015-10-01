@@ -14,7 +14,8 @@
 		  // e = publicExponent
 		  "e": 65537
 		};
-var cryptographer = new Jose.WebCryptographer();
+var cryptograph
+er = new Jose.WebCryptographer();
 var public_rsa_key = Jose.Utils.importRsaPublicKey(rsa_key, "RSA-OAEP");
 var encrypter = new JoseJWE.Encrypter(cryptographer, public_rsa_key);
 encrypter.encrypt(plaintext.textContent).then(function(result) {

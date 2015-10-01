@@ -26,7 +26,7 @@ public class UserDaoImpl implements UserDao{
 			mCollection.insert(new BasicDBObject()
 					.append("user_id", user.getUser_id())
 					.append("user_name", user.getUser_name())
-					.append("user_group_id", new ObjectId(user.getUser_group_id()))
+					/*.append("user_group_id", new ObjectId(user.getUser_group_id()))*/
 					.append("user_group_name", user.getUser_group_name())
 					.append("user_password", user.getUser_password())
 					.append("user_role", user.getUser_role())
@@ -35,6 +35,8 @@ public class UserDaoImpl implements UserDao{
 					.append("reg_date", user.getReg_date()));
 			return DBStatus.success;
 		}catch(Exception e){
+			System.out.println("다오에러");
+			System.out.println(e.getMessage());
 			return DBStatus.insertFail;
 		}
 	}
