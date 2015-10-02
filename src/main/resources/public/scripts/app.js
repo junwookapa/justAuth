@@ -20,28 +20,21 @@ app.config(function($routeProvider) {
 });
 
 app.controller('ListCtrl', function($scope, $http, $cookieStore, $location) {
-	$http.get('/headertest', {
-	    headers: {'Authorization': 'Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ=='}
-	}).success(function(data) {
-		console.log(data);
-	}).error(function(data, status) {
-		console.log(data);
-		$location.path('/login');
-	});
 	var token = $cookieStore.get('token');
 	if(typeof token == "undefined"){
 		$location.path('/login');
 	}
 	$http.get('/token'+'/'+token).success(function(data) {
 		console.log('data ='+data);
-		if(data === '"tokenExpired"' || data === '"unknownError"' || data === '"tokenExpired"' || data === '"notFoundToken"'){
+		if(data === '"notFoundToken"' || data === '"tokenExpired"'|| data === '"tokenUpdateFail"' || data === '"unknownError"'){
 			$location.path('/login');
+		}else if(data !== '"success"'){
+			$cookieStore.put('token', data);
 		}
 	}).error(function(data, status) {
 		console.log(data);
-		$location.path('/login');
+		$location.path('/');
 	})
-	
 	
 	console.log($cookieStore.get('token'));
 	$http.get('/api/v1/todos').success(function(data) {

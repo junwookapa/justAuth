@@ -55,32 +55,30 @@ public class TokenServiceImpl implements TokenService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public String verifyToken(String token, String aud) {
+	public TokenStatus verifyToken(String token, String aud) {
 		DBObject basic = null;
 		long expireTime;
 		try{
 			basic = mCollection.findOne(new BasicDBObject("token", token));
 			expireTime = new Long(basic.get("exp").toString());
 		}catch(NullPointerException e){
-			return TokenStatus.notFoundToken.name();
+			return TokenStatus.notFoundToken;
 		}
 		switch(isExpiredToken(expireTime)){
 			case tokenExpired:
-				return TokenStatus.tokenExpired.name();
+				return TokenStatus.tokenExpired;
 			case success:
 				break;
 			default:
-				return TokenStatus.unknownError.name();
+				return TokenStatus.unknownError;
 		}		
 		switch(isUpdateToken(expireTime)){
 			case tokenExpiringsoon:
-				JSONObject json = new JSONObject();
-				json.put("user_id", basic.get("user_id"));
-				return issueToken(json.toJSONString(), aud);
+				return TokenStatus.tokenExpiringsoon;
 			case success:
-				return TokenStatus.success.name();
+				return TokenStatus.success;
 			default:
-				return TokenStatus.unknownError.name();
+				return TokenStatus.unknownError;
 		}
 	}
 
@@ -117,5 +115,29 @@ public class TokenServiceImpl implements TokenService {
 		}else{
 			return TokenStatus.tokenExpired; // 토큰 죽음
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public String verifyandRefresh(String token, String aud) {
+		switch(verifyToken(token, aud)){
+		case notFoundToken:
+			return TokenStatus.notFoundToken.name();
+		case success:
+			return TokenStatus.success.name();
+		case tokenExpired:
+			JSONObject json= new JSONObject();
+			json.put("token", "token");
+			return json.toJSONString();
+		case tokenExpiringsoon:
+			return TokenStatus.notFoundToken.name();
+		case tokenUpdateFail:
+			return TokenStatus.tokenUpdateFail.name();
+		case unknownError:
+		default:
+			return TokenStatus.unknownError.name();
+			
+		}
+		
 	}
 }

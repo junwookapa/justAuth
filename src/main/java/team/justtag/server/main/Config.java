@@ -1,9 +1,5 @@
 package team.justtag.server.main;
 
-import java.security.Key;
-
-import javax.crypto.spec.SecretKeySpec;
-
 public final class Config {
 	
 	//host

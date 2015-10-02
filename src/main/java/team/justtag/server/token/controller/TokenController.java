@@ -26,31 +26,26 @@ public class TokenController {
 					System.out.println(statusCode+"");
 					if(statusCode == 201){
 						String decodingString = new JWEUtil().decoder(request.session().attribute("privateKey"), request.body());
-					//	String funtionBlockJson = new String(request.bodyAsBytes(), "UTF-8");
 						response.body(mTokenService.issueToken(decodingString, request.host()));
 					}else{
 						response.body();					
 						}
-		
 				}
 		);
-		// 토큰 검증
 		get("/token/:token", "application/json", (request, response) ->{
-					return mTokenService.verifyToken(request.params(":token"), request.host());
-					},
-				new JsonTransformer());
+			return mTokenService.verifyandRefresh(request.params(":token"), request.host());
+			},
+		new JsonTransformer());
+		// 토큰 재발급
+		put("/token/:token", "application/json", (request, response) ->{
+			return mTokenService.issueToken(request.params(":token"), request.host());
+			},
+		new JsonTransformer());
 		// 토큰 삭제
 		delete("/token/:token", "application/json", (request, response) -> {
 					return mTokenService.deleteToken(request.params(":token"));
 					},
-				new JsonTransformer());
-		before("/user/:token", "application/json", (request, response) ->{
-			request.headers().parallelStream();
-			});
-		before("/users", "application/json", (request, response) ->{
-			mTokenService.verifyToken(request.params(":token"), request.host());
-			});
-		
+				new JsonTransformer());		
 		
 	}
 
