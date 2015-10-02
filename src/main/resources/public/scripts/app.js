@@ -17,9 +17,9 @@ app.config(function($routeProvider) {
 	}).when('/sign2', {
 		templateUrl : 't.html',
 		controller : 'sign2'
-	}).when('/test', {
+	}).when('/case', {
 		templateUrl : 't.html',
-		controller : 'test'
+		controller : 'setkey'
 	}).otherwise({
 		redirectTo : '/'
 	})
@@ -116,31 +116,29 @@ app.controller('CreateCtrl', function($scope, $http, $location, RSAService) {
 	}
 });
 
-app.service('RSAService',
-		function($cookieStore) {
+app.service('RSAService', function($cookieStore, $http) {
+
+	this.getKey = function() {
+		$http.get('/key').success(function(data) {
+			$cookieStore.put('publicKey', data);
+			});
+		};
 			this.encrypt = function(payload) {
+				this.getKey();
 				var publicKey = $cookieStore.get('publicKey');
-				var key = JSON.parse(publicKey);
-				var rsa_key = {
-					"n" : key.n,
-					"e" : key.e
-				};
 				var cryptographer = new Jose.WebCryptographer();
 				cryptographer.setContentEncryptionAlgorithm("A128GCM");
-				var public_rsa_key = Jose.Utils.importRsaPublicKey(rsa_key,
+				var public_rsa_key = Jose.Utils.importRsaPublicKey(publicKey,
 						"RSA-OAEP");
-				var encrypter = new JoseJWE.Encrypter(cryptographer,
-						public_rsa_key);
+				var encrypter = new JoseJWE.Encrypter(cryptographer, public_rsa_key);
 				var encryptData = encrypter.encrypt(payload);
+				$cookieStore.remove('publicKey');
 				return encryptData;
 			};
-		});
+});
 
-
-app.controller('test', function($scope, $http, $location, RSAService) {
-	$http.get('/key').success(function(data) {
-		var key = JSON.parse(data);
-		console.log(key);
-
-		});
+app.controller('setkey', function($http, $cookieStore, RSAService) {
+	RSAService.encrypt('asd').then(function(result) {
+		console.log(result);
+	});
 });

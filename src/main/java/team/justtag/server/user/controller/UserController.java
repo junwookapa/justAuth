@@ -98,6 +98,6 @@ public class UserController {
 					request.session().maxInactiveInterval(Config.SESSION_TIME);
 					request.session().attribute("privateKey", keyManager.getPrivateKey());
 					return keyManager.getPublicKeyWithJson();
-		},new JsonTransformer());	
+		});	
 	}
 }
