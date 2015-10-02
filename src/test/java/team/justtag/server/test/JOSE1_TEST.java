@@ -40,7 +40,6 @@ public class JOSE1_TEST {
 	public void test3() throws JoseException{
 	PublicJsonWebKey jwk111 = EcJwkGenerator.generateJwk(EllipticCurves.P256);
 	System.out.println(jwk111.getPublicKey().getEncoded().toString());
-	
 }
 	public void test() throws ParseException, NoSuchAlgorithmException,
 			JoseException {

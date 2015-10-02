@@ -1,6 +1,7 @@
 package team.justtag.server.security;
 
 import java.security.InvalidKeyException;
+import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 
 import javax.crypto.BadPaddingException;
@@ -8,19 +9,16 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
-import team.justtag.server.main.Config;
-
 import com.auth0.jwt.internal.org.apache.commons.codec.DecoderException;
 import com.auth0.jwt.internal.org.apache.commons.codec.binary.Hex;
 
-
 public class AESSecurity {
-		
-	public String encoding(String str) {
+
+	public String encoding(String str, Key key) {
 		Cipher cipher;
 		try {
 			cipher = Cipher.getInstance("AES");
-			cipher.init(Cipher.ENCRYPT_MODE, Config.AES_KEY);
+			cipher.init(Cipher.ENCRYPT_MODE, key);
 			byte[] encryptedData;
 			encryptedData = cipher.doFinal(str.getBytes());
 			return Hex.encodeHexString(encryptedData);
@@ -40,13 +38,12 @@ public class AESSecurity {
 			// TODO Auto-generated catch block
 			return e.getMessage();
 		}
-
 	}
 
-	public String decoding(String str) {
+	public String decoding(String str, Key key) {
 		try {
 			Cipher cipherx = Cipher.getInstance("AES");
-			cipherx.init(Cipher.DECRYPT_MODE, Config.AES_KEY);
+			cipherx.init(Cipher.DECRYPT_MODE, key);
 			byte[] plainText = cipherx
 					.doFinal(Hex.decodeHex(str.toCharArray()));
 			return new String(plainText);
@@ -69,7 +66,6 @@ public class AESSecurity {
 			// TODO Auto-generated catch block
 			return e.getMessage();
 		}
-
 	}
 
 }

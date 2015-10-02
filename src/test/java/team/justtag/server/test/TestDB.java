@@ -1,19 +1,6 @@
 package team.justtag.server.test;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import org.junit.Test;
-
-import team.justtag.server.security.JWEwithAES;
-import team.justtag.server.user.model.UserGroup;
-
-import com.google.gson.Gson;
-import com.mongodb.BasicDBObject;
-
 import java.security.InvalidKeyException;
-import java.security.Key;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -21,16 +8,19 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.security.SecureRandom;
-import java.security.Security;
 import java.security.spec.InvalidKeySpecException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-import javax.servlet.http.HttpSession;
 
+import team.justtag.server.security.JWEwithAES;
+
+import com.google.gson.Gson;
+import com.mongodb.BasicDBObject;
 
 public class TestDB {
 	public void test(){
@@ -65,9 +55,6 @@ public class TestDB {
 				
 		String json = new Gson().toJson(basic2);
 		System.out.println(json);
-		UserGroup usergroup = new UserGroup(basic2);
-		System.out.println(usergroup.getUsers().get(0));
-		System.out.println(usergroup.getUsers().get(1));
 		
 	}
 	

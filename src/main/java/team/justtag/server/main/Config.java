@@ -18,6 +18,7 @@ public final class Config {
 	//security
 	public static final String KEY_STRING = "1234567890qwerty"; // 16 wrods
 	public static final Key AES_KEY = new SecretKeySpec(KEY_STRING.getBytes(), "AES"); // AES KEY
+	public static final int AES_LENGTH = 128;
 	public static final int RSA_LENGTH = 2048;
 	
 	//token

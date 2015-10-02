@@ -26,12 +26,9 @@ public class UserDaoImpl implements UserDao{
 			mCollection.insert(new BasicDBObject()
 					.append("user_id", user.getUser_id())
 					.append("user_name", user.getUser_name())
-					/*.append("user_group_id", new ObjectId(user.getUser_group_id()))*/
-					.append("user_group_name", user.getUser_group_name())
 					.append("user_password", user.getUser_password())
 					.append("user_role", user.getUser_role())
 					.append("user_email", user.getUser_email())
-					.append("store_id", user.getStore_id())
 					.append("reg_date", user.getReg_date()));
 			return DBStatus.success;
 		}catch(Exception e){
@@ -49,12 +46,9 @@ public class UserDaoImpl implements UserDao{
 					, new BasicDBObject("$set", new BasicDBObject()
 					.append("user_id", user.getUser_id())
 					.append("user_name", user.getUser_name())
-					.append("user_group_id", new ObjectId(user.getUser_group_id()))
-					.append("user_group_name", user.getUser_group_name())
 					.append("user_password", user.getUser_password())
 					.append("user_role", user.getUser_role())
 					.append("user_email", user.getUser_email())
-					.append("store_id", user.getStore_id())
 					.append("reg_date", user.getReg_date())));
 			return DBStatus.success;
 		}catch(Exception e){
@@ -119,7 +113,7 @@ public class UserDaoImpl implements UserDao{
 	@Override
 	public DBStatus isUserExist(String user_id) {
 		try{
-			if(mCollection.findOne(new BasicDBObject("user_id", user_id)).isPartialObject() != true){
+			if(mCollection.findOne(new BasicDBObject("user_id", user_id)) != null){
 				return DBStatus.insertFail;
 			}else{
 				return DBStatus.success;
@@ -129,7 +123,4 @@ public class UserDaoImpl implements UserDao{
 		}
 		
 	}
-	
-	
-
 }

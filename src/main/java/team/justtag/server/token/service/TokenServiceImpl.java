@@ -1,10 +1,17 @@
 package team.justtag.server.token.service;
 
 import team.justtag.server.main.Config;
+import team.justtag.server.main.Status.DBStatus;
 import team.justtag.server.main.Status.TokenStatus;
+import team.justtag.server.security.AESToken;
 import team.justtag.server.security.AESSecurity;
 import team.justtag.server.security.JWEwithAES;
+import team.justtag.server.token.dao.TokenDao;
+import team.justtag.server.token.dao.TokenDaoImpl;
 import team.justtag.server.token.model.Token;
+import team.justtag.server.user.dao.UserDao;
+import team.justtag.server.user.dao.UserDaoImpl;
+import team.justtag.server.util.RandomString;
 
 import com.google.gson.Gson;
 import com.mongodb.BasicDBObject;
@@ -17,31 +24,40 @@ public class TokenServiceImpl implements TokenService {
 	private final DBCollection mCollection;
 	private final JWEwithAES mJWESecurity;
 	private final AESSecurity mAESSecurity;
+	private final TokenDao mTokenDao;
 
 	public TokenServiceImpl(DB db) {
 		this.mCollection = db.getCollection("token");
 		this.mJWESecurity = new JWEwithAES();
 		this.mAESSecurity = new AESSecurity();
+		this.mTokenDao = new TokenDaoImpl(db);
 	}
 
 	@Override
 	public String issueToken(String body, String aud) {
-		String decodedbody = mJWESecurity.decoding(body);
-		Token token = new Gson().fromJson(decodedbody, Token.class);
+		Token token = new Gson().fromJson(body, Token.class);
 		long nowTime = System.currentTimeMillis() / 1000;
 		long exp = nowTime + new Long(Config.EXPIRED_TOKEN_TIME);
 		token.setAud(aud);
 		token.setExp(exp+"");
 		token.setIat(nowTime+"");
 		token.setIss(Config.APP_DNS);
-		String tokenString = mJWESecurity.encoding(new Gson().toJson(token));
-		isUserExist(token.getUser_id());
-		mCollection.insert(new BasicDBObject("token", tokenString)
-				.append("user_id", token.getUser_id())
-				.append("exp", token.getExp()).append("iat", token.getIat())
-				.append("iss", token.getIss()).append("aud", token.getAud()));
-
+		token.setAes_key(new RandomString(16).nextString());
+		String tokenString = new AESToken().encodingToken(new Gson().toJson(token), token.getAes_key());
+		token.setToken(tokenString);
+		switch (mTokenDao.isUserExist(token.getUser_id())) {
+		case duplicated:
+			String objID = mTokenDao.getTokenIDByUserID(token.getUser_id());
+			mTokenDao.updateToken(objID, token);
+			break;
+		case noproblem:
+			mTokenDao.createToken(token);
+			break;
+		default:
+			break;
+		}
 		return tokenString;
+		
 	}
 
 	@Override
@@ -51,25 +67,25 @@ public class TokenServiceImpl implements TokenService {
 		long nowTime = System.currentTimeMillis() / 1000;
 		long exp = nowTime + new Long(Config.EXPIRED_TOKEN_TIME);
 		Token token  = new Gson().fromJson(mJWESecurity.decoding(strToken), Token.class);
-	
 		token.setAud(aud);
 		token.setExp(exp+"");
 		token.setIat(nowTime+"");
 		token.setIss(Config.APP_DNS);
-		String tokenString = mJWESecurity.encoding(new Gson().toJson(token));
+	//	String tokenString = mJWESecurity.encoding(new Gson().toJson(token));
 		BasicDBObject searchQry = new BasicDBObject("token", strToken);
 		BasicDBObject changeDoc = new BasicDBObject();
-		changeDoc.append("$set", new BasicDBObject("token", tokenString)
+	/*	changeDoc.append("$set", new BasicDBObject("token", tokenString)
 		.append("userID", token.getUser_id())
 		.append("exp", token.getExp()).append("iat", token.getIat())
-		.append("iss", token.getIss()).append("aud", token.getAud()));
+		.append("iss", token.getIss()).append("aud", token.getAud()));*/
 		
 		//http://wannastop.tistory.com/486
 		if(mCollection.update(searchQry, changeDoc).getN() > 0){
-			return tokenString;
+		//	return tokenString;
 		}else{
-			return TokenStatus.tokenUpdateFail.name();
+		//	return TokenStatus.tokenUpdateFail.name();
 		}
+		return aud;
 	}
 
 	@Override
@@ -77,7 +93,7 @@ public class TokenServiceImpl implements TokenService {
 		// TODO Auto-generated method stub
 		DBObject basic = mCollection.findOne(new BasicDBObject("token", token));	
 		if(isUpdateToken(new Long(basic.get("exp").toString())).equals(TokenStatus.tokenExpiringsoon)){
-			return updateToken(token, aud); //토큰 
+			return issueToken(token, aud); //토큰 
 		}else{
 			return TokenStatus.success.name();
 		}
@@ -114,14 +130,6 @@ public class TokenServiceImpl implements TokenService {
 			return TokenStatus.tokenExpired; // 토큰 죽음
 		}
 	}
-	private TokenStatus isUserExist(String userID){
-		
-		if(mCollection.find(new BasicDBObject("userID", userID)).count()>0){
-			mCollection.remove(new BasicDBObject("userID", userID));
-			return TokenStatus.tokenExpired;
-		}
-		return TokenStatus.success;
-		
-	}
+
 
 }

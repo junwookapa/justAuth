@@ -11,15 +11,9 @@ app.config(function($routeProvider) {
 	}).when('/list', {
 		templateUrl : 'views/list.html',
 		controller : 'ListCtrl'
-	}).when('/create', {
-		templateUrl : 'views/create.html',
-		controller : 'CreateCtrl'
 	}).when('/sign2', {
 		templateUrl : 't.html',
 		controller : 'sign2'
-	}).when('/case', {
-		templateUrl : 't.html',
-		controller : 'setkey'
 	}).otherwise({
 		redirectTo : '/'
 	})
@@ -43,18 +37,7 @@ app.controller('ListCtrl', function($scope, $http) {
 });
 
 app.controller('LoginCtrl', function($scope, $http, $location, RSAService) {
-	$http.post('/sign').success(function(data) {
-		RSAService.encrypt('asd').then(function(result) {
-			console.log(result);
-			$http.post('/conn', result).success(function(data) {
-				console.log(data);
-			}).error(function(data, status) {
-				console.log(data);
-			})
-
-		});
-	});
-
+	RSAService.getKey();
 	$scope.changeSingUpPage = function() {
 		$location.path('/sign');
 	}
@@ -67,9 +50,7 @@ app.controller('LoginCtrl', function($scope, $http, $location, RSAService) {
 			$http.post('/login', result).success(function(data) {
 				console.log(data);
 			});
-		});
-		
-		
+		});	
 	}
 });
 
@@ -95,9 +76,9 @@ app.controller('sign2', function($scope, $http, RSAService) {
 });
 
 app.controller('CreateCtrl', function($scope, $http, $location, RSAService) {
+	RSAService.getKey();
 	$scope.createuser = function(data) {
 		if($scope.user_password != $scope.user_confirm_password){
-		//	$windows.alret('비밀번호가 틀립니다.');
 			console.log($scope.user_password);
 			console.log($scope.user_confirm_password);
 		}else{
@@ -128,17 +109,10 @@ app.service('RSAService', function($cookieStore, $http) {
 				var publicKey = $cookieStore.get('publicKey');
 				var cryptographer = new Jose.WebCryptographer();
 				cryptographer.setContentEncryptionAlgorithm("A128GCM");
-				var public_rsa_key = Jose.Utils.importRsaPublicKey(publicKey,
-						"RSA-OAEP");
+				var public_rsa_key = Jose.Utils.importRsaPublicKey(publicKey, "RSA-OAEP");
 				var encrypter = new JoseJWE.Encrypter(cryptographer, public_rsa_key);
 				var encryptData = encrypter.encrypt(payload);
 				$cookieStore.remove('publicKey');
 				return encryptData;
 			};
-});
-
-app.controller('setkey', function($http, $cookieStore, RSAService) {
-	RSAService.encrypt('asd').then(function(result) {
-		console.log(result);
-	});
 });

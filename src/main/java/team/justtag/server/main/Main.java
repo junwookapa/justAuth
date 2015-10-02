@@ -5,6 +5,8 @@ import static spark.SparkBase.setPort;
 import static spark.SparkBase.staticFileLocation;
 import team.justtag.server.todo.controller.TodoResource;
 import team.justtag.server.todo.service.TodoService;
+import team.justtag.server.token.controller.TokenController;
+import team.justtag.server.token.service.TokenServiceImpl;
 import team.justtag.server.user.controller.UserController;
 import team.justtag.server.user.service.UserServiceImpl;
 
@@ -51,7 +53,9 @@ public class Main {
     //
     private static void setController(DB db){
     	new TodoResource(new TodoService(db));
-    	new UserController(new UserServiceImpl(db), db);
+    	new UserController(new UserServiceImpl(db));
+    	new TokenController(new TokenServiceImpl(db));
+    	
     }
     
 }

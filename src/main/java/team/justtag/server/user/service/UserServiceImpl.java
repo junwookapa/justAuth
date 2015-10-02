@@ -3,46 +3,54 @@ package team.justtag.server.user.service;
 import java.util.Date;
 import java.util.List;
 
+import team.justtag.server.main.Config;
 import team.justtag.server.main.Status.DBStatus;
+import team.justtag.server.main.Status.Role;
 import team.justtag.server.main.Status.UserStatus;
 import team.justtag.server.security.AESSecurity;
 import team.justtag.server.security.JWEwithAES;
 import team.justtag.server.user.dao.UserDao;
 import team.justtag.server.user.dao.UserDaoImpl;
-import team.justtag.server.user.dao.UserGroupDao;
-import team.justtag.server.user.dao.UserGroupDaoImpl;
 import team.justtag.server.user.model.User;
 
 import com.google.gson.Gson;
+import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.MongoException;
 
 public class UserServiceImpl implements UserService {
 	private final UserDao mUserDao;
-	private final UserGroupDao mUserGroupDao;
 	private final JWEwithAES mJWESecurity;
 	private final AESSecurity mAESSecurity;
 
 	public UserServiceImpl(DB db) {
 		this.mUserDao = new UserDaoImpl(db);
-		this.mUserGroupDao = new UserGroupDaoImpl(db);
 		this.mJWESecurity = new JWEwithAES();
 		this.mAESSecurity = new AESSecurity();
+		createAdmin();
 	}
-
+	private void createAdmin(){
+		User user = new User();
+		user.setUser_id("admin");
+		user.setUser_name("admin");
+		user.setUser_password("admin");
+		user.setUser_email("admin@justtag.com");
+		user.setUser_role(Role.admin.name());
+		createUser(new Gson().toJson(user));
+	}
+	
 	@Override
 	public UserStatus createUser(String body) {
-	//	String decodedbody = mJWESecurity.decoding(body);
-		User user = new Gson().fromJson(body, User.class);
 		try{
-			if(!mUserDao.isUserExist(user.getUser_id()).equals(DBStatus.success))
+			User user = new Gson().fromJson(body, User.class);
+			mUserDao.isUserExist(user.getUser_id());
+			if(!mUserDao.isUserExist(user.getUser_id()).equals(DBStatus.success)){
 				return UserStatus.duplicateID;
+			}
 			user.setReg_date(new Date().toString());
-			String decodingUserpassword = mAESSecurity.encoding(user.getUser_password());
-			user.setUser_password(decodingUserpassword);
-			mUserDao.createUser(user);
-			
-		//	mUserGroupDao.addUser(user.getUser_group_id(), mUserDao.getObjIDByUserID(user.getUser_id()));
+			String encodingUserpassword = mAESSecurity.encoding(user.getUser_password(), Config.AES_KEY);
+			user.setUser_password(encodingUserpassword);
+			String asd =mUserDao.createUser(user).toString();
 			return UserStatus.success;
 		}catch(Exception e){
 			System.out.println("서비스에러");
@@ -56,7 +64,6 @@ public class UserServiceImpl implements UserService {
 		try {
 			String decodedbody = mJWESecurity.decoding(body);
 			User user = new Gson().fromJson(decodedbody, User.class);
-			mUserGroupDao.deleteUser(user.getUser_group_name(), mUserDao.getObjIDByUserID(user.getUser_id()));
 			mUserDao.deleteUser(user.getUser_id());
 			return UserStatus.success;
 		} catch (Exception e) {
@@ -70,12 +77,10 @@ public class UserServiceImpl implements UserService {
 		User compareUser = null;
 		String decodedPassword = null;
 		System.out.println(body);
-		try {
-		//	String decodedbody = mJWESecurity.decoding(body);
-			
+		try {			
 			user = new Gson().fromJson(body, User.class);
 			compareUser = mUserDao.getUserByUserID(user.getUser_id());
-			decodedPassword = mAESSecurity.decoding(compareUser.getUser_password());
+			decodedPassword = mAESSecurity.decoding(compareUser.getUser_password(), Config.AES_KEY);
 		} catch (Exception e) {
 			
 			return UserStatus.unkwonError;

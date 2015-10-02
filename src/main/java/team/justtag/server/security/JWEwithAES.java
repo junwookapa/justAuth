@@ -2,6 +2,8 @@ package team.justtag.server.security;
 
 import java.security.Key;
 
+import javax.crypto.spec.SecretKeySpec;
+
 import org.jose4j.json.internal.json_simple.JSONObject;
 import org.jose4j.jwe.ContentEncryptionAlgorithmIdentifiers;
 import org.jose4j.jwe.JsonWebEncryption;
@@ -38,8 +40,8 @@ public class JWEwithAES {
 	public String encoding(JSONObject json) {
 		JsonWebEncryption jwe = new JsonWebEncryption();
 		jwe.setPayload(json.toJSONString());
-		jwe.setAlgorithmHeaderValue(KeyManagementAlgorithmIdentifiers.RSA_OAEP);
-		jwe.setEncryptionMethodHeaderParameter(ContentEncryptionAlgorithmIdentifiers.AES_256_GCM);
+		jwe.setAlgorithmHeaderValue(KeyManagementAlgorithmIdentifiers.A128KW);
+		jwe.setEncryptionMethodHeaderParameter(ContentEncryptionAlgorithmIdentifiers.AES_128_CBC_HMAC_SHA_256);
 		jwe.setKey(Config.AES_KEY);
 		try {
 			return jwe.getCompactSerialization();
@@ -49,12 +51,13 @@ public class JWEwithAES {
 
 	}
 
-	public String encoding(String str) {
+	public String encodingToken(String str, String keyString) {
 		JsonWebEncryption jwe = new JsonWebEncryption();
 		jwe.setPayload(str);
-		jwe.setAlgorithmHeaderValue(KeyManagementAlgorithmIdentifiers.RSA_OAEP);
-		jwe.setEncryptionMethodHeaderParameter(ContentEncryptionAlgorithmIdentifiers.AES_256_GCM);
-		jwe.setKey(Config.AES_KEY);
+		jwe.setAlgorithmHeaderValue(KeyManagementAlgorithmIdentifiers.A128KW);
+		jwe.setEncryptionMethodHeaderParameter(ContentEncryptionAlgorithmIdentifiers.AES_128_CBC_HMAC_SHA_256);
+		Key key = new SecretKeySpec(keyString.getBytes(), "AES");
+		jwe.setKey(key);
 
 		try {
 			return jwe.getCompactSerialization();
@@ -66,8 +69,8 @@ public class JWEwithAES {
 	public String encoding(JwtClaims claims) {
 		JsonWebEncryption jwe = new JsonWebEncryption();
 		jwe.setPayload(claims.toJson());
-		jwe.setAlgorithmHeaderValue(KeyManagementAlgorithmIdentifiers.RSA_OAEP);
-		jwe.setEncryptionMethodHeaderParameter(ContentEncryptionAlgorithmIdentifiers.AES_256_GCM);
+		jwe.setAlgorithmHeaderValue(KeyManagementAlgorithmIdentifiers.A128KW);
+		jwe.setEncryptionMethodHeaderParameter(ContentEncryptionAlgorithmIdentifiers.AES_128_CBC_HMAC_SHA_256);
 		jwe.setKey(Config.AES_KEY);
 		try {
 			return jwe.getCompactSerialization();

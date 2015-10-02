@@ -6,6 +6,7 @@ import team.justtag.server.main.Status.DBStatus;
 import team.justtag.server.user.model.User;
 
 public interface UserDao {
+	
 	public DBStatus createUser(User user); // 유저 생성
 	public DBStatus updateUser(String _id, User user); // 유저 변경
 	public DBStatus deleteUser(String _id); // 유저 삭제

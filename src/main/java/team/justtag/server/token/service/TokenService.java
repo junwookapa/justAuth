@@ -1,5 +1,5 @@
-package team.justtag.server.token.service;
 
+package team.justtag.server.token.service;
 import team.justtag.server.main.Status.TokenStatus;
 
 public interface TokenService {

@@ -27,6 +27,8 @@ public class Status {
 		updateFail,
 		deleteFail,
 		readFail,
+		duplicated,
+		noproblem,
 		success
 	}
 	
@@ -36,5 +38,9 @@ public class Status {
 		processing, // 처리중
 		delay, // 지연 됨
 		finished // 완료됨
+	}
+	public enum Role{
+		admin,
+		enduser
 	}
 }
