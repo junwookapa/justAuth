@@ -32,7 +32,6 @@ public class UserDaoImpl implements UserDao{
 					.append("reg_date", user.getReg_date()));
 			return DBStatus.success;
 		}catch(Exception e){
-			System.out.println("다오에러");
 			System.out.println(e.getMessage());
 			return DBStatus.insertFail;
 		}
@@ -121,6 +120,5 @@ public class UserDaoImpl implements UserDao{
 		}catch(Exception e){
 			return null;
 		}
-		
 	}
 }

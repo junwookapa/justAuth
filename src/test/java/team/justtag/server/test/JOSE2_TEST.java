@@ -16,7 +16,7 @@ import org.jose4j.jwk.RsaJsonWebKey;
 import org.jose4j.lang.JoseException;
 import org.junit.Test;
 
-import team.justtag.server.security.JWEwithRSA;
+import team.justtag.server.security.JWEUtil;
 
 public class JOSE2_TEST {
 	
@@ -188,7 +188,7 @@ public class JOSE2_TEST {
 		RsaJsonWebKey asd = new RsaJsonWebKey((RSAPublicKey) clsKeyPair.getPublic());
 		asd.setPrivateKey(clsKeyPair.getPrivate());
 		
-		JWEwithRSA sec = new JWEwithRSA();
+		JWEUtil sec = new JWEUtil();
 		String asdc = sec.encoder(clsKeyPair.getPublic(), "asd");
 		System.out.println(asdc);
 		String bb = sec.decoder(clsKeyPair.getPrivate(), asdc);

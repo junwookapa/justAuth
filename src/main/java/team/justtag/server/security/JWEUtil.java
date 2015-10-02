@@ -23,7 +23,7 @@ import org.jose4j.lang.JoseException;
 
 import team.justtag.server.main.Config;
 
-public class JWEwithRSA {
+public class JWEUtil {
 		
 	public RsaJsonWebKey generateJsonWebKey() throws NoSuchAlgorithmException, JoseException{
 		KeyPairGenerator clsKeyPairGenerator = KeyPairGenerator.getInstance("RSA");

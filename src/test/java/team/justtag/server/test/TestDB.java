@@ -17,8 +17,6 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
-import team.justtag.server.security.JWEwithAES;
-
 import com.google.gson.Gson;
 import com.mongodb.BasicDBObject;
 
@@ -61,7 +59,7 @@ public class TestDB {
 	public void test3(){
 //System.out.println(new JWESecurity().keyGenerate("1234567890qwerty"));
 				//System.out.println(new JWESecurity().keyGenerate(Config.KEY_STRING)+"");
-				System.out.println(new JWEwithAES().decoding("eyJhbGciOiJBMTI4S1ciLCJlbmMiOiJBMTI4Q0JDLUhTMjU2In0.Xl8rAjoI9aqxqi5FQTT43RD7QzBRqT7IIkbTfGt6QZu5SKBxhu0KFg.wrhOycD2BaPW2KQ8qz-yHA.Wb2BS02dxgCvdq4efOQdmQ.4OkyRU3wD1f4OCz6qXQLmA"));
+			//	System.out.println(new JWEwithAES().decoding("eyJhbGciOiJBMTI4S1ciLCJlbmMiOiJBMTI4Q0JDLUhTMjU2In0.Xl8rAjoI9aqxqi5FQTT43RD7QzBRqT7IIkbTfGt6QZu5SKBxhu0KFg.wrhOycD2BaPW2KQ8qz-yHA.Wb2BS02dxgCvdq4efOQdmQ.4OkyRU3wD1f4OCz6qXQLmA"));
 				//eyJhbGciOiJBMTI4S1ciLCJlbmMiOiJBMTI4Q0JDLUhTMjU2In0.ecI-M_GWuqf_8fjP1tl1dOheIxuHFRplEpX9bPCv11ij9J737vCssg.3DBSpwNkZC1SkHhwnCrwFw.Rv7sQpuMfqc5Ax_lAxfbgA.zX2vjpka1XAjA0eoyiP40w
 				
 				

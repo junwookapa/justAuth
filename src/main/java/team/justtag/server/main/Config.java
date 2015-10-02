@@ -4,10 +4,6 @@ import java.security.Key;
 
 import javax.crypto.spec.SecretKeySpec;
 
-import org.jose4j.jwk.JsonWebKey;
-
-import team.justtag.server.security.JWEwithAES;
-
 public final class Config {
 	
 	//host
@@ -16,9 +12,8 @@ public final class Config {
 	public static final String APP_DNS = System.getenv("OPENSHIFT_APP_DNS") != null ? System.getenv("OPENSHIFT_APP_DNS") : IP_ADDRESS+"/"+PORT;
 
 	//security
-	public static final String KEY_STRING = "1234567890qwerty"; // 16 wrods
+	public static final String KEY_STRING = "1234567890qwerty"; // 비밀번호 암호용 토큰
 	public static final Key AES_KEY = new SecretKeySpec(KEY_STRING.getBytes(), "AES"); // AES KEY
-	public static final int AES_LENGTH = 128;
 	public static final int RSA_LENGTH = 2048;
 	
 	//token

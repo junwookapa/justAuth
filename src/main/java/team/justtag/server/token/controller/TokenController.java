@@ -4,7 +4,7 @@ import static spark.Spark.after;
 import static spark.Spark.delete;
 import static spark.Spark.get;
 import static spark.Spark.put;
-import team.justtag.server.security.JWEwithRSA;
+import team.justtag.server.security.JWEUtil;
 import team.justtag.server.token.service.TokenServiceImpl;
 import team.justtag.server.util.JsonTransformer;
 
@@ -24,7 +24,7 @@ public class TokenController {
 					int statusCode = response.raw().getStatus();
 					System.out.println(statusCode+"");
 					if(statusCode == 201){
-						String decodingString = new JWEwithRSA().decoder(request.session().attribute("privateKey"), request.body());
+						String decodingString = new JWEUtil().decoder(request.session().attribute("privateKey"), request.body());
 					//	String funtionBlockJson = new String(request.bodyAsBytes(), "UTF-8");
 						response.body(mTokenService.issueToken(decodingString, request.host()));
 					}else{
@@ -36,10 +36,6 @@ public class TokenController {
 		// 토큰 검증
 		get("/token/:token", "application/json", (request, response) ->
 					mTokenService.verifyToken(request.params(":token"), request.host()),
-				new JsonTransformer());
-		// 토큰 업데이트
-		put("/token/:token", "application/json", (request, response) -> 
-		mTokenService.updateToken(request.params(":token"), request.host()),
 				new JsonTransformer());
 		// 토큰 삭제
 		delete("/token/:token", "application/json", (request,

@@ -6,7 +6,7 @@ import static spark.Spark.post;
 import team.justtag.server.main.Config;
 import team.justtag.server.main.Status.UserStatus;
 import team.justtag.server.security.JWEManager;
-import team.justtag.server.security.JWEwithRSA;
+import team.justtag.server.security.JWEUtil;
 import team.justtag.server.user.model.User;
 import team.justtag.server.user.service.UserService;
 import team.justtag.server.util.JsonTransformer;
@@ -28,7 +28,7 @@ public class UserController {
 		// createUser
 		post("/user", "application/json", (request, response) -> {
 					String funtionBlockJson = new String(request.bodyAsBytes(),	"UTF-8");
-					String decodingString = new JWEwithRSA().decoder(request.session().attribute("privateKey"), funtionBlockJson);
+					String decodingString = new JWEUtil().decoder(request.session().attribute("privateKey"), funtionBlockJson);
 					return mUserService.createUser(decodingString);
 				}, new JsonTransformer());
 		
@@ -44,12 +44,12 @@ public class UserController {
 				}, new JsonTransformer());
 		// login
 		post("/login", "application/json", (request, response) -> {
-			String decodingString = new JWEwithRSA().decoder(request.session().attribute("privateKey"), request.body());
+			String decodingString = new JWEUtil().decoder(request.session().attribute("privateKey"), request.body());
 			UserStatus responseStatus = mUserService.login(decodingString);
 			if (responseStatus.equals(UserStatus.success)) {
 				response.status(201);
 			} else {
-				response.status(406);
+				response.status(204);
 			}
 			return responseStatus;
 		}, new JsonTransformer());
@@ -61,6 +61,5 @@ public class UserController {
 					request.session().attribute("privateKey", keyManager.getPrivateKey());
 					return keyManager.getPublicKeyWithJson();
 		});
-
 	}
 }

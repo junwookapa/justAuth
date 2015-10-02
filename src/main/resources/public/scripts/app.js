@@ -3,23 +3,28 @@ var app = angular.module('justTagServer', [ 'ngCookies', 'ngResource',
 
 app.config(function($routeProvider) {
 	$routeProvider.when('/', {
+		templateUrl : 'views/list.html',
+		controller : 'ListCtrl'
+	}).when('/login', {
 		templateUrl : 'views/user/login.html',
 		controller : 'LoginCtrl'
 	}).when('/sign', {
 		templateUrl : 'views/user/signup.html',
+		controller : 'sginCtrl'
+	}).when('/create', {
+		templateUrl : 'views/create.html',
 		controller : 'CreateCtrl'
-	}).when('/list', {
-		templateUrl : 'views/list.html',
-		controller : 'ListCtrl'
-	}).when('/sign2', {
-		templateUrl : 't.html',
-		controller : 'sign2'
 	}).otherwise({
 		redirectTo : '/'
 	})
 });
 
-app.controller('ListCtrl', function($scope, $http) {
+app.controller('ListCtrl', function($scope, $http, $cookieStore, $location) {
+	if(typeof $cookieStore.get('token') == "undefined"){
+		$location.path('/login');
+	}
+		
+	
 	$http.get('/api/v1/todos').success(function(data) {
 		$scope.todos = data;
 	}).error(function(data, status) {
@@ -34,9 +39,22 @@ app.controller('ListCtrl', function($scope, $http) {
 			console.log('Error ' + data)
 		})
 	}
+		
 });
-
-app.controller('LoginCtrl', function($scope, $http, $location, RSAService) {
+app.controller('CreateCtrl', function ($scope, $http, $location) {
+    $scope.todo = {
+        done: false
+    };
+    $scope.createTodo = function () {
+        console.log($scope.todo);
+        $http.post('/api/v1/todos', $scope.todo).success(function (data) {
+            $location.path('/');
+        }).error(function (data, status) {
+            console.log('Error ' + data)
+        })
+    }
+});
+app.controller('LoginCtrl', function($scope, $http, $location, RSAService, $cookieStore) {
 	RSAService.getKey();
 	$scope.changeSingUpPage = function() {
 		$location.path('/sign');
@@ -48,34 +66,17 @@ app.controller('LoginCtrl', function($scope, $http, $location, RSAService) {
 			+"}";
 		RSAService.encrypt(user).then(function(result) {
 			$http.post('/login', result).success(function(data) {
-				console.log(data);
-			});
+				$cookieStore.put('token', data);
+				$location.path('/');
+			}).error(function(response) {
+			   console.log("error");
+			  });
 		});	
 	}
 });
 
 
-
-
-app.controller('sign2', function($scope, $http, RSAService) {
-
-	$scope.ReadCookie = function() {
-		$http.post('/sign').success(function(data) {
-			RSAService.encrypt('asd').then(function(result) {
-				console.log(result);
-				$http.post('/conn', result).success(function(data) {
-					console.log(data);
-				}).error(function(data, status) {
-					console.log(data);
-				})
-
-			});
-		});
-	}
-
-});
-
-app.controller('CreateCtrl', function($scope, $http, $location, RSAService) {
+app.controller('sginCtrl', function($scope, $http, $location, RSAService) {
 	RSAService.getKey();
 	$scope.createuser = function(data) {
 		if($scope.user_password != $scope.user_confirm_password){
