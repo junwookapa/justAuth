@@ -3,6 +3,7 @@ package team.justtag.server.main;
 public class Status {
 	
 	public enum TokenStatus {
+		notFoundToken, // 토큰을 찾을 수 없다.
 		tokenExpired, // 토큰이 만료됨
 		tokenUpdateFail, // 토큰 업데이트 실패
 		tokenExpiringsoon, // 토큰이 곧 만료 됩니다.

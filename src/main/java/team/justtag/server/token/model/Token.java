@@ -24,6 +24,8 @@ public class Token {
 		this.aud = dbObject.getString("aud");
 		this.aud = dbObject.getString("aes_key");
 	}
+	public Token() {
+	}
 
 	public String getAes_key() {
 		return aes_key;

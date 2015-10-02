@@ -20,9 +20,29 @@ app.config(function($routeProvider) {
 });
 
 app.controller('ListCtrl', function($scope, $http, $cookieStore, $location) {
-	if(typeof $cookieStore.get('token') == "undefined"){
+	$http.get('/headertest', {
+	    headers: {'Authorization': 'Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ=='}
+	}).success(function(data) {
+		console.log(data);
+	}).error(function(data, status) {
+		console.log(data);
+		$location.path('/login');
+	});
+	var token = $cookieStore.get('token');
+	if(typeof token == "undefined"){
 		$location.path('/login');
 	}
+	$http.get('/token'+'/'+token).success(function(data) {
+		console.log('data ='+data);
+		if(data === '"tokenExpired"' || data === '"unknownError"' || data === '"tokenExpired"' || data === '"notFoundToken"'){
+			$location.path('/login');
+		}
+	}).error(function(data, status) {
+		console.log(data);
+		$location.path('/login');
+	})
+	
+	
 	console.log($cookieStore.get('token'));
 	$http.get('/api/v1/todos').success(function(data) {
 		$scope.todos = data;
@@ -37,6 +57,14 @@ app.controller('ListCtrl', function($scope, $http, $cookieStore, $location) {
 		}).error(function(data, status) {
 			console.log('Error ' + data)
 		})
+	}
+	$scope.logout = function(){
+			$http.delete('/token'+'/'+token).success(function(data) {
+				console.log(data);
+				$location.path('/login');
+			}).error(function(data, status) {
+				console.log(data);
+			})
 	}
 		
 });
@@ -65,7 +93,6 @@ app.controller('LoginCtrl', function($scope, $http, $location, RSAService, $cook
 			+"}";
 		RSAService.encrypt(user).then(function(result) {
 			$http.post('/login', result).success(function(data) {
-				console.log(data);
 				$cookieStore.put('token', data);
 				$location.path('/');
 			}).error(function(response) {
@@ -89,7 +116,7 @@ app.controller('sginCtrl', function($scope, $http, $location, RSAService) {
 				+"\"user_email\" : \""+$scope.user_email+"\""
 			+"}";
 		RSAService.encrypt(users).then(function(result) {
-			$http.post('/user', result).success(function(data) {
+			$http.post('/sign', result).success(function(data) {
 				console.log(data);
 			});
 		});

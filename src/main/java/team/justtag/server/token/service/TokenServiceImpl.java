@@ -1,5 +1,7 @@
 package team.justtag.server.token.service;
 
+import org.jose4j.json.internal.json_simple.JSONObject;
+
 import team.justtag.server.main.Config;
 import team.justtag.server.main.Status.TokenStatus;
 import team.justtag.server.security.AESToken;
@@ -26,6 +28,7 @@ public class TokenServiceImpl implements TokenService {
 
 	@Override
 	public String issueToken(String body, String aud) {
+		System.out.println(body);
 		Token token = new Gson().fromJson(body, Token.class);
 		long nowTime = System.currentTimeMillis() / 1000;
 		long exp = nowTime + new Long(Config.EXPIRED_TOKEN_TIME);
@@ -50,10 +53,17 @@ public class TokenServiceImpl implements TokenService {
 		return tokenString;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public String verifyToken(String token, String aud) {
-		DBObject basic = mCollection.findOne(new BasicDBObject("token", token));
-		long expireTime = new Long((long) basic.get("exp"));
+		DBObject basic = null;
+		long expireTime;
+		try{
+			basic = mCollection.findOne(new BasicDBObject("token", token));
+			expireTime = new Long(basic.get("exp").toString());
+		}catch(NullPointerException e){
+			return TokenStatus.notFoundToken.name();
+		}
 		switch(isExpiredToken(expireTime)){
 			case tokenExpired:
 				return TokenStatus.tokenExpired.name();
@@ -64,7 +74,9 @@ public class TokenServiceImpl implements TokenService {
 		}		
 		switch(isUpdateToken(expireTime)){
 			case tokenExpiringsoon:
-				return issueToken(token, aud);
+				JSONObject json = new JSONObject();
+				json.put("user_id", basic.get("user_id"));
+				return issueToken(json.toJSONString(), aud);
 			case success:
 				return TokenStatus.success.name();
 			default:
@@ -74,8 +86,11 @@ public class TokenServiceImpl implements TokenService {
 
 	@Override
 	public TokenStatus deleteToken(String token) {
-		mCollection.remove(new BasicDBObject("token", token));
-		return TokenStatus.success;
+		if(mCollection.remove(new BasicDBObject("token", token)).getN()>0){
+			return TokenStatus.success;
+		}else{
+			return TokenStatus.notFoundToken;
+		}		
 	}
 	
 	@Override

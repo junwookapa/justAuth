@@ -1,6 +1,7 @@
 package team.justtag.server.token.controller;
 
 import static spark.Spark.after;
+import static spark.Spark.before;
 import static spark.Spark.delete;
 import static spark.Spark.get;
 import static spark.Spark.put;
@@ -34,17 +35,23 @@ public class TokenController {
 				}
 		);
 		// 토큰 검증
-		get("/token/:token", "application/json", (request, response) ->
-					mTokenService.verifyToken(request.params(":token"), request.host()),
+		get("/token/:token", "application/json", (request, response) ->{
+					return mTokenService.verifyToken(request.params(":token"), request.host());
+					},
 				new JsonTransformer());
 		// 토큰 삭제
-		delete("/token/:token", "application/json", (request,
-				response) -> {
-					mTokenService.deleteToken(request.params(":token"));
-					response.status(201);
-					return response;
+		delete("/token/:token", "application/json", (request, response) -> {
+					return mTokenService.deleteToken(request.params(":token"));
 					},
-				new JsonTransformer());	
+				new JsonTransformer());
+		before("/user/:token", "application/json", (request, response) ->{
+			request.headers().parallelStream();
+			});
+		before("/users", "application/json", (request, response) ->{
+			mTokenService.verifyToken(request.params(":token"), request.host());
+			});
+		
+		
 	}
 
 }
