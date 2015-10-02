@@ -17,6 +17,9 @@ app.config(function($routeProvider) {
 	}).when('/sign2', {
 		templateUrl : 't.html',
 		controller : 'sign2'
+	}).when('/test', {
+		templateUrl : 't.html',
+		controller : 'test'
 	}).otherwise({
 		redirectTo : '/'
 	})
@@ -132,3 +135,12 @@ app.service('RSAService',
 				return encryptData;
 			};
 		});
+
+
+app.controller('test', function($scope, $http, $location, RSAService) {
+	$http.get('/key').success(function(data) {
+		var key = JSON.parse(data);
+		console.log(key);
+
+		});
+});

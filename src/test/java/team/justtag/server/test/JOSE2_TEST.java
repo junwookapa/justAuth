@@ -1,9 +1,12 @@
 package team.justtag.server.test;
 
+import java.security.InvalidKeyException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPublicKey;
+
+import javax.crypto.NoSuchPaddingException;
 
 import org.jose4j.jwe.ContentEncryptionAlgorithmIdentifiers;
 import org.jose4j.jwe.JsonWebEncryption;
@@ -12,6 +15,8 @@ import org.jose4j.jwk.PublicJsonWebKey;
 import org.jose4j.jwk.RsaJsonWebKey;
 import org.jose4j.lang.JoseException;
 import org.junit.Test;
+
+import team.justtag.server.security.JWEwithRSA;
 
 public class JOSE2_TEST {
 	
@@ -51,7 +56,7 @@ public class JOSE2_TEST {
 	
 //	String jwscs = jws.getCompactSerialization();
 	}
-	@Test
+	
 	public void superman() throws JoseException, NoSuchAlgorithmException{
 		KeyPairGenerator clsKeyPairGenerator = KeyPairGenerator.getInstance("RSA");
 		clsKeyPairGenerator.initialize(2048);
@@ -174,6 +179,21 @@ public class JOSE2_TEST {
 		
 	}
 	
+	@Test
+	public void security() throws JoseException, NoSuchAlgorithmException, InvalidKeyException, NoSuchPaddingException{
+		KeyPairGenerator clsKeyPairGenerator = KeyPairGenerator.getInstance("RSA");
+		clsKeyPairGenerator.initialize(2048);
+		KeyPair clsKeyPair = clsKeyPairGenerator.genKeyPair();
+		PublicJsonWebKey.Factory.newPublicJwk(clsKeyPair.getPublic());
+		RsaJsonWebKey asd = new RsaJsonWebKey((RSAPublicKey) clsKeyPair.getPublic());
+		asd.setPrivateKey(clsKeyPair.getPrivate());
+		
+		JWEwithRSA sec = new JWEwithRSA();
+		String asdc = sec.encoder(clsKeyPair.getPublic(), "asd");
+		System.out.println(asdc);
+		String bb = sec.decoder(clsKeyPair.getPrivate(), asdc);
+		System.out.println();
+	}
 	
 	
 	

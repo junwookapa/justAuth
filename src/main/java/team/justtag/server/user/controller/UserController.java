@@ -3,22 +3,13 @@ package team.justtag.server.user.controller;
 import static spark.Spark.delete;
 import static spark.Spark.get;
 import static spark.Spark.post;
-
-import java.security.KeyFactory;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import org.jose4j.json.internal.json_simple.JSONObject;
-
+import team.justtag.server.main.Config;
 import team.justtag.server.main.Status.UserStatus;
+import team.justtag.server.security.JWEManager;
 import team.justtag.server.security.JWEwithRSA;
-import team.justtag.server.user.dao.UserGroupDaoImpl;
-import team.justtag.server.user.model.UserGroup;
 import team.justtag.server.user.service.UserService;
 import team.justtag.server.util.JsonTransformer;
 
-import com.google.gson.Gson;
 import com.mongodb.DB;
 
 public class UserController {
@@ -39,7 +30,7 @@ public class UserController {
 				(request, response) -> {
 					String funtionBlockJson = new String(request.bodyAsBytes(),	"UTF-8");
 					System.out.println(funtionBlockJson);
-					String decodingString = new JWEwithRSA().decoding(request.session().attribute("privateKey"), funtionBlockJson);
+					String decodingString = new JWEwithRSA().decoder(request.session().attribute("privateKey"), funtionBlockJson);
 					System.out.println(decodingString);
 					return mUserService.createUser(decodingString);
 				}, new JsonTransformer());
@@ -65,7 +56,7 @@ public class UserController {
 		post("/login", "application/json", (request, response) -> {
 			
 			System.out.println(request.body());
-			String decodingString = new JWEwithRSA().decoding(request.session().attribute("privateKey"), request.body());
+			String decodingString = new JWEwithRSA().decoder(request.session().attribute("privateKey"), request.body());
 			UserStatus responseStatus = mUserService.login(decodingString);
 			if (responseStatus.equals(UserStatus.success)) {
 				response.status(201);
@@ -78,11 +69,12 @@ public class UserController {
 		post("/sign", "application/json",
 				(request, response) -> {
 					if(request.session().isNew() == true){
+						JWEManager jweObj = new JWEManager();
 						JWEwithRSA jWEwithRSA= new JWEwithRSA();
-						jWEwithRSA.init();
+					//jWEwithRSA.init();
 						request.session(true);
-						request.session().attribute("privateKey", jWEwithRSA.getPrivateKey());
-						response.cookie("publicKey", jWEwithRSA.getPublicKey());
+						request.session().attribute("privateKey", jweObj.getPrivateKey());
+						response.cookie("publicKey", jweObj.getPublicKeyWithJson());
 					}
 				return response;
 		},new JsonTransformer());
@@ -92,7 +84,7 @@ public class UserController {
 					System.out.println(request.body());
 					String decodingString = null;
 					try{
-					decodingString = new JWEwithRSA().decoding(request.session().attribute("privateKey"), request.body());
+					decodingString = new JWEwithRSA().decoder(request.session().attribute("privateKey"), request.body());
 					}catch(Exception e){
 						System.out.println("에롱"+e.getMessage());	
 					}
@@ -100,7 +92,12 @@ public class UserController {
 				return decodingString;
 
 		},new JsonTransformer());
+		get("/key", "application/json",
+				(request, response) -> {
+					JWEManager keyManager = new JWEManager();
+					request.session().maxInactiveInterval(Config.SESSION_TIME);
+					request.session().attribute("privateKey", keyManager.getPrivateKey());
+					return keyManager.getPublicKeyWithJson();
+		},new JsonTransformer());	
 	}
-
-
 }

@@ -23,5 +23,6 @@ public final class Config {
 	//token
 	public static final String EXPIRED_TOKEN_TIME = "21600"; // 6시간
 	public static final String REFREASH_TOKEN_TIME = "1800"; // 30분
+	public static final int SESSION_TIME = 1800; // 30분
 	
 }
