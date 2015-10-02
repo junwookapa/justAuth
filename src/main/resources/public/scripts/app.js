@@ -23,8 +23,7 @@ app.controller('ListCtrl', function($scope, $http, $cookieStore, $location) {
 	if(typeof $cookieStore.get('token') == "undefined"){
 		$location.path('/login');
 	}
-		
-	
+	console.log($cookieStore.get('token'));
 	$http.get('/api/v1/todos').success(function(data) {
 		$scope.todos = data;
 	}).error(function(data, status) {
@@ -66,6 +65,7 @@ app.controller('LoginCtrl', function($scope, $http, $location, RSAService, $cook
 			+"}";
 		RSAService.encrypt(user).then(function(result) {
 			$http.post('/login', result).success(function(data) {
+				console.log(data);
 				$cookieStore.put('token', data);
 				$location.path('/');
 			}).error(function(response) {

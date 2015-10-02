@@ -29,6 +29,7 @@ public class UserDaoImpl implements UserDao{
 					.append("user_password", user.getUser_password())
 					.append("user_role", user.getUser_role())
 					.append("user_email", user.getUser_email())
+					.append("aes_key", user.getAes_key())
 					.append("reg_date", user.getReg_date()));
 			return DBStatus.success;
 		}catch(Exception e){
@@ -48,6 +49,7 @@ public class UserDaoImpl implements UserDao{
 					.append("user_password", user.getUser_password())
 					.append("user_role", user.getUser_role())
 					.append("user_email", user.getUser_email())
+					.append("aes_key", user.getAes_key())
 					.append("reg_date", user.getReg_date())));
 			return DBStatus.success;
 		}catch(Exception e){
@@ -117,6 +119,14 @@ public class UserDaoImpl implements UserDao{
 			}else{
 				return DBStatus.success;
 			}
+		}catch(Exception e){
+			return null;
+		}
+	}
+	@Override
+	public String getAES_KEY(String _id) {
+		try{
+			 return new User((BasicDBObject) mCollection.findOne(new BasicDBObject("_id", new ObjectId(_id)))).getAes_key();
 		}catch(Exception e){
 			return null;
 		}

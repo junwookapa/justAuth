@@ -8,9 +8,11 @@ import team.justtag.server.main.Status.DBStatus;
 import team.justtag.server.main.Status.Role;
 import team.justtag.server.main.Status.UserStatus;
 import team.justtag.server.security.AESSecurity;
+import team.justtag.server.security.AESToken;
 import team.justtag.server.user.dao.UserDao;
 import team.justtag.server.user.dao.UserDaoImpl;
 import team.justtag.server.user.model.User;
+import team.justtag.server.util.RandomString;
 
 import com.google.gson.Gson;
 import com.mongodb.DB;
@@ -43,7 +45,9 @@ public class UserServiceImpl implements UserService {
 				return UserStatus.duplicatedID;
 			}
 			user.setReg_date(new Date().toString());
-			String encodingUserpassword = new AESSecurity().encoding(user.getUser_password(), Config.AES_KEY);
+			String tokenString = new RandomString(Config.AES_USER_PASSWORD_LENGTH).nextString();
+			user.setAes_key(tokenString);
+			String encodingUserpassword = new AESSecurity().encoding(user.getUser_password(), user.getAes_key());
 			user.setUser_password(encodingUserpassword);
 			switch(mUserDao.createUser(user)){
 			default:
@@ -74,7 +78,8 @@ public class UserServiceImpl implements UserService {
 		try{
 			User user = new Gson().fromJson(body, User.class);
 			User compareUser = mUserDao.getUserByUserID(user.getUser_id());
-			String decodedPassword = new AESSecurity().decoding(compareUser.getUser_password(), Config.AES_KEY);
+			String aes_key = mUserDao.getAES_KEY(compareUser.get_id());	
+			String decodedPassword = new AESSecurity().decoding(compareUser.getUser_password(), aes_key);
 			if (user.getUser_password().equals(decodedPassword)) {
 				return UserStatus.success;
 			} else {

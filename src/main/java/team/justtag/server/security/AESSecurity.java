@@ -8,17 +8,20 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.SecretKeySpec;
 
 import com.auth0.jwt.internal.org.apache.commons.codec.DecoderException;
 import com.auth0.jwt.internal.org.apache.commons.codec.binary.Hex;
 
 public class AESSecurity {
 
-	public String encoding(String str, Key key) {
+	public String encoding(String str, String tokenString) {
 		Cipher cipher;
 		try {
 			cipher = Cipher.getInstance("AES");
+			Key key = new SecretKeySpec(tokenString.getBytes(), "AES");
 			cipher.init(Cipher.ENCRYPT_MODE, key);
+			
 			byte[] encryptedData;
 			encryptedData = cipher.doFinal(str.getBytes());
 			return Hex.encodeHexString(encryptedData);
@@ -40,9 +43,10 @@ public class AESSecurity {
 		}
 	}
 
-	public String decoding(String str, Key key) {
+	public String decoding(String str, String tokenString) {
 		try {
 			Cipher cipherx = Cipher.getInstance("AES");
+			Key key = new SecretKeySpec(tokenString.getBytes(), "AES");
 			cipherx.init(Cipher.DECRYPT_MODE, key);
 			byte[] plainText = cipherx
 					.doFinal(Hex.decodeHex(str.toCharArray()));

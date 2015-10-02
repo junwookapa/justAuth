@@ -11,6 +11,7 @@ public class User {
 	private String user_password; // 비밀번호
 	private String user_role; // 역할 admin, group master, ...
 	private String user_email; // 이메일
+	private String aes_key;
 	private String reg_date; // 생성일
 
 	public User(BasicDBObject dbObject) {
@@ -20,8 +21,18 @@ public class User {
 		this.user_password = dbObject.getString("user_password");
 		this.user_role = dbObject.getString("user_role");
 		this.user_email = dbObject.getString("user_email");
+		this.aes_key = dbObject.getString("aes_key");
 		this.reg_date = dbObject.getString("reg_date");
 	}
+	
+	public String getAes_key() {
+		return aes_key;
+	}
+
+	public void setAes_key(String aes_key) {
+		this.aes_key = aes_key;
+	}
+
 	public User() {
 	}
 

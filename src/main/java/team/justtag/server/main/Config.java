@@ -12,8 +12,10 @@ public final class Config {
 	public static final String APP_DNS = System.getenv("OPENSHIFT_APP_DNS") != null ? System.getenv("OPENSHIFT_APP_DNS") : IP_ADDRESS+"/"+PORT;
 
 	//security
-	public static final String KEY_STRING = "1234567890qwerty"; // 비밀번호 암호용 토큰
-	public static final Key AES_KEY = new SecretKeySpec(KEY_STRING.getBytes(), "AES"); // AES KEY
+//	public static final String KEY_STRING = "1234567890qwerty"; // 비밀번호 암호용 토큰
+//	public static final Key AES_KEY = new SecretKeySpec(KEY_STRING.getBytes(), "AES"); // AES KEY
+	public static final int AES_TOKEN_LENGTH = 16; //128bit
+	public static final int AES_USER_PASSWORD_LENGTH = 16; //128bit
 	public static final int RSA_LENGTH = 2048;
 	
 	//token
