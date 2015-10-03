@@ -12,10 +12,10 @@
 		<th>Created On</th>
 <!-- 		<th>Done</th> -->
 	</tr>
-	<tr class="success-{{todo.done}}" ng-repeat="user in userss">
+	<tr ng-repeat="user in users">
 		<td>{{$index+1}}</td>
-		<td>{{todo.title}}</td>
-		<td>{{todo.createdOn |date:'medium'}}</td>
+		<td>{{user.user_id}}</td>
+		<td>{{user.regDate |date:'medium'}}</td>
 <!-- 		<td><input type="checkbox" ng-change="todoStatusChanged(todo)"
 			ng-value="todo.done" ng-model="todo.done"></td> -->
 	</tr>

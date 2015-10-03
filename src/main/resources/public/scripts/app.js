@@ -14,9 +14,9 @@ app.config(function($routeProvider) {
 	}).when('/create', {
 		templateUrl : 'views/create.html',
 		controller : 'CreateCtrl'
-	}).when('/test1', {
-		templateUrl : 'views/create2.html',
-		controller : 'test1'
+	}).when('/user', {
+		templateUrl : 'views/user.html',
+		controller : 'UserList'
 	}).otherwise({
 		redirectTo : '/'
 	})
@@ -28,19 +28,15 @@ app.controller('ListCtrl', function($scope, $http, $cookieStore, $location) {
 		$location.path('/login');
 	}
 	$http.get('/token'+'/'+token).success(function(data) {
-		console.log('data ='+data);
 		if(data === '"notFoundToken"' || data === '"tokenExpired"'|| data === '"tokenUpdateFail"' || data === '"unknownError"'){
 			$location.path('/login');
 		}else if(data !== '"success"'){
 			$cookieStore.put('token', data);
 		}
-	})/*.error(function(data, status) {
+	});
+
+	$http.get('/todos').success(function(data) {
 		console.log(data);
-		$location.path('/');
-	})*/
-	
-	console.log($cookieStore.get('token'));
-	$http.get('/api/v1/todos').success(function(data) {
 		$scope.todos = data;
 	}).error(function(data, status) {
 		console.log('Error ' + data)
@@ -48,7 +44,7 @@ app.controller('ListCtrl', function($scope, $http, $cookieStore, $location) {
 
 	$scope.todoStatusChanged = function(todo) {
 		console.log(todo);
-		$http.put('/api/v1/todos/' + todo.id, todo).success(function(data) {
+		$http.put('/todos/' + todo.id, todo).success(function(data) {
 			console.log('status changed');
 		}).error(function(data, status) {
 			console.log('Error ' + data)
@@ -78,9 +74,10 @@ app.controller('CreateCtrl', function ($scope, $http, $location) {
     }
 });
 
-app.controller('test1', function ($scope, $http, $location ,$cookieStore) {
+app.controller('UserList', function ($scope, $http, $location ,$cookieStore) {
 	$http.get('/users', {headers: {'token': $cookieStore.get('token')}}).success(function (data) {
 		console.log(data);
+		$scope.users = data;
 	}).error(function (data, status) {
         console.log('Error ' + data)
     });
@@ -109,7 +106,7 @@ app.controller('LoginCtrl', function($scope, $http, $location, RSAService, $cook
 });
 
 
-app.controller('sginCtrl', function($scope, $http, $location, RSAService) {
+app.controller('sginCtrl', function($scope, $http, $location, RSAService, $cookieStore) {
 	RSAService.getKey();
 	$scope.createuser = function(data) {
 		if($scope.user_password != $scope.user_confirm_password){
@@ -123,6 +120,13 @@ app.controller('sginCtrl', function($scope, $http, $location, RSAService) {
 			+"}";
 		RSAService.encrypt(users).then(function(result) {
 			$http.post('/sign', result).success(function(data) {
+				$http.post('/login', result).success(function(data) {
+					$cookieStore.put('token', data);
+					$location.path('/');
+				});
+				
+				
+				
 				console.log(data);
 			});
 		});

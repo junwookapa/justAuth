@@ -59,7 +59,7 @@ public class TokenController {
 				default:
 					break;
 				case success:
-					response.status(201);
+					break;
 				case notFoundToken:
 				case tokenExpired:
 				case tokenExpiringsoon:
@@ -79,7 +79,7 @@ public class TokenController {
 				default:
 					break;
 				case success:
-					response.status(201);
+					break;
 				case notFoundToken:
 				case tokenExpired:
 				case tokenExpiringsoon:
