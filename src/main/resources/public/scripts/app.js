@@ -24,7 +24,7 @@ app.config(function($routeProvider) {
 
 app.controller('ListCtrl', function($scope, $http, $cookieStore, $location) {
 	var token = $cookieStore.get('token');
-	if(typeof token == "undefined"){
+	if(typeof token == "undefined" && $cookieStore.get('token').length<1){
 		$location.path('/login');
 	}
 	$http.get('/token'+'/'+token).success(function(data) {
@@ -78,6 +78,14 @@ app.controller('UserList', function ($scope, $http, $location ,$cookieStore) {
 	}).error(function (data, status) {
         console.log('Error ' + data)
     });
+	$scope.logout = function(){
+		$http.delete('/token'+'/'+token).success(function(data) {
+			console.log(data);
+			$location.path('/login');
+		}).error(function(data, status) {
+			console.log(data);
+		})
+	};
 
 });
 	
@@ -93,8 +101,10 @@ app.controller('LoginCtrl', function($scope, $http, $location, RSAService, $cook
 			+"}";
 		RSAService.encrypt(user).then(function(result) {
 			$http.post('/login', result).success(function(data) {
-				$cookieStore.put('token', data);
-				$location.path('/');
+				if(data.length>0){
+					$cookieStore.put('token', data);
+					$location.path('/');
+				}
 			}).error(function(response) {
 			   console.log("error");
 			  });
@@ -121,9 +131,6 @@ app.controller('sginCtrl', function($scope, $http, $location, RSAService, $cooki
 					$cookieStore.put('token', data);
 					$location.path('/');
 				});
-				
-				
-				
 				console.log(data);
 			});
 		});
