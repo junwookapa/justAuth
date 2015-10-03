@@ -33,13 +33,16 @@ public class UserController {
 		// getUser Info
 		get("/user/:id", "application/json", (request, response) -> 
 					mUserService.findUserbyUserID(request.params(":id")), new JsonTransformer());
-		// getAll User Info
-		get("/users", "application/json", (request, response) -> mUserService.findAllUsers(), new JsonTransformer());
 		// delete User
 		delete("/user", "application/json", (request, response) -> {
-					String funtionBlockJson = new String(request.bodyAsBytes(), "UTF-8");
-					return mUserService.deleteUser(funtionBlockJson).toString();
-				}, new JsonTransformer());
+							String funtionBlockJson = new String(request.bodyAsBytes(), "UTF-8");
+							return mUserService.deleteUser(funtionBlockJson).toString();
+						}, new JsonTransformer());
+		
+		
+		// getAll User Info
+		get("/users", "application/json", (request, response) -> mUserService.findAllUsers(), new JsonTransformer());
+		
 		
 		
 		// sign
@@ -47,7 +50,8 @@ public class UserController {
 					String funtionBlockJson = new String(request.bodyAsBytes(),	"UTF-8");
 					String decodingString = new JWEUtil().decoder(request.session().attribute("privateKey"), funtionBlockJson);
 					return mUserService.createUser(decodingString);
-				}, new JsonTransformer());		
+				}, new JsonTransformer());			
+		
 		// login
 		post("/login", "application/json", (request, response) -> {
 			String decodingString = new JWEUtil().decoder(request.session().attribute("privateKey"), request.body());
@@ -66,15 +70,6 @@ public class UserController {
 					request.session().maxInactiveInterval(Config.SESSION_TIME);
 					request.session().attribute("privateKey", keyManager.getPrivateKey());
 					return keyManager.getPublicKeyWithJson();
-		});
-		get("/headertest", "application/json",
-				(request, response) -> {
-					
-					String asd = new Gson().toJson(request.headers());
-					
-					JSONObject abc = new JSONObject();
-					
-					return "asd";
 		});
 	}
 }

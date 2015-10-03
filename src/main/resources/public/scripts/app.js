@@ -14,6 +14,9 @@ app.config(function($routeProvider) {
 	}).when('/create', {
 		templateUrl : 'views/create.html',
 		controller : 'CreateCtrl'
+	}).when('/test1', {
+		templateUrl : 'views/create2.html',
+		controller : 'test1'
 	}).otherwise({
 		redirectTo : '/'
 	})
@@ -31,10 +34,10 @@ app.controller('ListCtrl', function($scope, $http, $cookieStore, $location) {
 		}else if(data !== '"success"'){
 			$cookieStore.put('token', data);
 		}
-	}).error(function(data, status) {
+	})/*.error(function(data, status) {
 		console.log(data);
 		$location.path('/');
-	})
+	})*/
 	
 	console.log($cookieStore.get('token'));
 	$http.get('/api/v1/todos').success(function(data) {
@@ -74,6 +77,16 @@ app.controller('CreateCtrl', function ($scope, $http, $location) {
         })
     }
 });
+
+app.controller('test1', function ($scope, $http, $location ,$cookieStore) {
+	$http.get('/users', {headers: {'token': $cookieStore.get('token')}}).success(function (data) {
+		console.log(data);
+	}).error(function (data, status) {
+        console.log('Error ' + data)
+    });
+
+});
+	
 app.controller('LoginCtrl', function($scope, $http, $location, RSAService, $cookieStore) {
 	RSAService.getKey();
 	$scope.changeSingUpPage = function() {

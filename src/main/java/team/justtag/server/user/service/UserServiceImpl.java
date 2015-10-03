@@ -110,6 +110,9 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public List<User> findAllUsers() {
+		List<User> asd = mUserDao.getAllUsers();
+		for(int i=0; i<asd.size(); i++)
+			System.out.println(mUserDao.getAllUsers().get(i).get_id());
 		return mUserDao.getAllUsers();
 	}
 

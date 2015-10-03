@@ -45,7 +45,50 @@ public class TokenController {
 		delete("/token/:token", "application/json", (request, response) -> {
 					return mTokenService.deleteToken(request.params(":token"));
 					},
-				new JsonTransformer());		
+				new JsonTransformer());
+		
+		
+		before("/user", "application/json", (request, response) ->{
+			String key =null;
+			if(request.headers().contains("token")){
+				key = request.headers("token");
+			}else{
+				response.status(204);
+			}
+			switch(mTokenService.verifyToken(key, request.host())){
+				default:
+					break;
+				case success:
+					response.status(201);
+				case notFoundToken:
+				case tokenExpired:
+				case tokenExpiringsoon:
+				case tokenUpdateFail:
+				case unknownError:
+					response.status(204);
+			}
+			});
+		before("/users", "application/json", (request, response) ->{
+			String key =null;
+			if(request.headers().contains("token")){
+				key = request.headers("token");
+			}else{
+				response.status(204);
+			}
+			switch(mTokenService.verifyToken(key, request.host())){
+				default:
+					break;
+				case success:
+					response.status(201);
+				case notFoundToken:
+				case tokenExpired:
+				case tokenExpiringsoon:
+				case tokenUpdateFail:
+				case unknownError:
+					response.status(204);
+			}
+			});
+		
 		
 	}
 
