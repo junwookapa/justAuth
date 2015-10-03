@@ -9,9 +9,13 @@ import team.justtag.server.main.Status.Role;
 import team.justtag.server.main.Status.UserStatus;
 import team.justtag.server.security.AESSecurity;
 import team.justtag.server.security.AESToken;
+import team.justtag.server.token.dao.TokenDao;
+import team.justtag.server.token.dao.TokenDaoImpl;
+import team.justtag.server.token.model.Token;
 import team.justtag.server.user.dao.UserDao;
 import team.justtag.server.user.dao.UserDaoImpl;
 import team.justtag.server.user.model.User;
+import team.justtag.server.user.model.UserInfo;
 import team.justtag.server.util.RandomString;
 
 import com.google.gson.Gson;
@@ -20,10 +24,12 @@ import com.mongodb.MongoException;
 
 public class UserServiceImpl implements UserService {
 	private final UserDao mUserDao;
+	private final TokenDao mTokenDao;
 
 
 	public UserServiceImpl(DB db) {
 		this.mUserDao = new UserDaoImpl(db);
+		this.mTokenDao = new TokenDaoImpl(db);
 		createAdmin();
 	}
 	private void createAdmin(){
@@ -109,18 +115,21 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public List<User> findAllUsers() {
-		List<User> users = mUserDao.getAllUsers();
-		for(int i=0; i<users.size(); i++){
-			System.out.println(mUserDao.getAllUsers().get(i).get_id());
-			System.out.println(mUserDao.getAllUsers().get(i).getUser_name());
+	public List<UserInfo> findAllUsers(String token) {
+		Token tokenx =mTokenDao.getTokenByToken(token);
+		String test = new AESToken().decodingToken(token, tokenx.getAes_key());
+		User user = new Gson().fromJson(test, User.class);
+		String role = mUserDao.getUserByUserID(user.getUser_id()).getUser_role();
+		try{
+			if(role.equals(Role.admin.name())){
+				List<UserInfo> users = mUserDao.getAllUsers();
+				return users;
+			}else{
+				return null;
+			}
+		}catch(NullPointerException e){
+			return null;
 		}
-		return users;
-	}
-
-	@Override
-	public List<User> findAllUsersByUserGroup(String userGroupID) {
-		return null;
 	}
 
 	@Override

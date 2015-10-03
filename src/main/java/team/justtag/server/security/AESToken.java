@@ -9,8 +9,10 @@ import org.jose4j.jwe.JsonWebEncryption;
 import org.jose4j.jwe.KeyManagementAlgorithmIdentifiers;
 import org.jose4j.jwt.JwtClaims;
 import org.jose4j.lang.JoseException;
+import org.junit.Test;
 
 public class AESToken {
+	
 	public String encodingToken(String str, String keyString) {
 		JsonWebEncryption jwe = new JsonWebEncryption();
 		jwe.setPayload(str);

@@ -22,7 +22,7 @@ public class Token {
 		this.iat = dbObject.getString("iat");
 		this.iss = dbObject.getString("iss");
 		this.aud = dbObject.getString("aud");
-		this.aud = dbObject.getString("aes_key");
+		this.aes_key = dbObject.getString("aes_key");
 	}
 	public Token() {
 	}

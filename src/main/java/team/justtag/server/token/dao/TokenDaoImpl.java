@@ -44,6 +44,7 @@ public class TokenDaoImpl implements TokenDao{
 					.append("exp", token.getExp())
 					.append("iat", token.getIat())
 					.append("iss", token.getIss())
+					.append("aud", token.getAud())
 					.append("aes_key", token.getAes_key())));
 			return DBStatus.success;
 		}catch(MongoException e){

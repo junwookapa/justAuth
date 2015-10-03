@@ -3,8 +3,8 @@ package team.justtag.server.main;
 import static spark.SparkBase.setIpAddress;
 import static spark.SparkBase.setPort;
 import static spark.SparkBase.staticFileLocation;
-import team.justtag.server.todo.controller.TodoResource;
-import team.justtag.server.todo.service.TodoService;
+import team.justtag.server.board.controller.BoardController;
+import team.justtag.server.board.service.BoardServiceImpl;
 import team.justtag.server.token.controller.TokenController;
 import team.justtag.server.token.service.TokenServiceImpl;
 import team.justtag.server.user.controller.UserController;
@@ -52,7 +52,7 @@ public class Main {
     }
     //
     private static void setController(DB db){
-    	new TodoResource(new TodoService(db));
+    	new BoardController(new BoardServiceImpl(db));
     	new UserController(new UserServiceImpl(db));
     	new TokenController(new TokenServiceImpl(db));
     	

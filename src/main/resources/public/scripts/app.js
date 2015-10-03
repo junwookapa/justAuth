@@ -15,7 +15,7 @@ app.config(function($routeProvider) {
 		templateUrl : 'views/create.html',
 		controller : 'CreateCtrl'
 	}).when('/user', {
-		templateUrl : 'views/user.html',
+		templateUrl : 'views/userlist.html',
 		controller : 'UserList'
 	}).otherwise({
 		redirectTo : '/'
@@ -35,16 +35,16 @@ app.controller('ListCtrl', function($scope, $http, $cookieStore, $location) {
 		}
 	});
 
-	$http.get('/todos').success(function(data) {
+	$http.get('/boards', {headers: {'token': $cookieStore.get('token')}}).success(function(data) {
 		console.log(data);
-		$scope.todos = data;
+		$scope.boards = data;
 	}).error(function(data, status) {
 		console.log('Error ' + data)
 	})
 
-	$scope.todoStatusChanged = function(todo) {
-		console.log(todo);
-		$http.put('/todos/' + todo.id, todo).success(function(data) {
+	$scope.boardStatusChanged = function(board) {
+		console.log(board);
+		$http.put('/boards/' + board.id, board).success(function(data) {
 			console.log('status changed');
 		}).error(function(data, status) {
 			console.log('Error ' + data)
@@ -60,13 +60,10 @@ app.controller('ListCtrl', function($scope, $http, $cookieStore, $location) {
 	}
 		
 });
-app.controller('CreateCtrl', function ($scope, $http, $location) {
-    $scope.todo = {
-        done: false
-    };
-    $scope.createTodo = function () {
-        console.log($scope.todo);
-        $http.post('/api/v1/todos', $scope.todo).success(function (data) {
+app.controller('CreateCtrl', function ($scope, $http, $location, $cookieStore) {
+    $scope.createboard = function () {
+        console.log($scope.board);
+        $http.post('/boards', $scope.board, {headers: {'token': $cookieStore.get('token')}}).success(function (data) {
             $location.path('/');
         }).error(function (data, status) {
             console.log('Error ' + data)

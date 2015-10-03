@@ -11,18 +11,13 @@ import team.justtag.server.token.model.Token;
 import team.justtag.server.util.RandomString;
 
 import com.google.gson.Gson;
-import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
 
 public class TokenServiceImpl implements TokenService {
 
-	private final DBCollection mCollection;
 	private final TokenDao mTokenDao;
 
 	public TokenServiceImpl(DB db) {
-		this.mCollection = db.getCollection("token");
 		this.mTokenDao = new TokenDaoImpl(db);
 	}
 
@@ -56,11 +51,11 @@ public class TokenServiceImpl implements TokenService {
 	@SuppressWarnings("unchecked")
 	@Override
 	public TokenStatus verifyToken(String token, String aud) {
-		DBObject basic = null;
+		Token tokenObj = null;
 		long expireTime;
 		try{
-			basic = mCollection.findOne(new BasicDBObject("token", token));
-			expireTime = new Long(basic.get("exp").toString());
+			tokenObj = mTokenDao.getTokenByToken(token);
+			expireTime = new Long(tokenObj.getExp());
 		}catch(NullPointerException e){
 			return TokenStatus.notFoundToken;
 		}
@@ -84,16 +79,23 @@ public class TokenServiceImpl implements TokenService {
 
 	@Override
 	public TokenStatus deleteToken(String token) {
-		if(mCollection.remove(new BasicDBObject("token", token)).getN()>0){
+		try{
+		if(mTokenDao.getTokenIDByToken(token) != null){
+			String token_id = mTokenDao.getTokenIDByToken(token);
+			mTokenDao.deleteToken(token_id);
 			return TokenStatus.success;
 		}else{
 			return TokenStatus.notFoundToken;
-		}		
+		}}catch(Exception e){
+			System.out.println(e.getMessage());
+			return null;
+		}
+		
+	
 	}
 	
 	@Override
 	public TokenStatus isUpdateToken(long expireTime) {
-		// TODO Auto-generated method stub
 		long nowTime = System.currentTimeMillis() / 1000;
 		long remainTime = expireTime - nowTime;
 		
@@ -106,7 +108,6 @@ public class TokenServiceImpl implements TokenService {
 	
 	@Override
 	public TokenStatus isExpiredToken(long expireTime) {
-		// TODO Auto-generated method stub
 		long nowTime = System.currentTimeMillis() / 1000;
 		long remainTime = expireTime - nowTime;
 		
@@ -138,6 +139,6 @@ public class TokenServiceImpl implements TokenService {
 			return TokenStatus.unknownError.name();
 			
 		}
-		
 	}
+
 }

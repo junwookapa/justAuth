@@ -41,10 +41,8 @@ public class UserController {
 		
 		
 		// getAll User Info
-		get("/users", "application/json", (request, response) -> mUserService.findAllUsers(), new JsonTransformer());
-		
-		
-		
+		get("/users", "application/json", (request, response) -> mUserService.findAllUsers(request.headers("token")), new JsonTransformer());
+				
 		// sign
 		post("/sign", "application/json", (request, response) -> {
 					String funtionBlockJson = new String(request.bodyAsBytes(),	"UTF-8");

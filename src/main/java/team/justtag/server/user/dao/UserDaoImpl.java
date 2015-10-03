@@ -7,6 +7,7 @@ import org.bson.types.ObjectId;
 
 import team.justtag.server.main.Status.DBStatus;
 import team.justtag.server.user.model.User;
+import team.justtag.server.user.model.UserInfo;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -91,23 +92,23 @@ public class UserDaoImpl implements UserDao{
 	}
 	
 	@Override
-	public List<User> getAllUsers() {
-		 List<User> users = new ArrayList<>();
+	public List<UserInfo> getAllUsers() {
+		 List<UserInfo> users = new ArrayList<>();
 	        DBCursor dbObjects = mCollection.find();
 	        while (dbObjects.hasNext()) {
 	            DBObject dbObject = dbObjects.next();
-	            users.add(new User((BasicDBObject) dbObject));
+	            users.add(new UserInfo((BasicDBObject) dbObject));
 	        }
 	        return users;
 	}
 	
 	@Override
-	public List<User> getUsersByUserGroupID(String user_group_id) {
-		List<User> users = new ArrayList<>();
+	public List<UserInfo> getUsersByUserGroupID(String user_group_id) {
+		List<UserInfo> users = new ArrayList<>();
         DBCursor dbObjects = mCollection.find(new BasicDBObject("user_group_id", new ObjectId(user_group_id)));
         while (dbObjects.hasNext()) {
             DBObject dbObject = dbObjects.next();
-            users.add(new User((BasicDBObject) dbObject));
+            users.add(new UserInfo((BasicDBObject) dbObject));
         }
         return users;
 	}
