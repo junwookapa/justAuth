@@ -1308,12 +1308,12 @@ JoseJWS.Signer.prototype.addSigner = function(rsa_key, key_id, aad, header) {
   if (Utils.isCryptoKey(rsa_key)) {
     key_promise = new Promise(function(resolve) {
       resolve(rsa_key);
-    } else {
-    	var alg;
-    	if (aad && aad.alg) {
-    		alg = aad.alg;
-    	} else {
     });
+  } else {
+    var alg;
+    if (aad && aad.alg) {
+      alg = aad.alg;
+    } else {
       alg = that.cryptographer.getContentSignAlgorithm();
     }
     key_promise = Jose.Utils.importRsaPrivateKey(rsa_key, alg, "sign");
