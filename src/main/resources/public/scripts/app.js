@@ -121,7 +121,6 @@ app.controller('LoginCtrl', function($scope, $http, $location, $cookieStore) {
 
 
 app.controller('sginCtrl', function($scope, $http, $location, $cookieStore) {
-	$http.get('/keyforbrowser').success(function(data, headers) {
 		$http.get('/keyforbrowser').success(function(data, status, headers, config) {
 			$cookieStore.put('publicKey', JSON.parse(headers('publickey')));
 			});
