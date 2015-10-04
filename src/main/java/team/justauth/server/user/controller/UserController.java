@@ -68,8 +68,16 @@ public class UserController {
 					JWEManager keyManager = new JWEManager();
 					request.session().maxInactiveInterval(Config.SESSION_TIME);
 					request.session().attribute("privateKey", keyManager.getPrivateKey());
-					System.out.println(new Date()+"::RSA publicKey : "+keyManager.getPublicKeyWithJson());
+//					System.out.println(new Date()+"::RSA publicKey : "+keyManager.getPublicKeyWithJson());
 					return keyManager.getPublicKeyWithJson();
+		});
+		get("/keyforbrowser", "application/json",
+				(request, response) -> {
+					JWEManager keyManager = new JWEManager();
+					request.session().maxInactiveInterval(Config.SESSION_TIME);
+					request.session().attribute("privateKey", keyManager.getPrivateKey());
+					response.cookie("publicKey", keyManager.getPublicKeyWithJson());
+					return "success";
 		});
 	}
 }
