@@ -76,7 +76,7 @@ public class UserController {
 					JWEManager keyManager = new JWEManager();
 					request.session().maxInactiveInterval(Config.SESSION_TIME);
 					request.session().attribute("privateKey", keyManager.getPrivateKey());
-					response.cookie("publicKey", keyManager.getPublicKeyWithJson());
+					response.header("publickey", keyManager.getPublicKeyWithJson());
 					return "success";
 		});
 	}

@@ -90,8 +90,8 @@ app.controller('UserList', function ($scope, $http, $location ,$cookieStore) {
 });
 
 app.controller('LoginCtrl', function($scope, $http, $location, $cookieStore) {
-	$http.get('/keyforbrowser').success(function(data) {
-	//	$cookieStore.put('publicKey', data);
+	$http.get('/keyforbrowser').success(function(data, status, headers, config) {
+		$cookieStore.put('publicKey', JSON.parse(headers('publickey')));
 		});
 	$scope.changeSingUpPage = function() {
 		$location.path('/sign');
@@ -101,7 +101,7 @@ app.controller('LoginCtrl', function($scope, $http, $location, $cookieStore) {
 				+"\"user_id\" : \""+$scope.user_id+"\" ,"
 				+"\"user_password\" : \""+$scope.user_password+"\""
 			+"}";
-		var publicKey = JSON.parse($cookieStore.get('publicKey'));
+		var publicKey = $cookieStore.get('publicKey');
 		var cryptographer = new Jose.WebCryptographer();
 		cryptographer.setContentEncryptionAlgorithm("A128GCM");
 		var public_rsa_key = Jose.Utils.importRsaPublicKey(publicKey, "RSA-OAEP");
@@ -121,8 +121,9 @@ app.controller('LoginCtrl', function($scope, $http, $location, $cookieStore) {
 
 
 app.controller('sginCtrl', function($scope, $http, $location, $cookieStore) {
-	$http.get('/keyforbrowser').success(function(data) {
-		//	$cookieStore.put('publicKey', data);
+	$http.get('/keyforbrowser').success(function(data, headers) {
+		$http.get('/keyforbrowser').success(function(data, status, headers, config) {
+			$cookieStore.put('publicKey', JSON.parse(headers('publickey')));
 			});
 	$scope.createuser = function(data) {
 		if($scope.user_password != $scope.user_confirm_password){
@@ -134,7 +135,7 @@ app.controller('sginCtrl', function($scope, $http, $location, $cookieStore) {
 				+"\"user_password\" : \""+$scope.user_password+"\" ,"
 				+"\"user_email\" : \""+$scope.user_email+"\""
 			+"}";
-		var publicKey = JSON.parse($cookieStore.get('publicKey'));
+				var publicKey = $cookieStore.get('publicKey');
 				var cryptographer = new Jose.WebCryptographer();
 				cryptographer.setContentEncryptionAlgorithm("A128GCM");
 				var public_rsa_key = Jose.Utils.importRsaPublicKey(publicKey, "RSA-OAEP");
