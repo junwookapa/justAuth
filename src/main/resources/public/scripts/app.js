@@ -24,7 +24,7 @@ app.config(function($routeProvider) {
 
 app.controller('ListCtrl', function($scope, $http, $cookieStore, $location) {
 	var token = $cookieStore.get('token');
-	if(typeof token == "undefined" && $cookieStore.get('token').length<1){
+	if(typeof token == "undefined" || $cookieStore.get('token').length<1){
 		$location.path('/login');
 	}
 	$http.get('/token'+'/'+token).success(function(data) {
