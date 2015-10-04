@@ -90,24 +90,25 @@ app.controller('UserList', function ($scope, $http, $location ,$cookieStore) {
 });
 	
 app.controller('LoginCtrl', function($scope, $http, $location, RSAService, $cookieStore) {
-	
+	$http.get('/key').success(function(data) {
+		$cookieStore.put('publicKey', data);
+		});
 	$scope.changeSingUpPage = function() {
 		$location.path('/sign');
 	}
 	$scope.login = function(data) {
-		RSAService.getKey();
 		var user = "{"
 				+"\"user_id\" : \""+$scope.user_id+"\" ,"
 				+"\"user_password\" : \""+$scope.user_password+"\""
 			+"}";
 		RSAService.encrypt(user).then(function(result) {
 			$http.post('/login', result).success(function(data) {
-			//	if(data.length>0){
+				if(data.length>0){
 					$cookieStore.put('token', data);
-			//		$location.path('/');
-			//	}
+					$location.path('/');
+				}
 			}).error(function(response) {
-			  // console.log("error");
+			   console.log("error");
 			  });
 		});	
 	}
@@ -115,7 +116,9 @@ app.controller('LoginCtrl', function($scope, $http, $location, RSAService, $cook
 
 
 app.controller('sginCtrl', function($scope, $http, $location, RSAService, $cookieStore) {
-	RSAService.getKey();
+	$http.get('/key').success(function(data) {
+		$cookieStore.put('publicKey', data);
+		});
 	$scope.createuser = function(data) {
 		if($scope.user_password != $scope.user_confirm_password){
 			console.log($scope.user_password);
@@ -141,14 +144,8 @@ app.controller('sginCtrl', function($scope, $http, $location, RSAService, $cooki
 });
 
 app.service('RSAService', function($cookieStore, $http) {
-
-	this.getKey = function() {
-		$http.get('/key').success(function(data) {
-			$cookieStore.put('publicKey', data);
-			});
-		};
 			this.encrypt = function(payload) {
-				this.getKey();
+			//	this.getKey();
 				var publicKey = $cookieStore.get('publicKey');
 				var cryptographer = new Jose.WebCryptographer();
 				cryptographer.setContentEncryptionAlgorithm("A128GCM");
