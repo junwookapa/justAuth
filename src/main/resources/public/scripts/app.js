@@ -107,11 +107,11 @@ app.controller('LoginCtrl', function($scope, $http, $location, $cookieStore) {
 		var public_rsa_key = Jose.Utils.importRsaPublicKey(publicKey, "RSA-OAEP");
 		var encrypter = new JoseJWE.Encrypter(cryptographer, public_rsa_key);
 		encrypter.encrypt(user).then(function(result) {
-			$http.post('http://localhost:8080/login', result).success(function(data) {
+		/*	$http.post('http://localhost:8080/login', result).success(function(data) {
 				if(data.length>0){
 					$cookieStore.put('token', data);
 					$location.path('/');
-				}
+				}*/
 			}).error(function(response) {
 			   console.log("error");
 			  });
