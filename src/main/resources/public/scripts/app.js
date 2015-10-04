@@ -23,7 +23,7 @@ app.config(function($routeProvider) {
 });
 
 app.controller('ListCtrl', function($scope, $http, $cookieStore, $location) {
-	var token = $cookieStore.get('token');
+	/*var token = $cookieStore.get('token');
 	if(typeof token == "undefined" || $cookieStore.get('token').length<1){
 		$location.path('/login');
 	}
@@ -33,7 +33,7 @@ app.controller('ListCtrl', function($scope, $http, $cookieStore, $location) {
 		}else if(data !== '"success"'){
 			$cookieStore.put('token', data);
 		}
-	});
+	});*/
 
 	$http.get('/boards', {headers: {'token': $cookieStore.get('token')}}).success(function(data) {
 		console.log(data);
