@@ -27,7 +27,7 @@ app.controller('ListCtrl', function($scope, $http, $cookieStore, $location) {
 	if(typeof token == "undefined" || $cookieStore.get('token').length<1){
 		$location.path('/login');
 	}
-	$http.get('http://localhost:8080/token'+'/'+token).success(function(data) {
+	$http.get('/token'+'/'+token).success(function(data) {
 		if(data === '"notFoundToken"' || data === '"tokenExpired"'|| data === '"tokenUpdateFail"' || data === '"unknownError"'){
 			$location.path('/login');
 		}else if(data !== '"success"'){
@@ -35,7 +35,7 @@ app.controller('ListCtrl', function($scope, $http, $cookieStore, $location) {
 		}
 	});
 
-	$http.get('http://localhost:8080/boards', {headers: {'token': $cookieStore.get('token')}}).success(function(data) {
+	$http.get('/boards', {headers: {'token': $cookieStore.get('token')}}).success(function(data) {
 		console.log(data);
 		$scope.boards = data;
 	}).error(function(data, status) {
@@ -44,14 +44,14 @@ app.controller('ListCtrl', function($scope, $http, $cookieStore, $location) {
 
 	$scope.boardStatusChanged = function(board) {
 		console.log(board);
-		$http.put('http://localhost:8080/boards/' + board.id, board).success(function(data) {
+		$http.put('/boards/' + board.id, board).success(function(data) {
 			console.log('status changed');
 		}).error(function(data, status) {
 			console.log('Error ' + data)
 		})
 	}
 	$scope.logout = function(){
-			$http.delete('http://localhost:8080/token'+'/'+token).success(function(data) {
+			$http.delete('/token'+'/'+token).success(function(data) {
 				console.log(data);
 				$location.path('/login');
 			}).error(function(data, status) {
@@ -63,7 +63,7 @@ app.controller('ListCtrl', function($scope, $http, $cookieStore, $location) {
 app.controller('CreateCtrl', function ($scope, $http, $location, $cookieStore) {
     $scope.createboard = function () {
         console.log($scope.board);
-        $http.post('http://localhost:8080/boards', $scope.board, {headers: {'token': $cookieStore.get('token')}}).success(function (data) {
+        $http.post('/boards', $scope.board, {headers: {'token': $cookieStore.get('token')}}).success(function (data) {
             $location.path('/');
         }).error(function (data, status) {
             console.log('Error ' + data)
@@ -72,14 +72,14 @@ app.controller('CreateCtrl', function ($scope, $http, $location, $cookieStore) {
 });
 
 app.controller('UserList', function ($scope, $http, $location ,$cookieStore) {
-	$http.get('http://localhost:8080/users', {headers: {'token': $cookieStore.get('token')}}).success(function (data) {
+	$http.get('/users', {headers: {'token': $cookieStore.get('token')}}).success(function (data) {
 		console.log(data);
 		$scope.users = data;
 	}).error(function (data, status) {
         console.log('Error ' + data)
     });
 	$scope.logout = function(){
-		$http.delete('http://localhost:8080/token'+'/'+token).success(function(data) {
+		$http.delete('/token'+'/'+token).success(function(data) {
 			console.log(data);
 			$location.path('/login');
 		}).error(function(data, status) {
@@ -90,11 +90,11 @@ app.controller('UserList', function ($scope, $http, $location ,$cookieStore) {
 });
 
 app.controller('LoginCtrl', function($scope, $http, $location, $cookieStore) {
-	$http.get('http://localhost:8080/key').success(function(data) {
+	$http.get('/key').success(function(data) {
 		$cookieStore.put('publicKey', data);
 		});
 	$scope.changeSingUpPage = function() {
-		$location.path('http://localhost:8080/sign');
+		$location.path('/sign');
 	}
 	$scope.login = function(data) {
 		var user = "{"
@@ -107,11 +107,11 @@ app.controller('LoginCtrl', function($scope, $http, $location, $cookieStore) {
 		var public_rsa_key = Jose.Utils.importRsaPublicKey(publicKey, "RSA-OAEP");
 		var encrypter = new JoseJWE.Encrypter(cryptographer, public_rsa_key);
 		encrypter.encrypt(user).then(function(result) {
-		/*	$http.post('http://localhost:8080/login', result).success(function(data) {
+			$http.post('/login', result).success(function(data) {
 				if(data.length>0){
 					$cookieStore.put('token', data);
 					$location.path('/');
-				}*/
+				}
 			}).error(function(response) {
 			   console.log("error");
 			  });
@@ -121,7 +121,7 @@ app.controller('LoginCtrl', function($scope, $http, $location, $cookieStore) {
 
 
 app.controller('sginCtrl', function($scope, $http, $location, $cookieStore) {
-	$http.get('http://localhost:8080/key').success(function(data) {
+	$http.get('/key').success(function(data) {
 		$cookieStore.put('publicKey', data);
 		});
 	$scope.createuser = function(data) {
@@ -140,8 +140,8 @@ app.controller('sginCtrl', function($scope, $http, $location, $cookieStore) {
 				var public_rsa_key = Jose.Utils.importRsaPublicKey(publicKey, "RSA-OAEP");
 				var encrypter = new JoseJWE.Encrypter(cryptographer, public_rsa_key);
 				encrypter.encrypt(payload).then(function(result) {
-			$http.post('http://localhost:8080/sign', result).success(function(data) {
-				$http.post('http://localhost:8080/login', result).success(function(token) {
+			$http.post('/sign', result).success(function(data) {
+				$http.post('/login', result).success(function(token) {
 					$cookieStore.put('token', token);
 					$location.path('/');
 				});
