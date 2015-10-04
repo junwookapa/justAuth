@@ -90,23 +90,24 @@ app.controller('UserList', function ($scope, $http, $location ,$cookieStore) {
 });
 	
 app.controller('LoginCtrl', function($scope, $http, $location, RSAService, $cookieStore) {
-	RSAService.getKey();
+	
 	$scope.changeSingUpPage = function() {
 		$location.path('/sign');
 	}
 	$scope.login = function(data) {
+		RSAService.getKey();
 		var user = "{"
 				+"\"user_id\" : \""+$scope.user_id+"\" ,"
 				+"\"user_password\" : \""+$scope.user_password+"\""
 			+"}";
 		RSAService.encrypt(user).then(function(result) {
 			$http.post('/login', result).success(function(data) {
-				if(data.length>0){
+			//	if(data.length>0){
 					$cookieStore.put('token', data);
-					$location.path('/');
-				}
+			//		$location.path('/');
+			//	}
 			}).error(function(response) {
-			   console.log("error");
+			  // console.log("error");
 			  });
 		});	
 	}
