@@ -16,7 +16,7 @@ import org.jose4j.jwk.RsaJsonWebKey;
 import org.jose4j.lang.JoseException;
 import org.junit.Test;
 
-import team.justtag.server.security.JWEUtil;
+import team.justauth.server.security.JWEUtil;
 
 public class JOSE2_TEST {
 	
