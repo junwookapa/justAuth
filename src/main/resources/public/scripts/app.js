@@ -1,4 +1,4 @@
-var app = angular.module('justTagServer', [ 'ngCookies', 'ngResource',
+var app = angular.module('justAuth', [ 'ngCookies', 'ngResource',
 		'ngSanitize', 'ngRoute' ]);
 
 app.config(function($routeProvider) {

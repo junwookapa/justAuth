@@ -1,4 +1,4 @@
-package team.justtag.server.test;
+package team.justauth.server.test;
 
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;

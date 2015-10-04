@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
 		user.setUser_id("admin");
 		user.setUser_name("admin");
 		user.setUser_password("admin");
-		user.setUser_email("admin@justtag.com");
+		user.setUser_email("admin@justauth.com");
 		user.setUser_role(Role.admin.name());
 		createUser(new Gson().toJson(user));
 	}

@@ -1,4 +1,4 @@
-package team.justtag.server.test;
+package team.justauth.server.test;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
