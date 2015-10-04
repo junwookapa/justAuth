@@ -1,0 +1,93 @@
+<html>
+<meta charset="UTF-8">
+<body>
+	<p>
+		plain text: <span id="plaintext">hello world</span>
+	</p>
+	<p>cipher text:
+	<pre style="word-wrap: break-word" id="ciphertext"></pre>
+	</p>
+	<p>decoded text:
+	<pre style="word-wrap: break-word" id="decodedtext"></pre>
+	</p>
+	<p>
+		error: <span id="error" style="color: red"></span>
+	</p>
+	<script src="../dist/jose.js"></script>
+
+	<script>
+var rsa_key = {
+  // n = modulus
+		"kty": "RSA",
+        "n":   "oahUIoWw0K0usKNuOR6H4wkf4oBUXHTxRvgb48E-BVvxkeDNjbC4he8rUW"+
+               "cJoZmds2h7M70imEVhRU5djINXtqllXI4DFqcI1DgjT9LewND8MW2Krf3S"+
+               "psk_ZkoFnilakGygTwpZ3uesH-PFABNIUYpOiN15dsQRkgr0vEhxN92i2a"+
+               "sbOenSZeyaxziK72UwxrrKoExv6kc5twXTq4h-QChLOln0_mtUZwfsRaMS"+
+               "tPs6mS6XrgxnxbWhojf663tuEQueGC-FCMfra36C9knDFGzKsNa7LZK2dj"+
+               "YgyD3JR_MB_4NUJW_TqOQtwHYbxevoJArm-L5StowjzGy-_bq6Gw",
+        "e":   "AQAB",
+        "d":   "kLdtIj6GbDks_ApCSTYQtelcNttlKiOyPzMrXHeI-yk1F7-kpDxY4-WY5N"+
+               "WV5KntaEeXS1j82E375xxhWMHXyvjYecPT9fpwR_M9gV8n9Hrh2anTpTD9"+
+               "3Dt62ypW3yDsJzBnTnrYu1iwWRgBKrEYY46qAZIrA2xAwnm2X7uGR1hghk"+
+               "qDp0Vqj3kbSCz1XyfCs6_LehBwtxHIyh8Ripy40p24moOAbgxVw3rxT_vl"+
+               "t3UVe4WO3JkJOzlpUf-KTVI2Ptgm-dARxTEtE-id-4OJr0h-K-VFs3VSnd"+
+               "VTIznSxfyrj8ILL6MG_Uv8YAu7VILSB3lOW085-4qE3DzgrTjgyQ",
+        "p":   "1r52Xk46c-LsfB5P442p7atdPUrxQSy4mti_tZI3Mgf2EuFVbUoDBvaRQ-"+
+               "SWxkbkmoEzL7JXroSBjSrK3YIQgYdMgyAEPTPjXv_hI2_1eTSPVZfzL0lf"+
+               "fNn03IXqWF5MDFuoUYE0hzb2vhrlN_rKrbfDIwUbTrjjgieRbwC6Cl0",
+        "q":   "wLb35x7hmQWZsWJmB_vle87ihgZ19S8lBEROLIsZG4ayZVe9Hi9gDVCOBm"+
+               "UDdaDYVTSNx_8Fyw1YYa9XGrGnDew00J28cRUoeBB_jKI1oma0Orv1T9aX"+
+               "IWxKwd4gvxFImOWr3QRL9KEBRzk2RatUBnmDZJTIAfwTs0g68UZHvtc",
+        "dp":  "ZK-YwE7diUh0qR1tR7w8WHtolDx3MZ_OTowiFvgfeQ3SiresXjm9gZ5KL"+
+               "hMXvo-uz-KUJWDxS5pFQ_M0evdo1dKiRTjVw_x4NyqyXPM5nULPkcpU827"+
+               "rnpZzAJKpdhWAgqrXGKAECQH0Xt4taznjnd_zVpAmZZq60WPMBMfKcuE",
+        "dq":  "Dq0gfgJ1DdFGXiLvQEZnuKEN0UUmsJBxkjydc3j4ZYdBiMRAy86x0vHCj"+
+               "ywcMlYYg4yoC4YZa9hNVcsjqA3FeiL19rk8g6Qn29Tt0cj8qqyFpz9vNDB"+
+               "UfCAiJVeESOjJDZPYHdHY8v1b-o-Z2X5tvLx-TCekf7oxyeKDUqKWjis",
+        "qi":  "VIMpMYbPf47dT1w_zDUXfPimsSegnMOA1zTaX7aGk_8urY6R8-ZW1FxU7"+
+               "AlWAyLWybqq6t16VFd7hQd0y6flUK4SlOydB61gwanOsXGOAOv82cHq0E3"+
+               "eL4HrtZkUuKvnPrMnsUUFlfUdybVzxyjz9JF_XyaY14ardLSjf4L_FNY"};
+
+var cryptographer = new Jose.WebCryptographer();
+
+var public_rsa_key = Jose.Utils.importRsaPublicKey(rsa_key, "RSA-OAEP");
+var private_rsa_key = Jose.Utils.importRsaPrivateKey(rsa_key, "RSA-OAEP");
+cryptographer.setContentEncryptionAlgorithm("A128GCM");
+var encrypter = new JoseJWE.Encrypter(cryptographer, public_rsa_key);
+/*
+encrypter.encrypt(plaintext.textContent).then(function(result) {
+	ciphertext.textContent = result;
+
+  var decrypter = new JoseJWE.Decrypter(cryptographer, private_rsa_key);
+  decrypter.decrypt(result)
+    .then(function(decrypted_plain_text) {
+      if (decrypted_plain_text != plaintext.textContent) {
+        error.textContent = "decryption failed!";
+      }else{
+          
+    	  decodedtext.textContent = decrypted_plain_text;
+          }
+    }).catch(function(err) {
+      error.textContent = err;
+    });
+}).catch(function(err){
+	error.textContent = err;
+});
+*/
+
+ var re2 = "eyJhbGciOiJSU0EtT0FFUCIsImVuYyI6IkExMjhHQ00ifQ.kQIv4HiDRB2E6IwZYmq6Hju8wLYkwBLbengU2B7qysCQChWSGXgkoYkdmhlDYKR5FMdbiL8NABNThKga0feLh67-rrXUabVClPTXDe7frDoxE2xl9B3LE7eRSciiHr5TKliqgOgerPfK_TG4Omt7fL3t5bE6slXh1J8G1VYoRnSlR2fMSBZWM3pr-UKfMp2kWyLiF-dmeQJfxTBRQGvCfj0-k3IGyuSALZz7DrxhWrn2m2-ujIcyM8D7DX-mTzsukVsNvd6gLtbeQR3RuAuNv0u1XxU4HsrUBjEB6cZQJMraBOYMewpr9uXPfPESb8OTq4RZPRZRwB7CxCipp24KqQ.kF_pMGa63XdjXC8O.1H4a.FcUlDQTQNT_2TxNobIUoyQ";
+ciphertext.textContent = re2;
+
+var decrypter = new JoseJWE.Decrypter(cryptographer, private_rsa_key);
+console.log(private_rsa_key);
+decrypter.decrypt(re2)
+.then(function(result) {
+	ciphertext.textContent = result;
+}).catch(function(err) {
+  error.textContent = err;
+}); 
+
+
+</script>
+</body>
+</html>

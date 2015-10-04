@@ -1,0 +1,20 @@
+<form class="form-signin" ng-submit="login()">
+	<h2 class="form-signin-heading">로그인</h2>
+
+	<label for="inputEmail" class="sr-only">Email address</label> 
+	<input type="text" id="user_id" class="form-control" placeholder="Email address" required autofocus ng-model="user_id"> 
+	<label for="inputPassword" class="sr-only">Password</label> 
+	<input type="password" id="user_password" class="form-control" 	placeholder="Password" required ng-model="user_password">
+
+
+	<div class="checkbox">
+		<label> <input type="checkbox" value="remember-me">
+			Remember me
+		</label>
+
+	</div>
+	<div class="btn-block">
+		<button class="btn btn-lg btn-primary btn-block" type="submit">로그인</button>
+		<label class="pull-right sign-up-btn" ><a href="#/sign">회원가입을 하시겠습니까?</a></label>
+	</div>
+</form>

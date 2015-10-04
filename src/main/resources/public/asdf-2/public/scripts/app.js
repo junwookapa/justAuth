@@ -88,7 +88,7 @@ app.controller('UserList', function ($scope, $http, $location ,$cookieStore) {
 	};
 
 });
-
+	
 app.controller('LoginCtrl', function($scope, $http, $location, $cookieStore) {
 	$http.get('/key').success(function(data) {
 		$cookieStore.put('publicKey', data);
@@ -100,7 +100,7 @@ app.controller('LoginCtrl', function($scope, $http, $location, $cookieStore) {
 		var user = "{"
 				+"\"user_id\" : \""+$scope.user_id+"\" ,"
 				+"\"user_password\" : \""+$scope.user_password+"\""
-			+"}";
+			+"}";		
 		var publicKey = $cookieStore.get('publicKey');
 		var cryptographer = new Jose.WebCryptographer();
 		cryptographer.setContentEncryptionAlgorithm("A128GCM");
