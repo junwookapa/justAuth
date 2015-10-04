@@ -23,7 +23,6 @@ public class TokenController {
 		after("/login", "application/json",
 				(request, response) ->{
 					int statusCode = response.raw().getStatus();
-					System.out.println(statusCode+"");
 					if(statusCode == 201){
 						String decodingString = new JWEUtil().decoder(request.session().attribute("privateKey"), request.body());
 						response.body(mTokenService.issueToken(decodingString, request.host()));

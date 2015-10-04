@@ -1,5 +1,7 @@
 package team.justauth.server.token.service;
 
+import java.util.Date;
+
 import org.jose4j.json.internal.json_simple.JSONObject;
 
 import team.justauth.server.main.Config;
@@ -23,7 +25,6 @@ public class TokenServiceImpl implements TokenService {
 
 	@Override
 	public String issueToken(String body, String aud) {
-		System.out.println(body);
 		Token token = new Gson().fromJson(body, Token.class);
 		long nowTime = System.currentTimeMillis() / 1000;
 		long exp = nowTime + new Long(Config.EXPIRED_TOKEN_TIME);
@@ -45,6 +46,7 @@ public class TokenServiceImpl implements TokenService {
 		default:
 			return TokenStatus.unknownError.name();
 		}
+		System.out.println(new Date()+"::토큰 :"+tokenString);
 		return tokenString;
 	}
 
@@ -83,6 +85,7 @@ public class TokenServiceImpl implements TokenService {
 		if(mTokenDao.getTokenIDByToken(token) != null){
 			String token_id = mTokenDao.getTokenIDByToken(token);
 			mTokenDao.deleteToken(token_id);
+			System.out.println(new Date()+"::토큰삭제 :"+token);
 			return TokenStatus.success;
 		}else{
 			return TokenStatus.notFoundToken;

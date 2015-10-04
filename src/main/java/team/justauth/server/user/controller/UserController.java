@@ -4,6 +4,7 @@ import static spark.Spark.delete;
 import static spark.Spark.get;
 import static spark.Spark.post;
 
+import java.util.Date;
 import java.util.List;
 
 import org.jose4j.json.internal.json_simple.JSONObject;
@@ -67,6 +68,7 @@ public class UserController {
 					JWEManager keyManager = new JWEManager();
 					request.session().maxInactiveInterval(Config.SESSION_TIME);
 					request.session().attribute("privateKey", keyManager.getPrivateKey());
+					System.out.println(new Date()+"::RSA publicKey : "+keyManager.getPublicKeyWithJson());
 					return keyManager.getPublicKeyWithJson();
 		});
 	}
