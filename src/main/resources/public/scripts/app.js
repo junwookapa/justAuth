@@ -89,7 +89,7 @@ app.controller('UserList', function ($scope, $http, $location ,$cookieStore) {
 
 });
 	
-app.controller('LoginCtrl', function($scope, $http, $location, RSAService, $cookieStore) {
+app.controller('LoginCtrl', function($scope, $http, $location, $cookieStore) {
 	$http.get('/key').success(function(data) {
 		$cookieStore.put('publicKey', data);
 		});
@@ -101,7 +101,16 @@ app.controller('LoginCtrl', function($scope, $http, $location, RSAService, $cook
 				+"\"user_id\" : \""+$scope.user_id+"\" ,"
 				+"\"user_password\" : \""+$scope.user_password+"\""
 			+"}";
-		RSAService.encrypt(user).then(function(result) {
+		
+		
+		
+		
+		var publicKey = $cookieStore.get('publicKey');
+		var cryptographer = new Jose.WebCryptographer();
+		cryptographer.setContentEncryptionAlgorithm("A128GCM");
+		var public_rsa_key = Jose.Utils.importRsaPublicKey(publicKey, "RSA-OAEP");
+		var encrypter = new JoseJWE.Encrypter(cryptographer, public_rsa_key);
+		encrypter.encrypt(user).then(function(result) {
 			$http.post('/login', result).success(function(data) {
 				if(data.length>0){
 					$cookieStore.put('token', data);
@@ -115,7 +124,7 @@ app.controller('LoginCtrl', function($scope, $http, $location, RSAService, $cook
 });
 
 
-app.controller('sginCtrl', function($scope, $http, $location, RSAService, $cookieStore) {
+app.controller('sginCtrl', function($scope, $http, $location, $cookieStore) {
 	$http.get('/key').success(function(data) {
 		$cookieStore.put('publicKey', data);
 		});
@@ -124,15 +133,20 @@ app.controller('sginCtrl', function($scope, $http, $location, RSAService, $cooki
 			console.log($scope.user_password);
 			console.log($scope.user_confirm_password);
 		}else{
-		var users = "{"
+		var payload = "{"
 				+"\"user_id\" : \""+$scope.user_id+"\" ,"
 				+"\"user_password\" : \""+$scope.user_password+"\" ,"
 				+"\"user_email\" : \""+$scope.user_email+"\""
 			+"}";
-		RSAService.encrypt(users).then(function(result) {
+				var publicKey = $cookieStore.get('publicKey');
+				var cryptographer = new Jose.WebCryptographer();
+				cryptographer.setContentEncryptionAlgorithm("A128GCM");
+				var public_rsa_key = Jose.Utils.importRsaPublicKey(publicKey, "RSA-OAEP");
+				var encrypter = new JoseJWE.Encrypter(cryptographer, public_rsa_key);
+				encrypter.encrypt(payload).then(function(result) {
 			$http.post('/sign', result).success(function(data) {
-				$http.post('/login', result).success(function(data) {
-					$cookieStore.put('token', data);
+				$http.post('/login', result).success(function(token) {
+					$cookieStore.put('token', token);
 					$location.path('/');
 				});
 				console.log(data);
@@ -141,18 +155,4 @@ app.controller('sginCtrl', function($scope, $http, $location, RSAService, $cooki
 		}
 		
 	}
-});
-
-app.service('RSAService', function($cookieStore, $http) {
-			this.encrypt = function(payload) {
-			//	this.getKey();
-				var publicKey = $cookieStore.get('publicKey');
-				var cryptographer = new Jose.WebCryptographer();
-				cryptographer.setContentEncryptionAlgorithm("A128GCM");
-				var public_rsa_key = Jose.Utils.importRsaPublicKey(publicKey, "RSA-OAEP");
-				var encrypter = new JoseJWE.Encrypter(cryptographer, public_rsa_key);
-				var encryptData = encrypter.encrypt(payload);
-				$cookieStore.remove('publicKey');
-				return encryptData;
-			};
 });
