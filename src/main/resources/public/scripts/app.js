@@ -61,6 +61,7 @@ app.controller('ListCtrl', function($scope, $http, $cookieStore, $location) {
 		
 });
 app.controller('CreateCtrl', function ($scope, $http, $location, $cookieStore) {
+	
     $scope.createboard = function () {
         console.log($scope.board);
         $http.post('/boards', $scope.board, {headers: {'token': $cookieStore.get('token')}}).success(function (data) {
@@ -72,6 +73,7 @@ app.controller('CreateCtrl', function ($scope, $http, $location, $cookieStore) {
 });
 
 app.controller('UserList', function ($scope, $http, $location ,$cookieStore) {
+	var token = $cookieStore.get('token');
 	$http.get('/users', {headers: {'token': $cookieStore.get('token')}}).success(function (data) {
 		console.log(data);
 		$scope.users = data;
@@ -85,7 +87,7 @@ app.controller('UserList', function ($scope, $http, $location ,$cookieStore) {
 		}).error(function(data, status) {
 			console.log(data);
 		})
-	};
+}
 
 });
 
