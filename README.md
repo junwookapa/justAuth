@@ -32,7 +32,7 @@ How to deploy Server
 1.1. rhc 설치
 ex) https://developers.openshift.com/en/getting-started-overview.html
 2.2. create app
-ex) rhc app create justtagserver diy mongodb-2.4 --repo=justtagserver-os --from-code=https://github.com/junwookapa/justtagserver.git
+ex) rhc app create justauth diy mongodb-2.4 --repo=justauth-os --from-code=https://github.com/junwookapa/justAuth.git
 
 2. embedded linux
 1.1. install java 1.8 and setup environment value
