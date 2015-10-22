@@ -53,6 +53,8 @@ public class UserController {
 		
 		// login
 		post("/login", "application/json", (request, response) -> {
+			System.out.println("request : "+request.headers("Cookie"));
+			System.out.println("body : "+request.body());
 			String decodingString = new JWEUtil().decoder(request.session().attribute("privateKey"), request.body());
 			UserStatus responseStatus = mUserService.login(decodingString);
 			if (responseStatus.equals(UserStatus.success)) {
@@ -68,7 +70,7 @@ public class UserController {
 					JWEManager keyManager = new JWEManager();
 					request.session().maxInactiveInterval(Config.SESSION_TIME);
 					request.session().attribute("privateKey", keyManager.getPrivateKey());
-//					System.out.println(new Date()+"::RSA publicKey : "+keyManager.getPublicKeyWithJson());
+					System.out.println(new Date()+"::RSA publicKey : "+keyManager.getPublicKeyWithJson());
 					return keyManager.getPublicKeyWithJson();
 		});
 		get("/keyforbrowser", "application/json",

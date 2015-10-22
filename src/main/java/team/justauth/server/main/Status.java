@@ -32,4 +32,6 @@ public class Status {
 		admin, // 운영자
 		enduser // 일반유저
 	}
+	
+
 }

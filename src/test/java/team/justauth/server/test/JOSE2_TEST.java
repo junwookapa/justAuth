@@ -14,7 +14,6 @@ import org.jose4j.jwe.KeyManagementAlgorithmIdentifiers;
 import org.jose4j.jwk.PublicJsonWebKey;
 import org.jose4j.jwk.RsaJsonWebKey;
 import org.jose4j.lang.JoseException;
-import org.junit.Test;
 
 import team.justauth.server.security.JWEUtil;
 
@@ -179,7 +178,6 @@ public class JOSE2_TEST {
 		
 	}
 	
-	@Test
 	public void security() throws JoseException, NoSuchAlgorithmException, InvalidKeyException, NoSuchPaddingException{
 		KeyPairGenerator clsKeyPairGenerator = KeyPairGenerator.getInstance("RSA");
 		clsKeyPairGenerator.initialize(2048);
