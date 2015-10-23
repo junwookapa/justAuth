@@ -1,6 +1,7 @@
 package team.justauth.server.util;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -14,6 +15,10 @@ public class Log {
 	
 	public static void writeLog(String log){
 	try {
+		File file = new File(Config.LOG_DIR_PATH+Config.LOG_FILE_NAME);
+		if(!file.exists()){
+			file.createNewFile();
+		}
 	      BufferedWriter out = new BufferedWriter(new FileWriter(Config.LOG_DIR_PATH+Config.LOG_FILE_NAME));
 
 	      out.write(log); out.newLine();
