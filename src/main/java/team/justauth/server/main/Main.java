@@ -9,6 +9,7 @@ import team.justauth.server.token.controller.TokenController;
 import team.justauth.server.token.service.TokenServiceImpl;
 import team.justauth.server.user.controller.UserController;
 import team.justauth.server.user.service.UserServiceImpl;
+import team.justauth.server.util.Log;
 
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
@@ -25,9 +26,11 @@ public class Main {
 
     @SuppressWarnings("deprecation")
 	public static void main(String[] args) throws Exception {
+    	Log.writeLog();
         setIpAddress(Config.IP_ADDRESS);
         setPort(Config.PORT);
         staticFileLocation("/public");
+        
         setController(mongo());
     }
 
