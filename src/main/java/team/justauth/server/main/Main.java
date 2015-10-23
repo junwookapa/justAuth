@@ -20,12 +20,13 @@ import com.mongodb.WriteConcern;
  * Created by shekhargulati on 09/06/14.
  */
 public class Main {
-    private static final String IP_ADDRESS = System.getenv("OPENSHIFT_DIY_IP") != null ? System.getenv("OPENSHIFT_DIY_IP") : "192.168.10.40";
-    private static final int PORT = System.getenv("OPENSHIFT_DIY_PORT") != null ? Integer.parseInt(System.getenv("OPENSHIFT_DIY_PORT")) : 8080;
+//    private static final String IP_ADDRESS = System.getenv("OPENSHIFT_DIY_IP") != null ? System.getenv("OPENSHIFT_DIY_IP") : "localhost";
+ //   private static final int PORT = System.getenv("OPENSHIFT_DIY_PORT") != null ? Integer.parseInt(System.getenv("OPENSHIFT_DIY_PORT")) : 8080;
 
-    public static void main(String[] args) throws Exception {
-        setIpAddress(IP_ADDRESS);
-        setPort(PORT);
+    @SuppressWarnings("deprecation")
+	public static void main(String[] args) throws Exception {
+        setIpAddress(Config.IP_ADDRESS);
+        setPort(Config.PORT);
         staticFileLocation("/public");
         setController(mongo());
     }
