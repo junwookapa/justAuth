@@ -58,7 +58,7 @@ public class TokenServiceImpl implements TokenService {
 		try{
 			tokenObj = mTokenDao.getTokenByToken(token);
 			expireTime = new Long(tokenObj.getExp());
-		}catch(NullPointerException e){
+		}catch(NullPointerException e)   {
 			return TokenStatus.notFoundToken;
 		}
 		switch(isExpiredToken(expireTime)){

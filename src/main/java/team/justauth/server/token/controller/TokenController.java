@@ -19,25 +19,26 @@ public class TokenController {
 	}
 
 	private void setupEndpoints() throws NullPointerException{
-		//토큰 발급
+		//토큰 발급 및 로그인
 		after("/login", "application/json",
 				(request, response) ->{
 					int statusCode = response.raw().getStatus();
 					if(statusCode == 201){
 						String decodingString = new JWEUtil().decoder(request.session().attribute("privateKey"), request.body());
-						response.body(mTokenService.issueToken(decodingString, request.host()));
+						response.body(mTokenService.issueToken(decodingString, request.ip()));
 					}else{
 						response.body();					
 						}
 				}
 		);
+		//토큰 확인
 		get("/token/:token", "application/json", (request, response) ->{
-			return mTokenService.verifyandRefresh(request.params(":token"), request.host());
+			return mTokenService.verifyandRefresh(request.params(":token"), request.ip());
 			},
 		new JsonTransformer());
 		// 토큰 재발급
 		put("/token/:token", "application/json", (request, response) ->{
-			return mTokenService.issueToken(request.params(":token"), request.host());
+			return mTokenService.issueToken(request.params(":token"), request.ip());
 			},
 		new JsonTransformer());
 		// 토큰 삭제
@@ -54,7 +55,7 @@ public class TokenController {
 			}else{
 				response.status(204);
 			}
-			switch(mTokenService.verifyToken(key, request.host())){
+			switch(mTokenService.verifyToken(key, request.ip())){
 				default:
 					break;
 				case success:
@@ -62,7 +63,7 @@ public class TokenController {
 				case notFoundToken:
 				case tokenExpired:
 				case tokenExpiringsoon:
-				case tokenUpdateFail:
+				case tokenUpdateFail: 
 				case unknownError:
 					response.status(204);
 			}
@@ -74,7 +75,7 @@ public class TokenController {
 			}else{
 				response.status(204);
 			}
-			switch(mTokenService.verifyToken(key, request.host())){
+			switch(mTokenService.verifyToken(key, request.ip())){
 				default:
 					break;
 				case success:

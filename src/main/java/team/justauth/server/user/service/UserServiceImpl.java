@@ -106,6 +106,8 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User findUserbyUserID(String userID) {
 		try {
+			
+			
 			return mUserDao.getUserByUserID(userID);
 		} catch (NullPointerException e) {
 			e.printStackTrace();

@@ -54,6 +54,7 @@ public class UserController {
 		// login
 		post("/login", "application/json", (request, response) -> {
 			System.out.println("request : "+request.headers("Cookie"));
+			System.out.println("request x : "+request.ip());
 			System.out.println("body : "+request.body());
 			String decodingString = new JWEUtil().decoder(request.session().attribute("privateKey"), request.body());
 			UserStatus responseStatus = mUserService.login(decodingString);
