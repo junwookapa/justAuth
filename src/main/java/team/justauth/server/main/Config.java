@@ -7,6 +7,13 @@ public final class Config {
 	public static final int PORT = System.getenv("OPENSHIFT_DIY_PORT") != null ? Integer.parseInt(System.getenv("OPENSHIFT_DIY_PORT")) : 8080;
 	public static final String APP_DNS = System.getenv("OPENSHIFT_APP_DNS") != null ? System.getenv("OPENSHIFT_APP_DNS") : IP_ADDRESS+"/"+PORT;
 
+	//log
+	//For Window
+	//public static final String LOCAL_DIRL_PATH = "c:/JustAuth/"
+	//For Linux
+	public static final String LOG_FILE_NAME = "justauth.log";
+	public static final String LOG_DIR_PATH = System.getenv("OPENSHIFT_LOG_DIR") != null ? System.getenv("OPENSHIFT_LOG_DIR") : "c:/JustAuth/";
+	
 	//security
 	public static final int AES_TOKEN_LENGTH = 16; //128bit
 	public static final int AES_USER_PASSWORD_LENGTH = 16; //128bit

@@ -30,4 +30,8 @@ public class NimbusRSA {
 		System.out.println(new JWEUtil().encoder(fact.generatePublic(publickKey), jsonObj.toJSONString()));
 		
 	}
+	@Test
+	public void osTest(){
+		System.out.println("운영체제 종류: " + System.getProperty("os.name"));
+	}
 }

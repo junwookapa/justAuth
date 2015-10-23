@@ -4,19 +4,19 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import team.justauth.server.main.Config;
+
 public class Log {
-	private static final String LOG_PATH = System.getenv("OPENSHIFT_LOG_DIR") != null ? System.getenv("OPENSHIFT_LOG_DIR") : "c:/Test/";
+	
 	public static void writeLog(String log){
 	try {
-	      ////////////////////////////////////////////////////////////////
-	      BufferedWriter out = new BufferedWriter(new FileWriter(LOG_PATH+"out.txt"));
+	      BufferedWriter out = new BufferedWriter(new FileWriter(Config.LOG_DIR_PATH+Config.LOG_FILE_NAME));
 
 	      out.write(log); out.newLine();
 
 	      out.close();
-	      ////////////////////////////////////////////////////////////////
 	    } catch (IOException e) {
-	        System.err.println(e); // 에러가 있다면 메시지 출력
+	        System.err.println("Fail to write log message"+e);
 	        System.exit(1);
 	    }
 	}
