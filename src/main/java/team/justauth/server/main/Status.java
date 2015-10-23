@@ -2,6 +2,11 @@ package team.justauth.server.main;
 
 public class Status {
 	
+	public enum OSType{
+		linux,
+		windows
+	}
+	
 	public enum TokenStatus {
 		notFoundToken, // 토큰을 찾을 수 없다.
 		tokenExpired, // 토큰이 만료됨

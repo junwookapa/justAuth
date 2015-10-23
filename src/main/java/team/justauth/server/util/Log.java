@@ -8,6 +8,10 @@ import team.justauth.server.main.Config;
 
 public class Log {
 	
+	public static void getOSType(){
+		
+	}
+	
 	public static void writeLog(String log){
 	try {
 	      BufferedWriter out = new BufferedWriter(new FileWriter(Config.LOG_DIR_PATH+Config.LOG_FILE_NAME));
