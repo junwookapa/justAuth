@@ -26,7 +26,7 @@ public class Main {
 
     @SuppressWarnings("deprecation")
 	public static void main(String[] args) throws Exception {
-    	Log.writeLog();
+    	Log.writeLog("logTest");
         setIpAddress(Config.IP_ADDRESS);
         setPort(Config.PORT);
         staticFileLocation("/public");

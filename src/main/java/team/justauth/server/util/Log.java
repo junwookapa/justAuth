@@ -6,14 +6,12 @@ import java.io.IOException;
 
 public class Log {
 	private static final String LOG_PATH = System.getenv("OPENSHIFT_LOG_DIR") != null ? System.getenv("OPENSHIFT_LOG_DIR") : "c:/Test/";
-	public static void writeLog(){
+	public static void writeLog(String log){
 	try {
 	      ////////////////////////////////////////////////////////////////
 	      BufferedWriter out = new BufferedWriter(new FileWriter(LOG_PATH+"out.txt"));
-	      String s = "Log TestMessage";
 
-	      out.write(s); out.newLine();
-	      out.write(s); out.newLine();
+	      out.write(log); out.newLine();
 
 	      out.close();
 	      ////////////////////////////////////////////////////////////////
