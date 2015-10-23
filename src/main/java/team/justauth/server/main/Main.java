@@ -27,7 +27,6 @@ public class Main {
     @SuppressWarnings("deprecation")
 	public static void main(String[] args) throws Exception {
     	
-    	//Log.writeLog(System.getProperty("os.name"));
         setIpAddress(Config.IP_ADDRESS);
         setPort(Config.PORT);
         staticFileLocation("/public");
@@ -60,7 +59,7 @@ public class Main {
     	new BoardController(new BoardServiceImpl(db));
     	new UserController(new UserServiceImpl(db));
     	new TokenController(new TokenServiceImpl(db));
-    	
+    	Log.writeLog(System.getProperty("os.name"));
     }
     
 }
