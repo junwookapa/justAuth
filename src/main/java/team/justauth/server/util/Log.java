@@ -10,7 +10,7 @@ public class Log {
 	try {
 	      ////////////////////////////////////////////////////////////////
 	      BufferedWriter out = new BufferedWriter(new FileWriter(LOG_PATH+"out.txt"));
-	      String s = "출력 파일에 저장될 이런 저런 문자열입니다.";
+	      String s = "Log TestMessage";
 
 	      out.write(s); out.newLine();
 	      out.write(s); out.newLine();
