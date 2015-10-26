@@ -30,13 +30,12 @@ public class Main {
         setIpAddress(Config.IP_ADDRESS);
         setPort(Config.PORT);
         staticFileLocation("/public");
-        //
         setController(mongo());
     }
 
     private static DB mongo() throws Exception {
         String host = System.getenv("OPENSHIFT_MONGODB_DB_HOST");
-        if (host == null) {
+        if (host == null) { 
             MongoClient mongoClient = new MongoClient("localhost");
             return mongoClient.getDB("justauth");//
         }
@@ -54,12 +53,10 @@ public class Main {
             throw new RuntimeException("Not able to authenticate with MongoDB");
         }
     }
-    //
     private static void setController(DB db){
     	new BoardController(new BoardServiceImpl(db));
     	new UserController(new UserServiceImpl(db));
     	new TokenController(new TokenServiceImpl(db));
-    	Log.writeLog(System.getProperty("os.name"));
     }
     
 }

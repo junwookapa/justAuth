@@ -1,5 +1,7 @@
 package team.justauth.server.main;
 
+import team.justauth.server.util.Log;
+
 public final class Config {
 	
 	//host
@@ -7,9 +9,9 @@ public final class Config {
 	public static final int PORT = System.getenv("OPENSHIFT_DIY_PORT") != null ? Integer.parseInt(System.getenv("OPENSHIFT_DIY_PORT")) : 8080;
 	public static final String APP_DNS = System.getenv("OPENSHIFT_APP_DNS") != null ? System.getenv("OPENSHIFT_APP_DNS") : IP_ADDRESS+"/"+PORT;
 
-	//For Linux
+	//set LogPath;
 	public static final String LOG_FILE_NAME = "justauth.log";
-	public static final String LOG_DIR_PATH = System.getenv("OPENSHIFT_LOG_DIR") != null ? System.getenv("OPENSHIFT_LOG_DIR") : "c:\\JustAuth\\";
+	public static final String LOG_DIR_PATH = System.getenv("OPENSHIFT_LOG_DIR") != null ? System.getenv("OPENSHIFT_LOG_DIR") : Log.getOSType();
 	
 	//security
 	public static final int AES_TOKEN_LENGTH = 16; //128bit

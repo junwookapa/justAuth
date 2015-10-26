@@ -9,8 +9,15 @@ import team.justauth.server.main.Config;
 
 public class Log {
 	
-	public static void getOSType(){
-		
+	public static String getOSType(){
+		if(System.getProperty("os.name").toLowerCase().contains("linux")){
+			return "home\\justAuth\\";
+		}else if(System.getProperty("os.name").toLowerCase().contains("window")){
+			return "c:\\JustAuth\\";
+		}else{
+			return null;
+		}
+
 	}
 	
 	public static void writeLog(String log){
