@@ -97,7 +97,7 @@ app.controller('UserList', function ($scope, $http, $location ,$cookieStore) {
 });
 
 
-app.controller('UserInfo', function ($scope, $http, $location ,$cookieStore) {
+app.controller('UserInfo', function ($scope, $http, $location ,$cookieStore, $window) {
 	var token = $cookieStore.get('token');
 	$http.get('/user', {headers: {'token': $cookieStore.get('token')}}).success(function(data) {
 		console.log(data);
@@ -105,6 +105,17 @@ app.controller('UserInfo', function ($scope, $http, $location ,$cookieStore) {
 	}).error(function (data, status) {
         console.log('Error ' + data)
     });
+	
+	$scope.leave =function(){
+		$http.delete('/user', {headers: {'token': $cookieStore.get('token')}}).success(function(data) {
+			console.log(data);
+			$cookieStore.remove('token');
+			$window.alert('회원이 탈퇴되었습니다.');
+			$location.path('/');
+		}).error(function (data, status) {
+	        console.log('Error ' + data)
+	    });
+	}
 
 	$scope.logout = function(){
 		$http.delete('/token'+'/'+token).success(function(data) {

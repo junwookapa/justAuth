@@ -65,10 +65,11 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserStatus deleteUser(String body) {
+	public UserStatus deleteUser(String userID) {
 		try {
-			User user = new Gson().fromJson(body, User.class);
-			mUserDao.deleteUser(user.getUser_id());
+			String userObjId = mUserDao.getUserByUserID(userID).get_id();
+			mUserDao.deleteUser(userObjId);
+			Log.writeLog("[회원탈퇴]"+userID);
 			return UserStatus.success;
 		} catch (Exception e) {
 			return UserStatus.unkwonError;

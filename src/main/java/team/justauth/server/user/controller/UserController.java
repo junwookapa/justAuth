@@ -33,8 +33,7 @@ public class UserController {
 		
 		// delete User
 		delete("/user", "application/json", (request, response) -> {
-							String funtionBlockJson = new String(request.bodyAsBytes(), "UTF-8");
-							return mUserService.deleteUser(funtionBlockJson).toString();
+							return mUserService.deleteUser(response.raw().getHeader("user_id"));
 						}, new JsonTransformer());
 		
 		
