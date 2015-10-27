@@ -103,16 +103,6 @@ public class UserDaoImpl implements UserDao{
 	}
 	
 	@Override
-	public List<UserInfo> getUsersByUserGroupID(String user_group_id) {
-		List<UserInfo> users = new ArrayList<>();
-        DBCursor dbObjects = mCollection.find(new BasicDBObject("user_group_id", new ObjectId(user_group_id)));
-        while (dbObjects.hasNext()) {
-            DBObject dbObject = dbObjects.next();
-            users.add(new UserInfo((BasicDBObject) dbObject));
-        }
-        return users;
-	}
-	@Override
 	public DBStatus isUserExist(String user_id) {
 		try{
 			if(mCollection.findOne(new BasicDBObject("user_id", user_id)) != null){
@@ -131,5 +121,9 @@ public class UserDaoImpl implements UserDao{
 		}catch(Exception e){
 			return null;
 		}
+	}
+	@Override
+	public UserInfo getUserInfoByUserID(String user_id) {
+		return new UserInfo((BasicDBObject) mCollection.findOne(new BasicDBObject("user_id", user_id)));
 	}
 }

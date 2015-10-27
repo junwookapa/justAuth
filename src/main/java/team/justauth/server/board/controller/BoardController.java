@@ -31,9 +31,10 @@ public class BoardController {
         get("/boards/:id", "application/json", (request, response)
                 -> mBoardServiceImpl.find(request.params(":id")), new JsonTransformer());
         get("/boards", "application/json", (request, response)
-                -> mBoardServiceImpl.findAll(), new JsonTransformer());
+                -> mBoardServiceImpl.findAll(), new JsonTransformer());   
         put("/boards/:id", "application/json", (request, response)
                 -> mBoardServiceImpl.update(request.params(":id"), request.body()), new JsonTransformer());
+
     }
 
 

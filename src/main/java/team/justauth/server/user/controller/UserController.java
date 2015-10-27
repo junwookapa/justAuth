@@ -28,8 +28,9 @@ public class UserController {
 	private void setupEndpoints() {
 		
 		// getUser Info
-		get("/user/:id", "application/json", (request, response) -> 
-					mUserService.findUserbyUserID(request.params(":id")), new JsonTransformer());
+		get("/user", "application/json", (request, response) -> 
+					mUserService.getUserInfoByUserID(response.raw().getHeader("user_id")), new JsonTransformer());
+		
 		// delete User
 		delete("/user", "application/json", (request, response) -> {
 							String funtionBlockJson = new String(request.bodyAsBytes(), "UTF-8");
@@ -54,6 +55,7 @@ public class UserController {
 			if (responseStatus.equals(UserStatus.success)) {
 				response.status(201);
 			} else {
+				response.body(responseStatus.name());
 				response.status(204);
 			}
 			return responseStatus;
@@ -68,19 +70,5 @@ public class UserController {
 					Log.writeLog("[RSA_PublicKey]"+keyManager.getPublicKeyWithJson());
 					return keyManager.getPublicKeyWithJson();
 		});
-		
-/*		before("/testp", "application/json",
-				(request, response) -> {
-				//	request.attribute("test", "testvalue");
-					response.body("test");
-					
-		});
-		get("/testp", "application/json",
-				(request, response) -> {
-					String test = response.body()+": ok";
-				//	response.body("zxc");
-					return test;
-					
-		});*/
 	}
 }

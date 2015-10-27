@@ -6,12 +6,14 @@ import static spark.Spark.delete;
 import static spark.Spark.get;
 import static spark.Spark.put;
 import team.justauth.server.security.JWEUtil;
+import team.justauth.server.token.service.TokenService;
 import team.justauth.server.token.service.TokenServiceImpl;
 import team.justauth.server.util.JsonTransformer;
 
+
 public class TokenController {
 
-	private final TokenServiceImpl mTokenService;
+	private final TokenService mTokenService;
 
 	public TokenController(TokenServiceImpl tokenService) {
 		this.mTokenService = tokenService;
@@ -27,8 +29,8 @@ public class TokenController {
 						String decodingString = JWEUtil.decoder(request.session().attribute("privateKey"), request.body());
 						response.body(mTokenService.issueToken(decodingString, request.ip()));
 					}else{
-						response.body();					
-						}
+						response.status(201);
+					}
 				}
 		);
 		//토큰 확인
@@ -36,6 +38,21 @@ public class TokenController {
 			return mTokenService.verifyandRefresh(request.params(":token"), request.ip());
 			},
 		new JsonTransformer());
+		
+		before("/token/:token", "application/json", (request, response) ->{
+			switch((mTokenService.verifyToken(request.params(":token"), request.ip()))){
+				case success:
+					break;
+				default:
+				case notFoundToken:
+				case tokenExpired:
+				case tokenExpiringsoon:
+				case tokenUpdateFail: 
+				case unknownError:
+			}
+			
+			});
+		
 		// 토큰 재발급
 		put("/token/:token", "application/json", (request, response) ->{
 			return mTokenService.issueToken(request.params(":token"), request.ip());
@@ -46,48 +63,58 @@ public class TokenController {
 					return mTokenService.deleteToken(request.params(":token"));
 					},
 				new JsonTransformer());
-		
-		
-		before("/user", "application/json", (request, response) ->{
-			String key =null;
-			if(request.headers().contains("token")){
+			
+		before("/user", "application/json", (request, response) -> {
+			String key = null;
+			if (request.headers().contains("token")) {
 				key = request.headers("token");
-			}else{
+				try {
+					response.header("user_id", mTokenService.getUserID(key));
+				} catch (NullPointerException e) {
+
+				}
+			} else {
 				response.status(204);
 			}
-			switch(mTokenService.verifyToken(key, request.ip())){
-				default:
-					break;
-				case success:
-					break;
-				case notFoundToken:
-				case tokenExpired:
-				case tokenExpiringsoon:
-				case tokenUpdateFail: 
-				case unknownError:
-					response.status(204);
+			switch (mTokenService.verifyToken(key, request.ip())) {
+			case success:
+				break;
+			default:
+			case notFoundToken:
+			case tokenExpired:
+			case tokenExpiringsoon:
+			case tokenUpdateFail:
+			case unknownError:
+				response.status(204);
+				break;
 			}
-			});
-		before("/users", "application/json", (request, response) ->{
-			String key =null;
-			if(request.headers().contains("token")){
+		});
+				
+		before("/users", "application/json", (request, response) -> {
+			String key = null;
+			if (request.headers().contains("token")) {
 				key = request.headers("token");
-				response.header("user_id", mTokenService.getUserID(key));
-			}else{
+				try {
+					response.header("user_id", mTokenService.getUserID(key));
+				} catch (NullPointerException e) {
+
+				}
+			} else {
 				response.status(204);
 			}
-			switch(mTokenService.verifyToken(key, request.ip())){
-				case success:	
-					break;
-				default:
-				case notFoundToken:
-				case tokenExpired:
-				case tokenExpiringsoon:
-				case tokenUpdateFail:
-				case unknownError:
-					response.status(204);
+			switch (mTokenService.verifyToken(key, request.ip())) {
+			case success:
+				break;
+			default:
+			case notFoundToken:
+			case tokenExpired:
+			case tokenExpiringsoon:
+			case tokenUpdateFail:
+			case unknownError:
+				response.status(204);
+				break;
 			}
-			});
+		});
 		
 		
 	}

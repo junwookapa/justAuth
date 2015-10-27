@@ -1,0 +1,26 @@
+
+<form class="form-signin" ng-controller="UserInfo">
+	<h2 class="form-signin-heading">회원정보</h2>
+		
+	<label for="user_id" class="sr-only">ID</label> 
+	<input type="text" id="user_id" class="form-control" placeholder="ID" 
+	required autofocus ng-model="user.user_id"> 
+	
+	<label for="user_email" class="sr-only">Email address</label> 
+	<input type="email" id="user_email" class="form-control" placeholder="Email address" required ng-model="user.user_email">
+	
+	<label for="user_email" class="sr-only">User Name</label> 
+	<input type="text" id="user_name" class="form-control" placeholder="User Name" required ng-model="user.user_name">
+	
+	<label for="user_password" class="sr-only">Password</label> 
+	<input type="password" id="user_password" class="form-control" placeholder="Password" required ng-model="user_password"> 
+	
+	<label for="user_confirm_password" class="sr-only">Confirm Password</label> 
+	<input type="password" id="user_confirm_password" class="form-control" placeholder="Confirm Password" required ng-model="user_confirm_password">
+	
+	<div class="btn-block">
+		<button class="btn btn-lg btn-primary btn-block sign-up-btn" type="submit">회원정보수정</button>
+		<label class="pull-right sign-up-btn" ><a href="#/sign">회원탈퇴를 하시겠습니까?</a></label>
+	</div>
+	
+</form>

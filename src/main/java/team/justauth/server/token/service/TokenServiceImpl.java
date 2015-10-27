@@ -1,13 +1,10 @@
 package team.justauth.server.token.service;
 
-import java.util.Date;
-
 import org.jose4j.json.internal.json_simple.JSONObject;
 
 import team.justauth.server.main.Config;
 import team.justauth.server.main.Status.TokenStatus;
 import team.justauth.server.security.AESToken;
-import team.justauth.server.security.JWEUtil;
 import team.justauth.server.token.dao.TokenDao;
 import team.justauth.server.token.dao.TokenDaoImpl;
 import team.justauth.server.token.model.Token;

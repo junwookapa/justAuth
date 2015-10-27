@@ -52,13 +52,13 @@ public class JWEUtil {
 		jwe.setAlgorithmHeaderValue(KeyManagementAlgorithmIdentifiers.RSA_OAEP);
 		jwe.setEncryptionMethodHeaderParameter(ContentEncryptionAlgorithmIdentifiers.AES_128_GCM);
 		jwe.setKey(jwk.getPublicKey());
-		System.out.println(byteString);
+		//System.out.println(byteString);
 		jwe.setPayload(byteString);
 		try {
 			return jwe.getCompactSerialization();
 		} catch (JoseException e) {
 			// TODO Auto-generated catch block
-			System.out.println(e.getMessage());
+			//System.out.println(e.getMessage());
 			e.printStackTrace();
 			return null;
 		}

@@ -35,7 +35,6 @@ public class BoardServiceImpl implements BoardService{
 	}
 
 	public void createNewContents(String body, String token) {
-		System.out.println(token);
 		Token tokenx =mTokenDao.getTokenByToken(token);
 		String decodingToken = AESToken.decodingToken(token, tokenx.getAes_key());
 		Token tokenObj = new Gson().fromJson(decodingToken, Token.class);

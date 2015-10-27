@@ -34,7 +34,6 @@ public class UserServiceImpl implements UserService {
 		user.setUser_email("admin@justauth.com");
 		user.setUser_role(Role.admin.name());
 		createUser(new Gson().toJson(user));
-		
 		Log.writeLog("[유저생성]"+user.getUser_id());
 	}
 	
@@ -100,10 +99,10 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User findUserbyUserID(String userID) {
+	public UserInfo getUserInfoByUserID(String userID) {
 		try {
 			
-			return mUserDao.getUserByUserID(userID);
+			return mUserDao.getUserInfoByUserID(userID);
 		} catch (NullPointerException e) {
 			e.printStackTrace();
 			return null;

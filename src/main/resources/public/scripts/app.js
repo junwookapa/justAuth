@@ -14,9 +14,12 @@ app.config(function($routeProvider) {
 	}).when('/create', {
 		templateUrl : 'views/create.html',
 		controller : 'CreateCtrl'
-	}).when('/user', {
+	}).when('/userlist', {
 		templateUrl : 'views/userlist.html',
 		controller : 'UserList'
+	}).when('/user', {
+		templateUrl : 'views/user/userinfo.html',
+		controller : 'UserInfo'
 	}).otherwise({
 		redirectTo : '/'
 	})
@@ -27,6 +30,7 @@ app.controller('ListCtrl', function($scope, $http, $cookieStore, $location) {
 	if(typeof token == "undefined" || $cookieStore.get('token').length<1){
 		$location.path('/login');
 	}
+	
 	$http.get('/token'+'/'+token).success(function(data) {
 		if(data === '"notFoundToken"' || data === '"tokenExpired"'|| data === '"tokenUpdateFail"' || data === '"unknownError"'){
 			$location.path('/login');
@@ -58,6 +62,7 @@ app.controller('ListCtrl', function($scope, $http, $cookieStore, $location) {
 				console.log(data);
 			})
 	}
+	$scope.custom = true;
 		
 });
 app.controller('CreateCtrl', function ($scope, $http, $location, $cookieStore) {
@@ -91,7 +96,28 @@ app.controller('UserList', function ($scope, $http, $location ,$cookieStore) {
 
 });
 
-app.controller('LoginCtrl', function($scope, $http, $location, $cookieStore) {
+
+app.controller('UserInfo', function ($scope, $http, $location ,$cookieStore) {
+	var token = $cookieStore.get('token');
+	$http.get('/user', {headers: {'token': $cookieStore.get('token')}}).success(function(data) {
+		console.log(data);
+		$scope.user = data;
+	}).error(function (data, status) {
+        console.log('Error ' + data)
+    });
+
+	$scope.logout = function(){
+		$http.delete('/token'+'/'+token).success(function(data) {
+			console.log(data);
+			$location.path('/login');
+		}).error(function(data, status) {
+			console.log(data);
+		})
+}
+
+});
+
+app.controller('LoginCtrl', function($scope, $http, $location, $cookieStore, $window) {
 	$http.get('/key').success(function(data, status, headers, config) {
 		$cookieStore.put('publicKey', JSON.parse(headers('publickey')));
 		});
@@ -110,9 +136,11 @@ app.controller('LoginCtrl', function($scope, $http, $location, $cookieStore) {
 		var encrypter = new JoseJWE.Encrypter(cryptographer, public_rsa_key);
 		encrypter.encrypt(user).then(function(result) {
 			$http.post('/login', result).success(function(data) {
-				if(data.length>0){
+				if(data.length>100){ // 추후 인터페이스 변경(?)
 					$cookieStore.put('token', data);
 					$location.path('/');
+				}else{
+					$window.confirm('error_code : '+data);
 				}
 			}).error(function(response) {
 			   console.log("error");
@@ -122,7 +150,7 @@ app.controller('LoginCtrl', function($scope, $http, $location, $cookieStore) {
 });
 
 
-app.controller('sginCtrl', function($scope, $http, $location, $cookieStore) {
+app.controller('sginCtrl', function($scope, $http, $location, $cookieStore, $window) {
 		$http.get('/key').success(function(data, status, headers, config) {
 			$cookieStore.put('publicKey', JSON.parse(headers('publickey')));
 			});
@@ -144,8 +172,12 @@ app.controller('sginCtrl', function($scope, $http, $location, $cookieStore) {
 				encrypter.encrypt(payload).then(function(result) {
 			$http.post('/sign', result).success(function(data) {
 				$http.post('/login', result).success(function(token) {
-					$cookieStore.put('token', token);
-					$location.path('/');
+					if(token.length>100){ // 추후 인터페이스 변경(?)
+						$cookieStore.put('token', token);
+						$location.path('/');
+					}else{
+						$window.confirm('error_code : '+data);
+					}
 				});
 				console.log(data);
 			});
