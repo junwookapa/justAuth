@@ -10,6 +10,7 @@ import team.justauth.server.security.AESToken;
 import team.justauth.server.token.dao.TokenDao;
 import team.justauth.server.token.dao.TokenDaoImpl;
 import team.justauth.server.token.model.Token;
+import team.justauth.server.util.Log;
 import team.justauth.server.util.RandomString;
 
 import com.google.gson.Gson;
@@ -46,7 +47,7 @@ public class TokenServiceImpl implements TokenService {
 		default:
 			return TokenStatus.unknownError.name();
 		}
-		System.out.println(new Date()+"::토큰 :"+tokenString);
+		Log.writeLog("[토큰발급]"+tokenString);
 		return tokenString;
 	}
 
@@ -85,7 +86,7 @@ public class TokenServiceImpl implements TokenService {
 		if(mTokenDao.getTokenIDByToken(token) != null){
 			String token_id = mTokenDao.getTokenIDByToken(token);
 			mTokenDao.deleteToken(token_id);
-			System.out.println(new Date()+"::토큰삭제 :"+token);
+			Log.writeLog("[토큰삭제]"+token);
 			return TokenStatus.success;
 		}else{
 			return TokenStatus.notFoundToken;

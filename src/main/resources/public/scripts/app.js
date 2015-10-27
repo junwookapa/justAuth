@@ -92,7 +92,7 @@ app.controller('UserList', function ($scope, $http, $location ,$cookieStore) {
 });
 
 app.controller('LoginCtrl', function($scope, $http, $location, $cookieStore) {
-	$http.get('/keyforbrowser').success(function(data, status, headers, config) {
+	$http.get('/key').success(function(data, status, headers, config) {
 		$cookieStore.put('publicKey', JSON.parse(headers('publickey')));
 		});
 	$scope.changeSingUpPage = function() {
@@ -123,7 +123,7 @@ app.controller('LoginCtrl', function($scope, $http, $location, $cookieStore) {
 
 
 app.controller('sginCtrl', function($scope, $http, $location, $cookieStore) {
-		$http.get('/keyforbrowser').success(function(data, status, headers, config) {
+		$http.get('/key').success(function(data, status, headers, config) {
 			$cookieStore.put('publicKey', JSON.parse(headers('publickey')));
 			});
 	$scope.createuser = function(data) {

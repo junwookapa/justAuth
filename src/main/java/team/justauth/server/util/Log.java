@@ -3,16 +3,18 @@ package team.justauth.server.util;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import team.justauth.server.main.Config;
 
 public class Log {
 	
 	public static String getOSType(){
-		System.out.println(System.getProperty("os.name").toLowerCase()+"");
+	//	System.out.println(System.getProperty("os.name").toLowerCase()+"");
 		if(System.getProperty("os.name").toLowerCase().contains("linux")){
 			return "home\\justAuth\\";
 		}else if(System.getProperty("os.name").toLowerCase().contains("window")){
@@ -20,7 +22,6 @@ public class Log {
 		}else{
 			return null;
 		}
-
 	}
 	
 	public static void writeLog(String log) {
@@ -32,18 +33,22 @@ public class Log {
 			}
 			FileOutputStream fos = new FileOutputStream(file, true);
 			OutputStreamWriter osw = new OutputStreamWriter(fos, "UTF-8");
-		//	String asd = new String(log.getBytes(), "UTF-8");
 			BufferedWriter out = new BufferedWriter(osw);
-//
 			
-			out.write(log);
+			SimpleDateFormat formatter = new SimpleDateFormat ( "yyyy.MM.dd HH:mm:ss", Locale.KOREA );
+			Date currentTime = new Date ( );
+			String dTime = formatter.format ( currentTime );
+			
+			System.out.println("["+dTime+"] "+log);
+			out.write("["+dTime+"] "+log);
+			out.flush();
 			out.newLine();
-	//		out.flush();
 			out.close();
 		} catch (IOException e) {
 			System.err.println("Fail to write log message" + e);
 			System.exit(1);
 		}
 	}
+	
 }
 

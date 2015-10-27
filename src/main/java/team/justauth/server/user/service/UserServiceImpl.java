@@ -41,10 +41,8 @@ public class UserServiceImpl implements UserService {
 		user.setUser_email("admin@justauth.com");
 		user.setUser_role(Role.admin.name());
 		createUser(new Gson().toJson(user));
-		System.out.println(new Date()+"::유저생성 :"+user.getUser_id());
-		Log.writeLog(new Date()+"::유저생성 :"+user.getUser_id());
-		Log.writeLog("로그테스트");
-		Log.writeLog("로그테스트2");
+		
+		Log.writeLog("[유저생성]"+user.getUser_id());
 	}
 	
 	@Override
@@ -60,7 +58,7 @@ public class UserServiceImpl implements UserService {
 			user.setAes_key(tokenString);
 			String encodingUserpassword = new AESSecurity().encoding(user.getUser_password(), user.getAes_key());
 			user.setUser_password(encodingUserpassword);
-			System.out.println(new Date()+"::유저생성 :"+user.getUser_id());
+			Log.writeLog("[유저생성]"+user.getUser_id());
 			switch(mUserDao.createUser(user)){
 			default:
 				return UserStatus.unkwonError;
@@ -93,7 +91,7 @@ public class UserServiceImpl implements UserService {
 			String aes_key = mUserDao.getAES_KEY(compareUser.get_id());	
 			String decodedPassword = new AESSecurity().decoding(compareUser.getUser_password(), aes_key);
 			if (user.getUser_password().equals(decodedPassword)) {
-				System.out.println(new Date()+"::로그인 :"+user.getUser_id());
+				Log.writeLog("[로그인]"+user.getUser_id());
 				return UserStatus.success;
 			} else {
 				return UserStatus.wrongPassword;

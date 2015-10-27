@@ -18,6 +18,7 @@ import team.justauth.server.security.JWEManager;
 import team.justauth.server.security.JWEUtil;
 import team.justauth.server.user.service.UserService;
 import team.justauth.server.util.JsonTransformer;
+import team.justauth.server.util.Log;
 
 public class UserController {
 
@@ -53,9 +54,6 @@ public class UserController {
 		
 		// login
 		post("/login", "application/json", (request, response) -> {
-			System.out.println("request : "+request.headers("Cookie"));
-			System.out.println("request x : "+request.ip());
-			System.out.println("body : "+request.body());
 			String decodingString = new JWEUtil().decoder(request.session().attribute("privateKey"), request.body());
 			UserStatus responseStatus = mUserService.login(decodingString);
 			if (responseStatus.equals(UserStatus.success)) {
@@ -71,16 +69,8 @@ public class UserController {
 					JWEManager keyManager = new JWEManager();
 					request.session().maxInactiveInterval(Config.SESSION_TIME);
 					request.session().attribute("privateKey", keyManager.getPrivateKey());
-					System.out.println(new Date()+"::RSA publicKey : "+keyManager.getPublicKeyWithJson());
+					Log.writeLog("[RSA_PublicKey]"+keyManager.getPublicKeyWithJson());
 					return keyManager.getPublicKeyWithJson();
-		});
-		get("/keyforbrowser", "application/json",
-				(request, response) -> {
-					JWEManager keyManager = new JWEManager();
-					request.session().maxInactiveInterval(Config.SESSION_TIME);
-					request.session().attribute("privateKey", keyManager.getPrivateKey());
-					response.header("publickey", keyManager.getPublicKeyWithJson());
-					return "success";
 		});
 	}
 }
