@@ -35,7 +35,7 @@ public class Log {
 			String asd = new String(log.getBytes(), "UTF-8");
 			BufferedWriter out = new BufferedWriter(new FileWriter(file, true));
 
-			out.write(log, 0 , log.length());
+			out.write(asd, 0 , asd.length());
 			out.newLine();
 	//		out.flush();
 			out.close();
@@ -44,6 +44,5 @@ public class Log {
 			System.exit(1);
 		}
 	}
-	  
 }
 
