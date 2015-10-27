@@ -34,7 +34,7 @@ public class Log {
 		//	OutputStreamWriter osw = new OutputStreamWriter(fos, "UTF-8");
 		//	String asd = new String(log.getBytes(), "UTF-8");
 			BufferedWriter out = new BufferedWriter(new FileWriter(file, true));
-
+//
 			out.write(log, 0 , log.length());
 			out.newLine();
 	//		out.flush();
