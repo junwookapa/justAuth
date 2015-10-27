@@ -12,7 +12,7 @@ public class Token {
 	private String iat; // 토큰 발급시간
 	private String iss; // 토큰 발급자
 	private String aud; // 토큰 사용처
-	private String aes_key;
+	private String aes_key; // aes_key
 
 	public Token(BasicDBObject dbObject) {
 		this._id = ((ObjectId) dbObject.get("_id")).toString();

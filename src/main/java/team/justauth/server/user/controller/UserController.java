@@ -3,14 +3,9 @@ package team.justauth.server.user.controller;
 import static spark.Spark.delete;
 import static spark.Spark.get;
 import static spark.Spark.post;
+import static spark.Spark.before;
 
-import java.util.Date;
-import java.util.List;
-
-import org.jose4j.json.internal.json_simple.JSONObject;
-
-import com.google.gson.Gson;
-import com.mongodb.util.JSON;
+import org.junit.Before;
 
 import team.justauth.server.main.Config;
 import team.justauth.server.main.Status.UserStatus;
@@ -43,18 +38,18 @@ public class UserController {
 		
 		
 		// getAll User Info
-		get("/users", "application/json", (request, response) -> mUserService.findAllUsers(request.headers("token")), new JsonTransformer());
+		get("/users", "application/json", (request, response) -> mUserService.findAllUsers(request.headers("token"), response.raw().getHeader("user_id")), new JsonTransformer());
 				
 		// sign
 		post("/sign", "application/json", (request, response) -> {
 					String funtionBlockJson = new String(request.bodyAsBytes(),	"UTF-8");
-					String decodingString = new JWEUtil().decoder(request.session().attribute("privateKey"), funtionBlockJson);
+					String decodingString = JWEUtil.decoder(request.session().attribute("privateKey"), funtionBlockJson);
 					return mUserService.createUser(decodingString);
 				}, new JsonTransformer());			
 		
 		// login
 		post("/login", "application/json", (request, response) -> {
-			String decodingString = new JWEUtil().decoder(request.session().attribute("privateKey"), request.body());
+			String decodingString = JWEUtil.decoder(request.session().attribute("privateKey"), request.body());
 			UserStatus responseStatus = mUserService.login(decodingString);
 			if (responseStatus.equals(UserStatus.success)) {
 				response.status(201);
@@ -73,5 +68,19 @@ public class UserController {
 					Log.writeLog("[RSA_PublicKey]"+keyManager.getPublicKeyWithJson());
 					return keyManager.getPublicKeyWithJson();
 		});
+		
+/*		before("/testp", "application/json",
+				(request, response) -> {
+				//	request.attribute("test", "testvalue");
+					response.body("test");
+					
+		});
+		get("/testp", "application/json",
+				(request, response) -> {
+					String test = response.body()+": ok";
+				//	response.body("zxc");
+					return test;
+					
+		});*/
 	}
 }

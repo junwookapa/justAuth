@@ -24,7 +24,7 @@ public class TokenController {
 				(request, response) ->{
 					int statusCode = response.raw().getStatus();
 					if(statusCode == 201){
-						String decodingString = new JWEUtil().decoder(request.session().attribute("privateKey"), request.body());
+						String decodingString = JWEUtil.decoder(request.session().attribute("privateKey"), request.body());
 						response.body(mTokenService.issueToken(decodingString, request.ip()));
 					}else{
 						response.body();					
@@ -72,14 +72,14 @@ public class TokenController {
 			String key =null;
 			if(request.headers().contains("token")){
 				key = request.headers("token");
+				response.header("user_id", mTokenService.getUserID(key));
 			}else{
 				response.status(204);
 			}
 			switch(mTokenService.verifyToken(key, request.ip())){
+				case success:	
+					break;
 				default:
-					break;
-				case success:
-					break;
 				case notFoundToken:
 				case tokenExpired:
 				case tokenExpiringsoon:

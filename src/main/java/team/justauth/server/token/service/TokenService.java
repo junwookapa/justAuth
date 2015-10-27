@@ -10,5 +10,5 @@ public interface TokenService {
 	public TokenStatus deleteToken(String token); // 토큰 삭제
 	public TokenStatus isUpdateToken(long expireTime); // 토큰을 갱신해야하는가
 	public TokenStatus isExpiredToken(long expireTime); // 토큰이 만료되었는가
-	
+	public String getUserID(String token);
 }

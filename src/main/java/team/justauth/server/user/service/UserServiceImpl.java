@@ -8,10 +8,6 @@ import team.justauth.server.main.Status.DBStatus;
 import team.justauth.server.main.Status.Role;
 import team.justauth.server.main.Status.UserStatus;
 import team.justauth.server.security.AESSecurity;
-import team.justauth.server.security.AESToken;
-import team.justauth.server.token.dao.TokenDao;
-import team.justauth.server.token.dao.TokenDaoImpl;
-import team.justauth.server.token.model.Token;
 import team.justauth.server.user.dao.UserDao;
 import team.justauth.server.user.dao.UserDaoImpl;
 import team.justauth.server.user.model.User;
@@ -25,12 +21,9 @@ import com.mongodb.MongoException;
 
 public class UserServiceImpl implements UserService {
 	private final UserDao mUserDao;
-	private final TokenDao mTokenDao;
-
 
 	public UserServiceImpl(DB db) {
 		this.mUserDao = new UserDaoImpl(db);
-		this.mTokenDao = new TokenDaoImpl(db);
 		createAdmin();
 	}
 	private void createAdmin(){
@@ -110,7 +103,6 @@ public class UserServiceImpl implements UserService {
 	public User findUserbyUserID(String userID) {
 		try {
 			
-			
 			return mUserDao.getUserByUserID(userID);
 		} catch (NullPointerException e) {
 			e.printStackTrace();
@@ -122,11 +114,9 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public List<UserInfo> findAllUsers(String token) {
-		Token tokenx =mTokenDao.getTokenByToken(token);
-		String test = AESToken.decodingToken(token, tokenx.getAes_key());
-		User user = new Gson().fromJson(test, User.class);
-		String role = mUserDao.getUserByUserID(user.getUser_id()).getUser_role();
+	public List<UserInfo> findAllUsers(String token, String userID) {
+
+		String role = mUserDao.getUserByUserID(userID).getUser_role();
 		try{
 			if(role.equals(Role.admin.name())){
 				List<UserInfo> users = mUserDao.getAllUsers();

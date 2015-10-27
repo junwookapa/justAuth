@@ -52,7 +52,6 @@ public class TokenServiceImpl implements TokenService {
 		return tokenString;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public TokenStatus verifyToken(String token, String aud) {
 		Token tokenObj = null;
@@ -150,8 +149,13 @@ public class TokenServiceImpl implements TokenService {
 		case unknownError:
 		default:
 			return TokenStatus.unknownError.name();
-			
 		}
 	}
+
+	@Override
+	public String getUserID(String token) {
+		return mTokenDao.getTokenByToken(token).getUser_id();
+	}
+
 
 }

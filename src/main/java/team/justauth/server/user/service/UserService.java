@@ -12,7 +12,7 @@ public interface UserService {
 	public UserStatus updateUser(String body); // 유저 변경
 	public UserStatus deleteUser(String body); // 유저 삭제
 	public User findUserbyUserID(String userID); // 유저 아이디로 유저 정보 찾기
-	public List<UserInfo> findAllUsers(String token); // 모든 유저 찾기
+	public List<UserInfo> findAllUsers(String token, String userID); // 모든 유저 찾기
 	
 	// login method
 	public UserStatus login(String body); // 로그인 정보
