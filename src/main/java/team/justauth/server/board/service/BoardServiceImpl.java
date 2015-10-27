@@ -10,6 +10,7 @@ import team.justauth.server.security.AESToken;
 import team.justauth.server.token.dao.TokenDao;
 import team.justauth.server.token.dao.TokenDaoImpl;
 import team.justauth.server.token.model.Token;
+import team.justauth.server.util.Log;
 
 import com.google.gson.Gson;
 import com.mongodb.DB;
@@ -42,6 +43,7 @@ public class BoardServiceImpl implements BoardService{
 		board.setPlace(tokenObj.getAud());
 		board.setUser_id(tokenObj.getUser_id());
 		board.setReg_date(new Date());
+		Log.writeLog("[글생성]"+tokenObj.getUser_id());
 		mBoardDao.create(board);
 	}
 
