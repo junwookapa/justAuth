@@ -16,6 +16,7 @@ import team.justauth.server.user.dao.UserDao;
 import team.justauth.server.user.dao.UserDaoImpl;
 import team.justauth.server.user.model.User;
 import team.justauth.server.user.model.UserInfo;
+import team.justauth.server.util.Log;
 import team.justauth.server.util.RandomString;
 
 import com.google.gson.Gson;
@@ -40,6 +41,9 @@ public class UserServiceImpl implements UserService {
 		user.setUser_email("admin@justauth.com");
 		user.setUser_role(Role.admin.name());
 		createUser(new Gson().toJson(user));
+		System.out.println(new Date()+"::유저생성 :"+user.getUser_id());
+		Log.writeLog(new Date()+"::유저생성 :"+user.getUser_id());
+		Log.writeLog("로그테스트");
 	}
 	
 	@Override

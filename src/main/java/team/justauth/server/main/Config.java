@@ -10,13 +10,13 @@ public final class Config {
 	public static final String APP_DNS = System.getenv("OPENSHIFT_APP_DNS") != null ? System.getenv("OPENSHIFT_APP_DNS") : IP_ADDRESS+"/"+PORT;
 
 	//set LogPath;
-	public static final String LOG_FILE_NAME = "justauth.log";
 	public static final String LOG_DIR_PATH = System.getenv("OPENSHIFT_LOG_DIR") != null ? System.getenv("OPENSHIFT_LOG_DIR") : Log.getOSType();
+	public static final String LOG_FILE_NAME = "justauth.log";
 	
 	//security
 	public static final int AES_TOKEN_LENGTH = 16; //128bit
 	public static final int AES_USER_PASSWORD_LENGTH = 16; //128bit
-	public static final int RSA_LENGTH = 2048;
+	public static final int RSA_LENGTH = 2048; // 2048bit
 	
 	//token
 	public static final long EXPIRED_TOKEN_TIME = 21600; // 6시간
