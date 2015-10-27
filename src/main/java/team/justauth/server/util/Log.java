@@ -32,10 +32,10 @@ public class Log {
 			}
 		//	FileOutputStream fos = new FileOutputStream(file);
 		//	OutputStreamWriter osw = new OutputStreamWriter(fos, "UTF-8");
-			String asd = new String(log.getBytes(), "UTF-8");
+		//	String asd = new String(log.getBytes(), "UTF-8");
 			BufferedWriter out = new BufferedWriter(new FileWriter(file, true));
 
-			out.write(asd, 0 , asd.length());
+			out.write(log, 0 , log.length());
 			out.newLine();
 	//		out.flush();
 			out.close();
