@@ -27,14 +27,17 @@ public class Log {
 		try {
 			File file = new File(Config.LOG_DIR_PATH + Config.LOG_FILE_NAME);
 			if (!file.exists()) {
+				file.getParentFile().mkdirs();
 				file.createNewFile();
 			}
-			FileOutputStream fos = new FileOutputStream(file);
-			OutputStreamWriter osw = new OutputStreamWriter(fos, "UTF-8");
-			BufferedWriter out = new BufferedWriter(osw);
+		//	FileOutputStream fos = new FileOutputStream(file);
+		//	OutputStreamWriter osw = new OutputStreamWriter(fos, "UTF-8");
+			String asd = new String(log.getBytes(), "UTF-8");
+			BufferedWriter out = new BufferedWriter(new FileWriter(file, true));
 
-			out.write(log);
+			out.write(log, 0 , log.length());
 			out.newLine();
+	//		out.flush();
 			out.close();
 		} catch (IOException e) {
 			System.err.println("Fail to write log message" + e);

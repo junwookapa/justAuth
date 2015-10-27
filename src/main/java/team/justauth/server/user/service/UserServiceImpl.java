@@ -44,6 +44,7 @@ public class UserServiceImpl implements UserService {
 		System.out.println(new Date()+"::유저생성 :"+user.getUser_id());
 		Log.writeLog(new Date()+"::유저생성 :"+user.getUser_id());
 		Log.writeLog("로그테스트");
+		Log.writeLog("로그테스트2");
 	}
 	
 	@Override
