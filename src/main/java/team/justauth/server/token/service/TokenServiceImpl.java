@@ -64,7 +64,7 @@ public class TokenServiceImpl implements TokenService {
 			Token inputToken = new Gson().fromJson(AESToken.decodingToken(token, tokenObj.getAes_key()), Token.class);
 			
 			// 인증방식은 입력토큰과 db에 저장된 토큰을 비교 한 후
-			// 2차 인증으로 아이디를 서로 비교 한다.
+			// 2차 인증으로 유저아이디를 서로 비교 한다.
 			// 인증 방식은 추후 변경 될 수 있다.
 			if(!tokenObj.getUser_id().equals(inputToken.getUser_id())){
 				return TokenStatus.notFoundToken;

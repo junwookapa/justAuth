@@ -9,7 +9,6 @@ import team.justauth.server.token.controller.TokenController;
 import team.justauth.server.token.service.TokenServiceImpl;
 import team.justauth.server.user.controller.UserController;
 import team.justauth.server.user.service.UserServiceImpl;
-import team.justauth.server.util.Log;
 
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
@@ -21,8 +20,6 @@ import com.mongodb.WriteConcern;
  * Created by shekhargulati on 09/06/14.
  */
 public class Main {
-//    private static final String IP_ADDRESS = System.getenv("OPENSHIFT_DIY_IP") != null ? System.getenv("OPENSHIFT_DIY_IP") : "localhost";
- //   private static final int PORT = System.getenv("OPENSHIFT_DIY_PORT") != null ? Integer.parseInt(System.getenv("OPENSHIFT_DIY_PORT")) : 8080;
 
     @SuppressWarnings("deprecation")
 	public static void main(String[] args) throws Exception {
