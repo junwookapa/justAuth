@@ -9,11 +9,10 @@ import org.jose4j.jwe.JsonWebEncryption;
 import org.jose4j.jwe.KeyManagementAlgorithmIdentifiers;
 import org.jose4j.jwt.JwtClaims;
 import org.jose4j.lang.JoseException;
-import org.junit.Test;
 
 public class AESToken {
 	
-	public String encodingToken(String str, String keyString) {
+	public static String encodingToken(String str, String keyString) {
 		JsonWebEncryption jwe = new JsonWebEncryption();
 		jwe.setPayload(str);
 		jwe.setAlgorithmHeaderValue(KeyManagementAlgorithmIdentifiers.A128KW);
@@ -27,7 +26,7 @@ public class AESToken {
 			return e.getMessage();
 		}
 	}
-	public String encodingToken(JwtClaims claims, String keyString) {
+	public static String encodingToken(JwtClaims claims, String keyString) {
 		JsonWebEncryption jwe = new JsonWebEncryption();
 		jwe.setPayload(claims.toJson());
 		jwe.setAlgorithmHeaderValue(KeyManagementAlgorithmIdentifiers.A128KW);
@@ -41,7 +40,7 @@ public class AESToken {
 		}
 	}
 
-	public String decodingToken(String str, String keyString) {
+	public static String decodingToken(String str, String keyString) {
 		JsonWebEncryption jwe = new JsonWebEncryption();
 		Key key = new SecretKeySpec(keyString.getBytes(), "AES");
 		jwe.setKey(key);

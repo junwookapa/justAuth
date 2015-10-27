@@ -73,6 +73,5 @@ public class UserController {
 					Log.writeLog("[RSA_PublicKey]"+keyManager.getPublicKeyWithJson());
 					return keyManager.getPublicKeyWithJson();
 		});
-
 	}
 }

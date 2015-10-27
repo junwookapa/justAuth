@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
 			user.setReg_date(new Date().toString());
 			String tokenString = new RandomString(Config.AES_USER_PASSWORD_LENGTH).nextString();
 			user.setAes_key(tokenString);
-			String encodingUserpassword = new AESSecurity().encoding(user.getUser_password(), user.getAes_key());
+			String encodingUserpassword = AESSecurity.encoding(user.getUser_password(), user.getAes_key());
 			user.setUser_password(encodingUserpassword);
 			Log.writeLog("[유저생성]"+user.getUser_id());
 			switch(mUserDao.createUser(user)){
@@ -89,7 +89,7 @@ public class UserServiceImpl implements UserService {
 			User user = new Gson().fromJson(body, User.class);
 			User compareUser = mUserDao.getUserByUserID(user.getUser_id());
 			String aes_key = mUserDao.getAES_KEY(compareUser.get_id());	
-			String decodedPassword = new AESSecurity().decoding(compareUser.getUser_password(), aes_key);
+			String decodedPassword = AESSecurity.decoding(compareUser.getUser_password(), aes_key);
 			if (user.getUser_password().equals(decodedPassword)) {
 				Log.writeLog("[로그인]"+user.getUser_id());
 				return UserStatus.success;
@@ -124,7 +124,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<UserInfo> findAllUsers(String token) {
 		Token tokenx =mTokenDao.getTokenByToken(token);
-		String test = new AESToken().decodingToken(token, tokenx.getAes_key());
+		String test = AESToken.decodingToken(token, tokenx.getAes_key());
 		User user = new Gson().fromJson(test, User.class);
 		String role = mUserDao.getUserByUserID(user.getUser_id()).getUser_role();
 		try{

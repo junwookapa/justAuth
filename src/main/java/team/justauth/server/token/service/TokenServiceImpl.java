@@ -7,6 +7,7 @@ import org.jose4j.json.internal.json_simple.JSONObject;
 import team.justauth.server.main.Config;
 import team.justauth.server.main.Status.TokenStatus;
 import team.justauth.server.security.AESToken;
+import team.justauth.server.security.JWEUtil;
 import team.justauth.server.token.dao.TokenDao;
 import team.justauth.server.token.dao.TokenDaoImpl;
 import team.justauth.server.token.model.Token;
@@ -34,7 +35,7 @@ public class TokenServiceImpl implements TokenService {
 		token.setIat(nowTime+"");
 		token.setIss(Config.APP_DNS);
 		token.setAes_key(new RandomString(16).nextString());
-		String tokenString = new AESToken().encodingToken(new Gson().toJson(token), token.getAes_key());
+		String tokenString = AESToken.encodingToken(new Gson().toJson(token), token.getAes_key());
 		token.setToken(tokenString);
 		switch (mTokenDao.isUserExist(token.getUser_id())) {
 		case duplicated:
@@ -59,6 +60,12 @@ public class TokenServiceImpl implements TokenService {
 		try{
 			tokenObj = mTokenDao.getTokenByToken(token);
 			expireTime = new Long(tokenObj.getExp());
+			tokenObj = new Gson().fromJson(AESToken.decodingToken(token, tokenObj.getAes_key()), Token.class);
+			
+			System.out.println(tokenObj.getExp());
+			
+			
+			
 		}catch(NullPointerException e)   {
 			return TokenStatus.notFoundToken;
 		}

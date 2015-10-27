@@ -15,7 +15,7 @@ import com.auth0.jwt.internal.org.apache.commons.codec.binary.Hex;
 
 public class AESSecurity {
 
-	public String encoding(String str, String tokenString) {
+	public static String encoding(String str, String tokenString) {
 		Cipher cipher;
 		try {
 			cipher = Cipher.getInstance("AES");
@@ -43,7 +43,7 @@ public class AESSecurity {
 		}
 	}
 
-	public String decoding(String str, String tokenString) {
+	public static String decoding(String str, String tokenString) {
 		try {
 			Cipher cipherx = Cipher.getInstance("AES");
 			Key key = new SecretKeySpec(tokenString.getBytes(), "AES");

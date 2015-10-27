@@ -10,7 +10,6 @@ import team.justauth.server.security.AESToken;
 import team.justauth.server.token.dao.TokenDao;
 import team.justauth.server.token.dao.TokenDaoImpl;
 import team.justauth.server.token.model.Token;
-import team.justauth.server.user.model.User;
 
 import com.google.gson.Gson;
 import com.mongodb.DB;
@@ -37,7 +36,7 @@ public class BoardServiceImpl implements BoardService{
 	public void createNewContents(String body, String token) {
 		System.out.println(token);
 		Token tokenx =mTokenDao.getTokenByToken(token);
-		String decodingToken = new AESToken().decodingToken(token, tokenx.getAes_key());
+		String decodingToken = AESToken.decodingToken(token, tokenx.getAes_key());
 		Token tokenObj = new Gson().fromJson(decodingToken, Token.class);
 		Board board = new Gson().fromJson(body, Board.class);
 		board.setPlace(tokenObj.getAud());

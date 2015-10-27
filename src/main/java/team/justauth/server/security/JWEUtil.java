@@ -25,7 +25,7 @@ import team.justauth.server.main.Config;
 
 public class JWEUtil {
 		
-	public RsaJsonWebKey generateJsonWebKey() throws NoSuchAlgorithmException, JoseException{
+	public static RsaJsonWebKey generateJsonWebKey() throws NoSuchAlgorithmException, JoseException{
 		KeyPairGenerator clsKeyPairGenerator = KeyPairGenerator.getInstance("RSA");
 		clsKeyPairGenerator.initialize(Config.RSA_LENGTH);
 		KeyPair clsKeyPair = clsKeyPairGenerator.genKeyPair();
@@ -35,7 +35,7 @@ public class JWEUtil {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public String publicKeyConvertJsonString(PublicKey publicKey) throws NoSuchAlgorithmException, InvalidKeySpecException{
+	public static String publicKeyConvertJsonString(PublicKey publicKey) throws NoSuchAlgorithmException, InvalidKeySpecException{
 		KeyFactory fact = KeyFactory.getInstance("RSA");
 		RSAPublicKeySpec clsPublicKeySpec = fact.getKeySpec(publicKey, RSAPublicKeySpec.class);
 		JSONObject json = new JSONObject();
@@ -46,7 +46,7 @@ public class JWEUtil {
 		return json.toJSONString();
 	}
 	
-	public String encoder(PublicKey publicKey, String byteString) {
+	public static String encoder(PublicKey publicKey, String byteString) {
 		RsaJsonWebKey jwk = new RsaJsonWebKey((RSAPublicKey) publicKey);
 		JsonWebEncryption jwe = new JsonWebEncryption();
 		jwe.setAlgorithmHeaderValue(KeyManagementAlgorithmIdentifiers.RSA_OAEP);
@@ -63,7 +63,7 @@ public class JWEUtil {
 			return null;
 		}
 	}
-	public String decoder(PrivateKey privateKey, String byteString) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, JoseException{
+	public static String decoder(PrivateKey privateKey, String byteString) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, JoseException{
 		JsonWebEncryption jwe = new JsonWebEncryption();
 		jwe.setAlgorithmHeaderValue(KeyManagementAlgorithmIdentifiers.RSA_OAEP);
 		jwe.setEncryptionMethodHeaderParameter(ContentEncryptionAlgorithmIdentifiers.AES_128_GCM);
