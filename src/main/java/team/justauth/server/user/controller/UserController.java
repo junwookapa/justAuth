@@ -3,10 +3,7 @@ package team.justauth.server.user.controller;
 import static spark.Spark.delete;
 import static spark.Spark.get;
 import static spark.Spark.post;
-import static spark.Spark.before;
-
-import org.junit.Before;
-
+import static spark.Spark.put;
 import team.justauth.server.main.Config;
 import team.justauth.server.main.Status.UserStatus;
 import team.justauth.server.security.JWEManager;
@@ -39,17 +36,27 @@ public class UserController {
 		
 		// getAll User Info
 		get("/users", "application/json", (request, response) -> mUserService.findAllUsers(request.headers("token"), response.raw().getHeader("user_id")), new JsonTransformer());
-				
+		
+		// sign
+		put("/user", "application/json", (request, response) -> {
+					String funtionBlockJson = new String(request.bodyAsBytes(),	"UTF-8");
+					String decodingString = JWEUtil.decoder(request.session().attribute("privateKey"), funtionBlockJson);
+					return mUserService.updateUser(decodingString, response.raw().getHeader("user_id")).name();
+		}, new JsonTransformer());		
+		
+		
 		// sign
 		post("/sign", "application/json", (request, response) -> {
 					String funtionBlockJson = new String(request.bodyAsBytes(),	"UTF-8");
 					String decodingString = JWEUtil.decoder(request.session().attribute("privateKey"), funtionBlockJson);
 					return mUserService.createUser(decodingString);
-				}, new JsonTransformer());			
+				}, new JsonTransformer());		
+		
 		
 		// login
 		post("/login", "application/json", (request, response) -> {
 			String decodingString = JWEUtil.decoder(request.session().attribute("privateKey"), request.body());
+			
 			UserStatus responseStatus = mUserService.login(decodingString);
 			if (responseStatus.equals(UserStatus.success)) {
 				response.status(201);

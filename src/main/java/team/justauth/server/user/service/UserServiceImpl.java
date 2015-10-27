@@ -41,7 +41,6 @@ public class UserServiceImpl implements UserService {
 	public UserStatus createUser(String body) {
 		try{
 			User user = new Gson().fromJson(body, User.class);
-			mUserDao.isUserExist(user.getUser_id());
 			if(!mUserDao.isUserExist(user.getUser_id()).equals(DBStatus.success)){
 				return UserStatus.duplicatedID;
 			}
@@ -95,8 +94,23 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserStatus updateUser(String body) {
-		return null;
+	public UserStatus updateUser(String body, String userID) {
+		User user = new Gson().fromJson(body, User.class);
+		User oldUSer = mUserDao.getUserByUserID(user.getUser_id());
+		System.out.println(user.getUser_password()+ oldUSer.getAes_key());
+		String tokenString = new RandomString(Config.AES_USER_PASSWORD_LENGTH).nextString();
+		user.setAes_key(tokenString);
+		String encodingUserpassword = AESSecurity.encoding(user.getUser_password(), user.getAes_key());
+		user.setUser_password(encodingUserpassword);
+		
+		switch(mUserDao.updateUser(oldUSer.get_id(), user)){
+		default:
+		case updateFail:
+			return UserStatus.unkwonError;
+		case success:
+			Log.writeLog("[회원정보 수정]"+user.getUser_id());
+			return UserStatus.success;
+		}
 	}
 
 	@Override

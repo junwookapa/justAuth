@@ -73,6 +73,7 @@ public class TokenServiceImpl implements TokenService {
 			case tokenExpired:
 				return TokenStatus.tokenExpired;
 			case success:
+				Log.writeLog("[토큰인증]"+token);
 				break;
 			default:
 				return TokenStatus.unknownError;

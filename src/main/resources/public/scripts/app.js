@@ -116,15 +116,33 @@ app.controller('UserInfo', function ($scope, $http, $location ,$cookieStore, $wi
 	        console.log('Error ' + data)
 	    });
 	}
-
-	$scope.logout = function(){
-		$http.delete('/token'+'/'+token).success(function(data) {
-			console.log(data);
-			$location.path('/login');
-		}).error(function(data, status) {
-			console.log(data);
-		})
-}
+	$http.get('/key').success(function(data, status, headers, config) {
+		$cookieStore.put('publicKey', JSON.parse(headers('publickey')));
+	});
+	$scope.modifyUser = function(data) {
+		if($scope.user.user_password != $scope.user.user_confirm_password){
+			$window.confirm('패스워드가 일치하지 않습니다.');
+		}else{
+		var payload = "{"
+				+"\"user_id\" : \""+$scope.user.user_id+"\" ,"
+				+"\"user_name\" : \""+$scope.user.user_name+"\" ,"
+				+"\"user_password\" : \""+$scope.user.user_password+"\" ,"
+				+"\"user_email\" : \""+$scope.user.user_email+"\""
+			+"}";
+				var publicKey = $cookieStore.get('publicKey');
+				var cryptographer = new Jose.WebCryptographer();
+				cryptographer.setContentEncryptionAlgorithm("A128GCM");
+				var public_rsa_key = Jose.Utils.importRsaPublicKey(publicKey, "RSA-OAEP");
+				var encrypter = new JoseJWE.Encrypter(cryptographer, public_rsa_key);
+				encrypter.encrypt(payload).then(function(result) {
+			$http.put('/user', result).success(function(data) {
+				$window.confirm('정보가 수정되었습니다.');
+				$cookieStore.remove('publicKey');
+				$location.path('/');
+			});
+		});
+		}
+	}
 
 });
 
@@ -147,6 +165,7 @@ app.controller('LoginCtrl', function($scope, $http, $location, $cookieStore, $wi
 		var encrypter = new JoseJWE.Encrypter(cryptographer, public_rsa_key);
 		encrypter.encrypt(user).then(function(result) {
 			$http.post('/login', result).success(function(data) {
+				$cookieStore.remove('publicKey');
 				if(data.length>100){ // 추후 인터페이스 변경(?)
 					$cookieStore.put('token', data);
 					$location.path('/');
@@ -167,8 +186,7 @@ app.controller('sginCtrl', function($scope, $http, $location, $cookieStore, $win
 			});
 	$scope.createuser = function(data) {
 		if($scope.user_password != $scope.user_confirm_password){
-			console.log($scope.user_password);
-			console.log($scope.user_confirm_password);
+			$window.confirm('패스워드가 일치하지 않습니다.');
 		}else{
 		var payload = "{"
 				+"\"user_id\" : \""+$scope.user_id+"\" ,"
@@ -183,6 +201,7 @@ app.controller('sginCtrl', function($scope, $http, $location, $cookieStore, $win
 				encrypter.encrypt(payload).then(function(result) {
 			$http.post('/sign', result).success(function(data) {
 				$http.post('/login', result).success(function(token) {
+					$cookieStore.remove('publicKey');
 					if(token.length>100){ // 추후 인터페이스 변경(?)
 						$cookieStore.put('token', token);
 						$location.path('/');
@@ -197,3 +216,5 @@ app.controller('sginCtrl', function($scope, $http, $location, $cookieStore, $win
 		
 	}
 });
+
+

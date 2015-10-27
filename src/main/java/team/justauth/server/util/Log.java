@@ -16,7 +16,7 @@ public class Log {
 	public static String getOSType(){
 	//	System.out.println(System.getProperty("os.name").toLowerCase()+"");
 		if(System.getProperty("os.name").toLowerCase().contains("linux")){
-			return "home\\justAuth\\";
+			return "home/justAuth/";
 		}else if(System.getProperty("os.name").toLowerCase().contains("window")){
 			return "c:\\JustAuth\\";
 		}else{

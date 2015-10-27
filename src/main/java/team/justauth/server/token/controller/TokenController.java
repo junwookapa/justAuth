@@ -5,6 +5,9 @@ import static spark.Spark.before;
 import static spark.Spark.delete;
 import static spark.Spark.get;
 import static spark.Spark.put;
+
+import org.eclipse.jetty.http.HttpTester.Request;
+
 import team.justauth.server.security.JWEUtil;
 import team.justauth.server.token.service.TokenService;
 import team.justauth.server.token.service.TokenServiceImpl;
@@ -69,6 +72,7 @@ public class TokenController {
 			if (request.headers().contains("token")) {
 				key = request.headers("token");
 				try {
+					
 					response.header("user_id", mTokenService.getUserID(key));
 				} catch (NullPointerException e) {
 
