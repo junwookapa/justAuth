@@ -16,7 +16,7 @@ import team.justauth.server.util.JsonTransformer;
 
 public class TokenController {
 
-	private final TokenService mTokenService;
+	private final TokenServiceImpl mTokenService;
 
 	public TokenController(TokenServiceImpl tokenService) {
 		this.mTokenService = tokenService;
@@ -55,10 +55,10 @@ public class TokenController {
 			}
 			
 			});
-		
+		//eyJhbGciOiJBMTI4S1ciLCJlbmMiOiJBMTI4Q0JDLUhTMjU2In0.UB7ERDL7RJREO5deK3ZDSHtXGSndqCp3AKIWuS6XXaUp80AFchy-Tg.X_TP5eCEVmvlkqGyQO6ugQ.cN74vpvVN7u1hvHwsERw14ilNdBpbaYxrOW1q-EKw2jl3ju_1KatgnOQKgFWUl_v1WA4fFnvY0TUAkZgG11LVn7wTEW1AMOcyJMJZxeAOIFTS7XHUz20T5GgoMwd4rAtYn2RwHMgmkx9-yVgJtsA61wuyjhATQjNx0ey2a8MXLY.zu_ZzqaocBXWHyFCsT4rlg
 		// 토큰 재발급
 		put("/token/:token", "application/json", (request, response) ->{
-			return mTokenService.issueToken(request.params(":token"), request.ip());
+			return mTokenService.tokenUpdate(request.params(":token"), request.ip());
 			},
 		new JsonTransformer());
 		// 토큰 삭제

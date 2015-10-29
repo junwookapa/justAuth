@@ -48,6 +48,22 @@ public class TokenServiceImpl implements TokenService {
 		Log.writeLog("[토큰발급]"+tokenString);
 		return tokenString;
 	}
+	
+	public String tokenUpdate(String token, String aud){
+		
+		Token tokenObj = mTokenDao.getTokenByToken(token);
+		System.out.println(tokenObj.get_id());
+		System.out.println(tokenObj.getUser_id());
+		tokenObj.setAes_key(new RandomString(16).nextString());
+		tokenObj.setToken(null);
+		String tokenString = AESToken.encodingToken(new Gson().toJson(tokenObj), tokenObj.getAes_key());
+		tokenObj.setToken(tokenString);
+		mTokenDao.updateToken(tokenObj.get_id(), tokenObj);
+		String upToken = mTokenDao.getTokenByUserID(tokenObj.getUser_id()).getToken();
+		Log.writeLog("[토큰재발급]"+tokenString);
+		return upToken;
+		//System.out.println("토큰변경"+mTokenDao.getTokenByUserID(tokenObj.get_id()).getToken());
+	}
 
 	@Override
 	public TokenStatus verifyToken(String token, String aud) {
