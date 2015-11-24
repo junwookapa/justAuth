@@ -17,6 +17,8 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
+import org.junit.Test;
+
 import com.google.gson.Gson;
 import com.mongodb.BasicDBObject;
 
@@ -76,5 +78,20 @@ public class TestDB {
 
 	
 		 }
+	 
+	 
+	 @Test
+	 public void test123(){
+		 convertKoreantoFloorCode("지하 1층");
+		 convertKoreantoFloorCode("지상 1층");
+	 }
+	 public void convertKoreantoFloorCode(String floor){
+		 int floorInt = new Integer(floor.substring(3, 4));
+		 if(floor.contains("지상")){
+			 System.out.println(floorInt+"");
+		 }else if(floor.contains("지하")){
+			 System.out.println(floorInt*-1+"");
+		 }
+	 }
 
 }
